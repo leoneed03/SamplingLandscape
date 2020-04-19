@@ -1,7 +1,7 @@
 #include <iostream>
 #include <random>
 #include <iterator>
-#include "../restribution/ripser.cpp"
+#include "ripser.cpp"
 
 using namespace std;
 
