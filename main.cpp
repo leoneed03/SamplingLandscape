@@ -6,11 +6,11 @@
 #include <boost/bind.hpp>
 #include <boost/thread/thread.hpp>
 #include <boost/asio.hpp>
-#include "tbb/concurrent_vector.h"
-
+#include <algorithm>
 #include "ripser.cpp"
 #include "mean_landscapes.cpp"
 
+#define space 5
 using namespace std;
 
 std::atomic<int> r = 0;
@@ -50,6 +50,11 @@ int main() {
     double max_edge_length = 8;
     double min_edge_length = 1e-10;
     int max_cohomology_rank = 2;
+
+
+    int max_rank = 3;
+
+
     std::string filename = "/Users/leonardbee/CLionProjects/restribution/cloud_50";
     std::ifstream file_stream(filename);
     int number_of_points = 0;
@@ -65,17 +70,17 @@ int main() {
     for (int i = 0; i < number_of_points; ++i) {
         cloud[i] = i;
     }
-    std::vector<std::string> argv_strings = {"./ripser", "--dim", "2", "--threshold", "8",
+    std::vector<std::string> argv_strings = {"./ripser", "--dim", std::to_string(max_rank), "--threshold", std::to_string(max_edge_length),
                                              "--modulus", "2", "--format", "point-cloud",
                                              "/Users/leonardbee/CLionProjects/restribution/cloud_50"};
-    auto res = main_ripser(10, argv_strings, get_random_sample(cloud, (int) (cloud.size() * 1)));
-    std::cout << res.size();
-    for (const auto &dim: res) {
-        for (const auto &persistence_pair: dim) {
-            std::cout << persistence_pair.first << " vs " << persistence_pair.second << std::endl;
-        }
-        std::cout << "_______\n_______\n____________________________________\n" << std::endl;
-    }
+//    auto res = main_ripser(10, argv_strings, get_random_sample(cloud, (int) (cloud.size() * 1)));
+//    std::cout << res.size();
+//    for (const auto &dim: res) {
+//        for (const auto &persistence_pair: dim) {
+//            std::cout << persistence_pair.first << " vs " << persistence_pair.second << std::endl;
+//        }
+//        std::cout << "_______\n_______\n____________________________________\n" << std::endl;
+//    }
 
 
 
@@ -88,17 +93,62 @@ int main() {
 //
 //    boost::asio::io_service::work work(ioService);
     int number_of_thread_workers = 4;
+
     double subsample_density_coefficient = 0.3;
-    int number_of_samples = 10;
+    int number_of_samples = 30;
     boost::asio::thread_pool pool(number_of_thread_workers);
-//    tbb::concurrent_vector<std::vector<>>
+    tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> all_persistence_diagrams(
+            number_of_thread_workers);
     for (int i = 0; i < number_of_samples; ++i) {
-        boost::asio::post(pool, std::bind(main_ripser, 10, argv_strings, get_random_sample(cloud, (int) (cloud.size() * 1))));
+        auto sample = get_random_sample(cloud, (int) (cloud.size() * subsample_density_coefficient));
+        boost::asio::post(pool,
+                          std::bind(main_ripser, 10, argv_strings, sample,
+                                    std::ref(all_persistence_diagrams)));
+//        for (int i = 0; i < current_persistence_diagrams.size(); ++i) {
+//            all_persistence_diagrams[i].emplace_back(current_persistence_diagrams[i]);
+//        }
     }
-    auto resu = get_random_sample(cloud, (int) (cloud.size() * 1));
-    boost::asio::post(pool, std::bind(main_ripser, 10, argv_strings, std::ref(resu)));
-    boost::asio::post(pool, std::bind(main_ripser, 10, argv_strings, std::ref(resu)));
+
+
+
+//    auto resu = get_random_sample(cloud, (int) (cloud.size() * 1));
+//    boost::asio::post(pool, std::bind(main_ripser, 10, argv_strings, std::ref(resu)));
+//    boost::asio::post(pool, std::bind(main_ripser, 10, argv_strings, std::ref(resu)));
 //    boost::asio::post(pool, p);
     pool.join();
+    std::cout << "counter " << special_counter << std::endl;
+    for (int i = 0; i < all_persistence_diagrams.size(); ++i) {
+        std::cout << "dimension " << i << " ";
+
+        if (all_persistence_diagrams[i].size() != number_of_samples) {
+            std::cout << all_persistence_diagrams[i].size() << std::endl;
+            exit(19);
+        }
+        for (auto &vector_of_intervals: all_persistence_diagrams[i]) {
+            for (auto& persistence_interval: vector_of_intervals) {
+                std::cout << endl << persistence_interval.first << " -> before -> " << persistence_interval.second << endl;
+                std::pair<double, double> new_pair = {(persistence_interval.second - persistence_interval.first) / 2.0, (persistence_interval.second + persistence_interval.first) / 2.0};
+
+
+                std::swap(new_pair, persistence_interval);
+                std::cout << endl << persistence_interval.first << " -> after -> " << persistence_interval.second << endl;
+            }
+
+        }
+        cout << endl;
+    }
+
+    std::vector<std::vector<std::pair<double, double>>> mean_landscape;
+    for (auto& landscape: all_persistence_diagrams) {
+        mean_landscape.emplace_back(get_mean_persistence(landscape));
+    }
+
+    for (int i = 0; i < mean_landscape.size(); ++i) {
+        cout << i << ": " << mean_landscape[i].size() << endl;
+    }
+
+
+
+
     return 0;
 }

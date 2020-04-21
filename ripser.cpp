@@ -36,6 +36,7 @@
 
 */
 
+#include "tbb/concurrent_vector.h"
 //#define USE_COEFFICIENTS
 
 //#define INDICATE_PROGRESS
@@ -172,29 +173,47 @@ std::ostream& operator<<(std::ostream& stream, const entry_t& e) {
 
 typedef index_t entry_t;
 
-const index_t get_index(const entry_t &i) { return i; }
+const index_t get_index(const entry_t &i) {
+    return i;
+}
 
-index_t get_coefficient(const entry_t &i) { return 1; }
+index_t get_coefficient(const entry_t &i) {
+    return 1;
+}
 
-entry_t make_entry(index_t _index, coefficient_t _value) { return entry_t(_index); }
+entry_t make_entry(index_t _index, coefficient_t _value) {
+    return entry_t(_index);
+}
 
-void set_coefficient(entry_t &e, const coefficient_t c) {}
+void set_coefficient(entry_t &e, const coefficient_t c) {
+
+}
 
 #endif
 
-const entry_t &get_entry(const entry_t &e) { return e; }
+const entry_t &get_entry(const entry_t &e) {
+    return e;
+}
 
 typedef std::pair<value_t, index_t> diameter_index_t;
 
-value_t get_diameter(const diameter_index_t &i) { return i.first; }
+value_t get_diameter(const diameter_index_t &i) {
+    return i.first;
+}
 
-index_t get_index(const diameter_index_t &i) { return i.second; }
+index_t get_index(const diameter_index_t &i) {
+    return i.second;
+}
 
 typedef std::pair<index_t, value_t> index_diameter_t;
 
-index_t get_index(const index_diameter_t &i) { return i.first; }
+index_t get_index(const index_diameter_t &i) {
+    return i.first;
+}
 
-value_t get_diameter(const index_diameter_t &i) { return i.second; }
+value_t get_diameter(const index_diameter_t &i) {
+    return i.second;
+}
 
 struct diameter_entry_t : std::pair<value_t, entry_t> {
     using std::pair<value_t, entry_t>::pair;
@@ -209,17 +228,25 @@ struct diameter_entry_t : std::pair<value_t, entry_t> {
     diameter_entry_t(const index_t &_index) : diameter_entry_t(0, _index, 0) {}
 };
 
-const entry_t &get_entry(const diameter_entry_t &p) { return p.second; }
+const entry_t &get_entry(const diameter_entry_t &p) {
+    return p.second;
+}
 
-entry_t &get_entry(diameter_entry_t &p) { return p.second; }
+entry_t &get_entry(diameter_entry_t &p) {
+    return p.second;
+}
 
-const index_t get_index(const diameter_entry_t &p) { return get_index(get_entry(p)); }
+const index_t get_index(const diameter_entry_t &p) {
+    return get_index(get_entry(p));
+}
 
 const coefficient_t get_coefficient(const diameter_entry_t &p) {
     return get_coefficient(get_entry(p));
 }
 
-const value_t &get_diameter(const diameter_entry_t &p) { return p.first; }
+const value_t &get_diameter(const diameter_entry_t &p) {
+    return p.first;
+}
 
 void set_coefficient(diameter_entry_t &p, const coefficient_t c) {
     set_coefficient(get_entry(p), c);
@@ -253,13 +280,16 @@ struct compressed_distance_matrix {
             : distances(mat.size() * (mat.size() - 1) / 2), rows(mat.size()) {
         init_rows();
 
-        for (size_t i = 1; i < size(); ++i)
+        for (size_t i = 1; i < size(); ++i) {
             for (size_t j = 0; j < i; ++j) rows[i][j] = mat(i, j);
+        }
     }
 
     value_t operator()(const index_t i, const index_t j) const;
 
-    size_t size() const { return rows.size(); }
+    size_t size() const {
+        return rows.size();
+    }
 
     void init_rows();
 };
@@ -319,7 +349,9 @@ struct sparse_distance_matrix {
                 }
     }
 
-    size_t size() const { return neighbors.size(); }
+    size_t size() const {
+        return neighbors.size();
+    }
 };
 
 struct euclidean_distance_matrix {
@@ -327,7 +359,9 @@ struct euclidean_distance_matrix {
 
     euclidean_distance_matrix(std::vector<std::vector<value_t>> &&_points)
             : points(std::move(_points)) {
-        for (auto p : points) { assert(p.size() == points.front().size()); }
+        for (auto p : points) {
+            assert(p.size() == points.front().size());
+        }
     }
 
     value_t operator()(const index_t i, const index_t j) const {
@@ -335,10 +369,14 @@ struct euclidean_distance_matrix {
         assert(j < points.size());
         return std::sqrt(std::inner_product(
                 points[i].begin(), points[i].end(), points[j].begin(), value_t(), std::plus<value_t>(),
-                [](value_t u, value_t v) { return (u - v) * (u - v); }));
+                [](value_t u, value_t v) {
+                    return (u - v) * (u - v);
+                }));
     }
 
-    size_t size() const { return points.size(); }
+    size_t size() const {
+        return points.size();
+    }
 };
 
 class union_find {
@@ -347,7 +385,9 @@ class union_find {
 
 public:
     union_find(const index_t n) : parent(n), rank(n, 0) {
-        for (index_t i = 0; i < n; ++i) parent[i] = i;
+        for (index_t i = 0; i < n; ++i) {
+            parent[i] = i;
+        }
     }
 
     index_t find(index_t x) {
@@ -372,10 +412,14 @@ public:
 };
 
 template<typename T>
-T begin(std::pair<T, T> &p) { return p.first; }
+T begin(std::pair<T, T> &p) {
+    return p.first;
+}
 
 template<typename T>
-T end(std::pair<T, T> &p) { return p.second; }
+T end(std::pair<T, T> &p) {
+    return p.second;
+}
 
 template<typename ValueType>
 class compressed_sparse_matrix {
@@ -475,7 +519,8 @@ public:
 
     void assemble_columns_to_reduce(std::vector<diameter_index_t> &simplices,
                                     std::vector<diameter_index_t> &columns_to_reduce,
-                                    entry_hash_map &pivot_column_index, index_t dim) {
+                                    entry_hash_map &pivot_column_index,
+                                    index_t dim) {
 
 #ifdef INDICATE_PROGRESS
         std::cerr << clear_line << "assembling columns" << std::flush;
@@ -549,8 +594,9 @@ public:
                 }
 #endif
                 dset.link(u, v);
-            } else
+            } else {
                 columns_to_reduce.push_back(e);
+            }
         }
         std::reverse(columns_to_reduce.begin(), columns_to_reduce.end());
 
@@ -584,7 +630,9 @@ public:
         while (!column.empty()) {
             pivot = column.top();
             column.pop();
-            if (column.empty() || get_index(column.top()) != get_index(pivot)) return pivot;
+            if (column.empty() || get_index(column.top()) != get_index(pivot)) {
+                return pivot;
+            }
             column.pop();
         }
         return -1;
@@ -594,7 +642,9 @@ public:
     template<typename Column>
     diameter_entry_t get_pivot(Column &column) {
         diameter_entry_t result = pop_pivot(column);
-        if (get_index(result) != -1) column.push(result);
+        if (get_index(result) != -1) {
+            column.push(result);
+        }
         return result;
     }
 
@@ -610,13 +660,16 @@ public:
             if (get_diameter(cofacet) <= threshold) {
                 cofacet_entries.push_back(cofacet);
                 if (check_for_emergent_pair && (get_diameter(simplex) == get_diameter(cofacet))) {
-                    if (pivot_column_index.find(get_entry(cofacet)) == pivot_column_index.end())
+                    if (pivot_column_index.find(get_entry(cofacet)) == pivot_column_index.end()) {
                         return cofacet;
+                    }
                     check_for_emergent_pair = false;
                 }
             }
         }
-        for (auto cofacet : cofacet_entries) working_coboundary.push(cofacet);
+        for (auto cofacet : cofacet_entries) {
+            working_coboundary.push(cofacet);
+        }
         return get_pivot(working_coboundary);
     }
 
@@ -627,7 +680,10 @@ public:
         simplex_coboundary_enumerator cofacets(simplex, dim, *this);
         while (cofacets.has_next()) {
             diameter_entry_t cofacet = cofacets.next();
-            if (get_diameter(cofacet) <= threshold) working_coboundary.push(cofacet);
+            if (get_diameter(cofacet) <= threshold) {
+                working_coboundary.push(cofacet);
+            }
+
         }
     }
 
@@ -756,9 +812,10 @@ public:
             }
 
             std::cout << "__________________" << std::endl;
-            if (dim < dim_max)
+            if (dim < dim_max) {
                 assemble_columns_to_reduce(simplices, columns_to_reduce, pivot_column_index,
                                            dim + 1);
+            }
             std::cout << "finished pairs " << std::endl;
         }
         return persistence_diagram;
@@ -796,7 +853,9 @@ public:
             assert(k != -1);
         }
         value_t cofacet_diameter = get_diameter(simplex);
-        for (index_t w : vertices) cofacet_diameter = std::max(cofacet_diameter, dist(v, w));
+        for (index_t w : vertices) {
+            cofacet_diameter = std::max(cofacet_diameter, dist(v, w));
+        }
         index_t cofacet_index = idx_above + binomial_coeff(v--, k + 1) + idx_below;
         coefficient_t cofacet_coefficient =
                 (k & 1 ? modulus - 1 : 1) * get_coefficient(simplex) % modulus;
@@ -875,7 +934,9 @@ std::vector<diameter_index_t> ripser<compressed_lower_distance_matrix>::get_edge
     for (index_t index = binomial_coeff(n, 2); index-- > 0;) {
         get_simplex_vertices(index, 1, dist.size(), vertices.rbegin());
         value_t length = dist(vertices[0], vertices[1]);
-        if (length <= threshold) edges.push_back({length, index});
+        if (length <= threshold) {
+            edges.push_back({length, index});
+        }
     }
     return edges;
 }
@@ -883,11 +944,12 @@ std::vector<diameter_index_t> ripser<compressed_lower_distance_matrix>::get_edge
 template<>
 std::vector<diameter_index_t> ripser<sparse_distance_matrix>::get_edges() {
     std::vector<diameter_index_t> edges;
-    for (index_t i = 0; i < n; ++i)
+    for (index_t i = 0; i < n; ++i) {
         for (auto n : dist.neighbors[i]) {
             index_t j = get_index(n);
             if (i > j) edges.push_back({get_diameter(n), get_edge_index(i, j)});
         }
+    }
     return edges;
 }
 
@@ -939,7 +1001,9 @@ compressed_lower_distance_matrix read_point_cloud(std::istream &input_stream, co
             point.push_back(value);
             s.ignore();
         }
-        if (!point.empty()) points.push_back(point);
+        if (!point.empty()) {
+            points.push_back(point);
+        }
         assert(point.size() == points.front().size());
     }
 
@@ -949,8 +1013,9 @@ compressed_lower_distance_matrix read_point_cloud(std::istream &input_stream, co
               << eucl_dist.points.front().size() << std::endl;
 
     std::vector<value_t> distances;
-    for (int i = 0; i < n; ++i)
+    for (int i = 0; i < n; ++i) {
         for (int j = 0; j < i; ++j) distances.push_back(eucl_dist(i, j));
+    }
 
     return compressed_lower_distance_matrix(std::move(distances));
 }
@@ -970,7 +1035,9 @@ compressed_lower_distance_matrix read_point_cloud(std::istream &input_stream) {
             point.push_back(value);
             s.ignore();
         }
-        if (!point.empty()) points.push_back(point);
+        if (!point.empty()) {
+            points.push_back(point);
+        }
         assert(point.size() == points.front().size());
     }
 
@@ -980,8 +1047,9 @@ compressed_lower_distance_matrix read_point_cloud(std::istream &input_stream) {
               << eucl_dist.points.front().size() << std::endl;
 
     std::vector<value_t> distances;
-    for (int i = 0; i < n; ++i)
+    for (int i = 0; i < n; ++i) {
         for (int j = 0; j < i; ++j) distances.push_back(eucl_dist(i, j));
+    }
 
     return compressed_lower_distance_matrix(std::move(distances));
 }
@@ -1006,8 +1074,9 @@ sparse_distance_matrix read_sparse_distance_matrix(std::istream &input_stream) {
         }
     }
 
-    for (size_t i = 0; i < neighbors.size(); ++i)
+    for (size_t i = 0; i < neighbors.size(); ++i) {
         std::sort(neighbors[i].begin(), neighbors[i].end());
+    }
 
     return sparse_distance_matrix(std::move(neighbors), num_edges);
 }
@@ -1065,19 +1134,24 @@ compressed_lower_distance_matrix read_dipha(std::istream &input_stream) {
 
     std::vector<value_t> distances;
 
-    for (int i = 0; i < n; ++i)
-        for (int j = 0; j < n; ++j)
-            if (i > j)
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            if (i > j) {
                 distances.push_back(read<double>(input_stream));
-            else
+            } else {
                 read<double>(input_stream);
+            }
+        }
+    }
 
     return compressed_lower_distance_matrix(std::move(distances));
 }
 
 compressed_lower_distance_matrix read_binary(std::istream &input_stream) {
     std::vector<value_t> distances;
-    while (!input_stream.eof()) distances.push_back(read<value_t>(input_stream));
+    while (!input_stream.eof()) {
+        distances.push_back(read<value_t>(input_stream));
+    }
     return compressed_lower_distance_matrix(std::move(distances));
 }
 
@@ -1148,8 +1222,12 @@ void print_usage_and_exit(int exit_code) {
     exit(exit_code);
 }
 
+std::atomic<int> special_counter = 0;
+std::mutex cout_mutex;
+
 std::vector<std::vector<std::pair<double, double>>>
-main_ripser(int argc, std::vector<std::string> argv, std::set<int> subcloud) {
+main_ripser(int argc, std::vector<std::string> argv, std::set<int> subcloud,
+            tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> &all_persistence_diagrams) {
     std::string filename = "";
     std::vector<std::vector<std::pair<double, double>>> resulting_persistence_diagram;
     file_format format = DISTANCE_MATRIX;
@@ -1201,10 +1279,14 @@ main_ripser(int argc, std::vector<std::string> argv, std::set<int> subcloud) {
             std::string parameter = std::string(argv[++i]);
             size_t next_pos;
             modulus = std::stol(parameter, &next_pos);
-            if (next_pos != parameter.size() || !is_prime(modulus)) print_usage_and_exit(-1);
+            if (next_pos != parameter.size() || !is_prime(modulus)) {
+                print_usage_and_exit(-1);
+            }
 
         } else {
-            if (!filename.empty()) { print_usage_and_exit(-1); }
+            if (!filename.empty()) {
+                print_usage_and_exit(-1);
+            }
             filename = argv[i];
         }
     }
@@ -1222,7 +1304,8 @@ main_ripser(int argc, std::vector<std::string> argv, std::set<int> subcloud) {
                   << dist.num_edges << "/" << (dist.size() * (dist.size() - 1)) / 2 << " entries"
                   << std::endl;
 
-        ripser<sparse_distance_matrix>(std::move(dist), dim_max, threshold, ratio, modulus)
+        resulting_persistence_diagram = ripser<sparse_distance_matrix>(std::move(dist), dim_max, threshold, ratio,
+                                                                       modulus)
                 .compute_barcodes();
     } else {
         compressed_lower_distance_matrix dist =
@@ -1247,15 +1330,18 @@ main_ripser(int argc, std::vector<std::string> argv, std::set<int> subcloud) {
             max = std::max(max, d);
             max_finite =
                     d != std::numeric_limits<value_t>::infinity() ? std::max(max, d) : max_finite;
-            if (d <= threshold) ++num_edges;
+            if (d <= threshold) {
+                ++num_edges;
+            }
         }
         std::cout << "value range: [" << min << "," << max_finite << "]" << std::endl;
 
         if (threshold >= max) {
             std::cout << "distance matrix with " << dist.size() << " points" << std::endl;
             std::cout << "started calculating persistence " << std::endl;
-            ripser<compressed_lower_distance_matrix>(std::move(dist), dim_max, threshold, ratio,
-                                                     modulus)
+            resulting_persistence_diagram = ripser<compressed_lower_distance_matrix>(std::move(dist), dim_max,
+                                                                                     threshold, ratio,
+                                                                                     modulus)
                     .compute_barcodes();
             std::cout << "finished calculating persistence " << std::endl;
         } else {
@@ -1270,10 +1356,26 @@ main_ripser(int argc, std::vector<std::string> argv, std::set<int> subcloud) {
             std::cout << "sparse finished calculating persistence " << std::endl;
 
         }
+        if (resulting_persistence_diagram.size() != 4) {
 
+            std::cout << "basd size " << resulting_persistence_diagram.size();
+            exit(7);
+        }
+        for (int i = 0; i < resulting_persistence_diagram.size(); ++i) {
+            all_persistence_diagrams[i].emplace_back(resulting_persistence_diagram[i]);
+        }
+        ++special_counter;
         return resulting_persistence_diagram;
-        exit(0);
     }
+    if (resulting_persistence_diagram.size() != 4) {
+        std::cout << "very bad size " << resulting_persistence_diagram.size();
+        exit(7);
+    }
+    for (int i = 0; i < resulting_persistence_diagram.size(); ++i) {
+        all_persistence_diagrams[i].emplace_back(resulting_persistence_diagram[i]);
+    }
+
+    ++special_counter;
     return resulting_persistence_diagram;
 }
 //}
