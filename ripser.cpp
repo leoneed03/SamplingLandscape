@@ -123,9 +123,15 @@ public:
 };
 
 bool is_prime(const coefficient_t n) {
-    if (!(n & 1) || n < 2) return n == 2;
-    for (coefficient_t p = 3; p <= n / p; p += 2)
-        if (!(n % p)) return false;
+    if (!(n & 1) || n < 2) {
+        return n == 2;
+    }
+    for (coefficient_t p = 3; p <= n / p; p += 2) {
+        if (!(n % p)) {
+            return false;
+        }
+
+    }
     return true;
 }
 
@@ -1142,7 +1148,8 @@ void print_usage_and_exit(int exit_code) {
     exit(exit_code);
 }
 
-std::vector<std::vector<std::pair<double, double>>> main_ripser(int argc, std::vector<std::string> argv, const std::set<int> &subcloud) {
+std::vector<std::vector<std::pair<double, double>>>
+main_ripser(int argc, std::vector<std::string> argv, std::set<int> subcloud) {
     std::string filename = "";
     std::vector<std::vector<std::pair<double, double>>> resulting_persistence_diagram;
     file_format format = DISTANCE_MATRIX;
@@ -1256,8 +1263,9 @@ std::vector<std::vector<std::pair<double, double>>> main_ripser(int argc, std::v
                       << num_edges << "/" << (dist.size() * dist.size() - 1) / 2 << " entries"
                       << std::endl;
             std::cout << "sparse started calculating persistence " << std::endl;
-            resulting_persistence_diagram = ripser<sparse_distance_matrix>(sparse_distance_matrix(std::move(dist), threshold),
-                                           dim_max, threshold, ratio, modulus).compute_barcodes();
+            resulting_persistence_diagram = ripser<sparse_distance_matrix>(
+                    sparse_distance_matrix(std::move(dist), threshold),
+                    dim_max, threshold, ratio, modulus).compute_barcodes();
 
             std::cout << "sparse finished calculating persistence " << std::endl;
 

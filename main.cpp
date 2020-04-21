@@ -1,15 +1,29 @@
 #include <iostream>
 #include <random>
 #include <iterator>
+#include <atomic>
+#include <boost/asio/io_service.hpp>
+#include <boost/bind.hpp>
+#include <boost/thread/thread.hpp>
+#include <boost/asio.hpp>
+#include "tbb/concurrent_vector.h"
+
 #include "ripser.cpp"
+#include "mean_landscapes.cpp"
 
 using namespace std;
 
-set<int> get_random_sample(vector<int>& vector_of_points, int size_of_one_sample) {
+std::atomic<int> r = 0;
+
+void p() {
+    std::cout << "Hello there " << std::endl;
+}
+
+set<int> get_random_sample(vector<int> &vector_of_points, int size_of_one_sample) {
     std::random_device rd;
     std::mt19937 g(rd());
     std::shuffle(vector_of_points.begin(), vector_of_points.end(), g);
-    for (const auto& e: vector_of_points) {
+    for (const auto &e: vector_of_points) {
         cout << e << " ";
     }
     cout << endl;
@@ -51,16 +65,40 @@ int main() {
     for (int i = 0; i < number_of_points; ++i) {
         cloud[i] = i;
     }
-    std::vector<std::string> argv_strings = {"./ripser",  "--dim",  "2",  "--threshold",  "8",
-                                             "--modulus",  "2", "--format", "point-cloud", "/Users/leonardbee/CLionProjects/restribution/cloud_50"};
+    std::vector<std::string> argv_strings = {"./ripser", "--dim", "2", "--threshold", "8",
+                                             "--modulus", "2", "--format", "point-cloud",
+                                             "/Users/leonardbee/CLionProjects/restribution/cloud_50"};
     auto res = main_ripser(10, argv_strings, get_random_sample(cloud, (int) (cloud.size() * 1)));
     std::cout << res.size();
-    for (const auto& dim: res) {
-        for (const auto& persistence_pair: dim) {
+    for (const auto &dim: res) {
+        for (const auto &persistence_pair: dim) {
             std::cout << persistence_pair.first << " vs " << persistence_pair.second << std::endl;
         }
-        std::cout << "____________________________________\n" << std::endl;
+        std::cout << "_______\n_______\n____________________________________\n" << std::endl;
     }
 
+
+
+
+
+
+//
+//    boost::asio::io_service ioService;
+//    boost::thread_group threadpool;
+//
+//    boost::asio::io_service::work work(ioService);
+    int number_of_thread_workers = 4;
+    double subsample_density_coefficient = 0.3;
+    int number_of_samples = 10;
+    boost::asio::thread_pool pool(number_of_thread_workers);
+//    tbb::concurrent_vector<std::vector<>>
+    for (int i = 0; i < number_of_samples; ++i) {
+        boost::asio::post(pool, std::bind(main_ripser, 10, argv_strings, get_random_sample(cloud, (int) (cloud.size() * 1))));
+    }
+    auto resu = get_random_sample(cloud, (int) (cloud.size() * 1));
+    boost::asio::post(pool, std::bind(main_ripser, 10, argv_strings, std::ref(resu)));
+    boost::asio::post(pool, std::bind(main_ripser, 10, argv_strings, std::ref(resu)));
+//    boost::asio::post(pool, p);
+    pool.join();
     return 0;
 }
