@@ -1,48 +1,6 @@
-/*
-
- Ripser: a lean C++ code for computation of Vietoris-Rips persistence barcodes
-
- MIT License
-
- Copyright (c) 2015–2019 Ulrich Bauer
-
- Permission is hereby granted, free of charge, to any person obtaining a copy
- of this software and associated documentation files (the "Software"), to deal
- in the Software without restriction, including without limitation the rights
- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- copies of the Software, and to permit persons to whom the Software is
- furnished to do so, subject to the following conditions:
-
- The above copyright notice and this permission notice shall be included in all
- copies or substantial portions of the Software.
-
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- SOFTWARE.
-
- You are under no obligation whatsoever to provide any bug fixes, patches, or
- upgrades to the features, functionality or performance of the source code
- ("Enhancements") to anyone; however, if you choose to make your Enhancements
- available either publicly, or directly to the author of this software, without
- imposing a separate written license agreement for such Enhancements, then you
- hereby grant the following license: a non-exclusive, royalty-free perpetual
- license to install, use, modify, prepare derivative works, incorporate into
- other computer software, distribute, and sublicense such enhancements or
- derivative works thereof, in binary and source code form.
-
-*/
-
 #include "tbb/concurrent_vector.h"
-//#define USE_COEFFICIENTS
 
-//#define INDICATE_PROGRESS
 #define PRINT_PERSISTENCE_PAIRS
-
-//#define USE_GOOGLE_HASHMAP
 
 #include <algorithm>
 #include <cassert>
@@ -75,7 +33,7 @@ class hash_map : public std::unordered_map<Key, T, H, E> {
 
 #endif
 
-typedef float value_t;
+typedef double value_t;
 typedef int64_t index_t;
 typedef uint16_t coefficient_t;
 
@@ -467,7 +425,7 @@ class ripser {
     const DistanceMatrix dist;
     const index_t n, dim_max;
     const value_t threshold;
-    const float ratio;
+    const double ratio;
     const coefficient_t modulus;
     const binomial_coeff_table binomial_coeff;
     const std::vector<coefficient_t> multiplicative_inverse;
@@ -488,7 +446,7 @@ class ripser {
     typedef hash_map<entry_t, size_t, entry_hash, equal_index> entry_hash_map;
 
 public:
-    ripser(DistanceMatrix &&_dist, index_t _dim_max, value_t _threshold, float _ratio,
+    ripser(DistanceMatrix &&_dist, index_t _dim_max, value_t _threshold, double _ratio,
            coefficient_t _modulus)
             : dist(std::move(_dist)), n(dist.size()),
               dim_max(std::min(_dim_max, index_t(dist.size() - 2))), threshold(_threshold),
@@ -921,8 +879,7 @@ public:
         ++neighbor_it[0];
         value_t cofacet_diameter = std::max(get_diameter(simplex), get_diameter(neighbor));
         index_t cofacet_index = idx_above + binomial_coeff(get_index(neighbor), k + 1) + idx_below;
-        coefficient_t cofacet_coefficient =
-                (k & 1 ? modulus - 1 : 1) * get_coefficient(simplex) % modulus;
+        coefficient_t cofacet_coefficient = (k & 1 ? modulus - 1 : 1) * get_coefficient(simplex) % modulus;
         return diameter_entry_t(cofacet_diameter, cofacet_index, cofacet_coefficient);
     }
 };
@@ -1235,7 +1192,7 @@ main_ripser(int argc, std::vector<std::string> argv, std::set<int> subcloud,
 
     index_t dim_max = 1;
     value_t threshold = std::numeric_limits<value_t>::max();
-    float ratio = 1;
+    double ratio = 1;
     coefficient_t modulus = 2;
 
     for (index_t i = 1; i < argc; ++i) {
@@ -1352,31 +1309,11 @@ main_ripser(int argc, std::vector<std::string> argv, std::set<int> subcloud,
             std::cout << "sparse finished calculating persistence " << std::endl;
 
         }
-//        if (resulting_persistence_diagram.size() != 4) {
-//
-//            std::cout << "basd size " << resulting_persistence_diagram.size();
-//            exit(7);
-//        }
-//        for (int i = 0; i < resulting_persistence_diagram.size(); ++i) {
-//            all_persistence_diagrams[i].emplace_back(resulting_persistence_diagram[i]);
-//        }
         all_persistence_diagrams.emplace_back(resulting_persistence_diagram);
         ++special_counter;
         return resulting_persistence_diagram;
     }
 
 
-//    return resulting_persistence_diagram;
-
-//    if (resulting_persistence_diagram.size() != 4) {
-//        std::cout << "very bad size " << resulting_persistence_diagram.size();
-//        exit(7);
-//    }
-//    for (int i = 0; i < resulting_persistence_diagram.size(); ++i) {
-//        all_persistence_diagrams[i].emplace_back(resulting_persistence_diagram[i]);
-//    }
-    all_persistence_diagrams.emplace_back(resulting_persistence_diagram);
-    ++special_counter;
-    return resulting_persistence_diagram;
 }
 //}
