@@ -34,6 +34,57 @@ set<int> get_random_sample(vector<int> &vector_of_points, int size_of_one_sample
     return std::set<int>(vector_of_points.begin(), vector_of_points.begin() + size_of_one_sample);
 }
 
+tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> get_diagrams(std::string filename, int max_rank,
+                                                                                    double max_edge_length, bool gudhi_format) {
+    std::ifstream file_stream(filename);
+    int number_of_points = 0;
+    std::string line;
+    while (std::getline(file_stream, line)) {
+        ++number_of_points;
+        std::vector<value_t> point;
+        std::istringstream s(line);
+    }
+    if (gudhi_format && number_of_points > 0) {
+        --number_of_points;
+    }
+    std::cout << "total number of points " << number_of_points << std::endl;
+
+    vector<int> cloud(number_of_points);
+    for (int i = 0; i < number_of_points; ++i) {
+        cloud[i] = i;
+    }
+    std::vector<std::string> argv_strings = {"./ripser", "--dim", std::to_string(max_rank), "--threshold", std::to_string(max_edge_length),
+                                             "--modulus", "2", "--format", "point-cloud",
+                                             filename};
+    int number_of_thread_workers = 1;
+
+    double subsample_density_coefficient = 1;
+    int number_of_samples = 1;
+    boost::asio::thread_pool pool(number_of_thread_workers);
+    tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> all_persistence_diagrams;
+    for (int i = 0; i < number_of_samples; ++i) {
+        auto sample = get_random_sample(cloud, (int) (cloud.size() * subsample_density_coefficient));
+        boost::asio::post(pool,
+                          std::bind(main_ripser, 10, argv_strings, sample,
+                                    std::ref(all_persistence_diagrams)));
+    }
+    pool.join();
+    cout << "____________________________________________________\n\n\n\n" << all_persistence_diagrams.size() << endl;
+    for (int i = 0; i < all_persistence_diagrams.size(); ++i) {
+        cout << "\n\n\n\ncurrently in " << i << endl;
+        for (int j = 0; j < all_persistence_diagrams[i].size(); ++j) {
+            cout << "                 into j " << j <<  endl;
+            for (auto& e: all_persistence_diagrams[i][j]) {
+                e.second = min(e.second, max_edge_length);
+                cout << e.first << " and " << e.second << endl;
+            }
+        }
+
+    }
+    get_average_landscape(all_persistence_diagrams);
+
+    return all_persistence_diagrams;
+}
 
 int main() {
     vector<int> v;
@@ -55,7 +106,25 @@ int main() {
     int max_rank = 3;
 
 
-    std::string filename = "/Users/leonardbee/CLionProjects/restribution/cloud_50";
+
+    std::string filebunny = "/Users/leonardbee/Desktop/dataset/bunny500.txt";
+    std::string filename = "/Users/leonardbee/CLionProjects/SubsamplingMethodsForPersistenceLandscape1/dots_50.txt";
+
+    get_diagrams(filebunny, 2, 8, true);
+
+    return 0;
+
+
+
+
+
+
+
+
+
+
+
+
     std::ifstream file_stream(filename);
     int number_of_points = 0;
     std::string line;

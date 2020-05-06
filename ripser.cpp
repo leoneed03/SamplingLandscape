@@ -985,6 +985,7 @@ compressed_lower_distance_matrix read_point_cloud(std::istream &input_stream, co
     std::string line;
     value_t value;
     int counter = -1;
+    std::getline(input_stream, line);
     while (std::getline(input_stream, line)) {
         ++counter;
 
@@ -1225,11 +1226,11 @@ void print_usage_and_exit(int exit_code) {
 std::atomic<int> special_counter = 0;
 std::mutex cout_mutex;
 
-std::vector<std::vector<std::pair<double, double>>>
+tbb::concurrent_vector<std::vector<std::pair<double, double>>>
 main_ripser(int argc, std::vector<std::string> argv, std::set<int> subcloud,
             tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> &all_persistence_diagrams) {
     std::string filename = "";
-    std::vector<std::vector<std::pair<double, double>>> resulting_persistence_diagram;
+    tbb::concurrent_vector<std::vector<std::pair<double, double>>> resulting_persistence_diagram;
     file_format format = DISTANCE_MATRIX;
 
     index_t dim_max = 1;
@@ -1297,17 +1298,7 @@ main_ripser(int argc, std::vector<std::string> argv, std::set<int> subcloud,
         exit(-1);
     }
 
-    if (format == SPARSE) {
-        sparse_distance_matrix dist =
-                read_sparse_distance_matrix(!filename.empty() ? file_stream : std::cin);
-        std::cout << "sparse distance matrix with " << dist.size() << " points and "
-                  << dist.num_edges << "/" << (dist.size() * (dist.size() - 1)) / 2 << " entries"
-                  << std::endl;
-
-        resulting_persistence_diagram = ripser<sparse_distance_matrix>(std::move(dist), dim_max, threshold, ratio,
-                                                                       modulus)
-                .compute_barcodes();
-    } else {
+    {
         compressed_lower_distance_matrix dist =
                 read_file(!filename.empty() ? file_stream : std::cin, format, subcloud);
 
@@ -1339,42 +1330,52 @@ main_ripser(int argc, std::vector<std::string> argv, std::set<int> subcloud,
         if (threshold >= max) {
             std::cout << "distance matrix with " << dist.size() << " points" << std::endl;
             std::cout << "started calculating persistence " << std::endl;
-            resulting_persistence_diagram = ripser<compressed_lower_distance_matrix>(std::move(dist), dim_max,
-                                                                                     threshold, ratio,
-                                                                                     modulus)
+            auto resulting_persistence_diagram_1 = ripser<compressed_lower_distance_matrix>(std::move(dist), dim_max,
+                                                                                            threshold, ratio,
+                                                                                            modulus)
                     .compute_barcodes();
+            for (const auto &e: resulting_persistence_diagram_1) {
+                resulting_persistence_diagram.push_back(e);
+            }
             std::cout << "finished calculating persistence " << std::endl;
         } else {
             std::cout << "sparse distance matrix with " << dist.size() << " points and "
                       << num_edges << "/" << (dist.size() * dist.size() - 1) / 2 << " entries"
                       << std::endl;
             std::cout << "sparse started calculating persistence " << std::endl;
-            resulting_persistence_diagram = ripser<sparse_distance_matrix>(
+            auto resulting_persistence_diagram_1 = ripser<sparse_distance_matrix>(
                     sparse_distance_matrix(std::move(dist), threshold),
                     dim_max, threshold, ratio, modulus).compute_barcodes();
-
+            for (const auto &e: resulting_persistence_diagram_1) {
+                resulting_persistence_diagram.push_back(e);
+            }
             std::cout << "sparse finished calculating persistence " << std::endl;
 
         }
-        if (resulting_persistence_diagram.size() != 4) {
-
-            std::cout << "basd size " << resulting_persistence_diagram.size();
-            exit(7);
-        }
-        for (int i = 0; i < resulting_persistence_diagram.size(); ++i) {
-            all_persistence_diagrams[i].emplace_back(resulting_persistence_diagram[i]);
-        }
+//        if (resulting_persistence_diagram.size() != 4) {
+//
+//            std::cout << "basd size " << resulting_persistence_diagram.size();
+//            exit(7);
+//        }
+//        for (int i = 0; i < resulting_persistence_diagram.size(); ++i) {
+//            all_persistence_diagrams[i].emplace_back(resulting_persistence_diagram[i]);
+//        }
+        all_persistence_diagrams.emplace_back(resulting_persistence_diagram);
         ++special_counter;
         return resulting_persistence_diagram;
     }
-    if (resulting_persistence_diagram.size() != 4) {
-        std::cout << "very bad size " << resulting_persistence_diagram.size();
-        exit(7);
-    }
-    for (int i = 0; i < resulting_persistence_diagram.size(); ++i) {
-        all_persistence_diagrams[i].emplace_back(resulting_persistence_diagram[i]);
-    }
 
+
+//    return resulting_persistence_diagram;
+
+//    if (resulting_persistence_diagram.size() != 4) {
+//        std::cout << "very bad size " << resulting_persistence_diagram.size();
+//        exit(7);
+//    }
+//    for (int i = 0; i < resulting_persistence_diagram.size(); ++i) {
+//        all_persistence_diagrams[i].emplace_back(resulting_persistence_diagram[i]);
+//    }
+    all_persistence_diagrams.emplace_back(resulting_persistence_diagram);
     ++special_counter;
     return resulting_persistence_diagram;
 }
