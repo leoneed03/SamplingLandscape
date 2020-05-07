@@ -18,7 +18,8 @@ using namespace std;
 using Persistence_landscape = Gudhi::Persistence_representations::Persistence_landscape;
 
 vector<Persistence_landscape>
-get_average_landscape(tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> all_persistence_diagrams) {
+get_average_landscape(tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> all_persistence_diagrams,
+                        std::string path_to_storage) {
 
     if (all_persistence_diagrams.empty()) {
         return vector<Persistence_landscape>(0);
@@ -31,7 +32,8 @@ get_average_landscape(tbb::concurrent_vector<tbb::concurrent_vector<std::vector<
     for (const auto &full_landscape: all_persistence_diagrams) {
         for (int i = 0; i < full_landscape.size(); ++i) {
             cout << i << " of " << full_landscape.size() << " with " << full_landscape[i].size() << endl;
-            Persistence_landscape pl(full_landscape[i]);
+            Persistence_landscape pl(full_landscape[i], 1); //only upper
+//            Persistence_landscape pl(full_landscape[i]);
             persistence_landscapes[i].push_back(pl);
             cout << "\nDim " << i << endl;
             for (const auto &e: full_landscape[i]) {
@@ -48,6 +50,15 @@ get_average_landscape(tbb::concurrent_vector<tbb::concurrent_vector<std::vector<
         average_landscape_all_dimensions[i].compute_average(plv);
         std::string s = "average_" + std::to_string(i);
         const char *ss(s.data());
+
+        std::vector<std::string> to(average_landscape_all_dimensions.size());
+        for (int i = 0; i < average_landscape_all_dimensions.size(); ++i) {
+            std::string new_name = path_to_storage + "/landscape_" + std::to_string(i);
+            {
+                std::ofstream fout(new_name);
+            }
+            average_landscape_all_dimensions[i].print_to_file(new_name.data());
+        }
         average_landscape_all_dimensions[i].plot(ss);
     }
     return average_landscape_all_dimensions;

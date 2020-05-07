@@ -19,7 +19,8 @@ void p() {
     std::cout << "Hello there " << std::endl;
 }
 
-set<int> get_random_sample(vector<int> &vector_of_points, int size_of_one_sample) {
+set<int> get_random_sample(vector<int> &vector_of_points,
+                           int size_of_one_sample) {
     std::random_device rd;
     std::mt19937 g(rd());
     std::shuffle(vector_of_points.begin(), vector_of_points.end(), g);
@@ -34,8 +35,14 @@ set<int> get_random_sample(vector<int> &vector_of_points, int size_of_one_sample
     return std::set<int>(vector_of_points.begin(), vector_of_points.begin() + size_of_one_sample);
 }
 
-tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> get_diagrams(std::string filename, int max_rank,
-                                                                                    double max_edge_length, bool gudhi_format) {
+tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>>
+get_diagrams(const std::string& filename,
+             int max_rank,
+             double max_edge_length,
+             bool gudhi_format,
+             int number_of_thread_workers = 1,
+             int number_of_samples = 1,
+             double subsample_density_coefficient = 1.0) {
     std::ifstream file_stream(filename);
     int number_of_points = 0;
     std::string line;
@@ -53,13 +60,14 @@ tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, doub
     for (int i = 0; i < number_of_points; ++i) {
         cloud[i] = i;
     }
-    std::vector<std::string> argv_strings = {"./ripser", "--dim", std::to_string(max_rank), "--threshold", std::to_string(max_edge_length),
+    std::vector<std::string> argv_strings = {"./ripser", "--dim", std::to_string(max_rank), "--threshold",
+                                             std::to_string(max_edge_length),
                                              "--modulus", "2", "--format", "point-cloud",
                                              filename};
-    int number_of_thread_workers = 1;
-
-    double subsample_density_coefficient = 1;
-    int number_of_samples = 1;
+//    int number_of_thread_workers = 1;
+//
+//    double subsample_density_coefficient = 1;
+//    int number_of_samples = 1;
     boost::asio::thread_pool pool(number_of_thread_workers);
     tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> all_persistence_diagrams;
     for (int i = 0; i < number_of_samples; ++i) {
@@ -73,15 +81,20 @@ tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, doub
     for (int i = 0; i < all_persistence_diagrams.size(); ++i) {
         cout << "\n\n\n\ncurrently in " << i << endl;
         for (int j = 0; j < all_persistence_diagrams[i].size(); ++j) {
-            cout << "                 into j " << j <<  endl;
-            for (auto& e: all_persistence_diagrams[i][j]) {
-                e.second = min(e.second, max_edge_length);
+            cout << "                 into j " << j << endl;
+            for (auto &e: all_persistence_diagrams[i][j]) {
+
+
+                if (e.second > 1e10) {
+                    e.second = std::numeric_limits<double>::max();
+                }
+//                e.second = min(e.second, max_edge_length);
                 cout << e.first << " and " << e.second << endl;
             }
         }
 
     }
-    get_average_landscape(all_persistence_diagrams);
+    get_average_landscape(all_persistence_diagrams, "/Users/leonardbee/Desktop/dataset/bunny/sampled_persistence");
 
     return all_persistence_diagrams;
 }
@@ -106,23 +119,13 @@ int main() {
     int max_rank = 3;
 
 
-
     std::string filebunny = "/Users/leonardbee/Desktop/dataset/bunny500.txt";
     std::string filename = "/Users/leonardbee/CLionProjects/SubsamplingMethodsForPersistenceLandscape1/dots_50.txt";
 
-    get_diagrams(filebunny, 2, 8, true);
+//    get_diagrams(filebunny, 2, 1e11, true); //sampled
+    get_diagrams(filebunny, 2, 5, true, 8, 20, 0.4); //full persistence
 
     return 0;
-
-
-
-
-
-
-
-
-
-
 
 
     std::ifstream file_stream(filename);
@@ -139,7 +142,8 @@ int main() {
     for (int i = 0; i < number_of_points; ++i) {
         cloud[i] = i;
     }
-    std::vector<std::string> argv_strings = {"./ripser", "--dim", std::to_string(max_rank), "--threshold", std::to_string(max_edge_length),
+    std::vector<std::string> argv_strings = {"./ripser", "--dim", std::to_string(max_rank), "--threshold",
+                                             std::to_string(max_edge_length),
                                              "--modulus", "2", "--format", "point-cloud",
                                              "/Users/leonardbee/CLionProjects/restribution/cloud_50"};
 //    auto res = main_ripser(10, argv_strings, get_random_sample(cloud, (int) (cloud.size() * 1)));
@@ -194,13 +198,16 @@ int main() {
             exit(19);
         }
         for (auto &vector_of_intervals: all_persistence_diagrams[i]) {
-            for (auto& persistence_interval: vector_of_intervals) {
-                std::cout << endl << persistence_interval.first << " -> before -> " << persistence_interval.second << endl;
-                std::pair<double, double> new_pair = {(persistence_interval.second - persistence_interval.first) / 2.0, (persistence_interval.second + persistence_interval.first) / 2.0};
+            for (auto &persistence_interval: vector_of_intervals) {
+                std::cout << endl << persistence_interval.first << " -> before -> " << persistence_interval.second
+                          << endl;
+                std::pair<double, double> new_pair = {(persistence_interval.second - persistence_interval.first) / 2.0,
+                                                      (persistence_interval.second + persistence_interval.first) / 2.0};
 
 
                 std::swap(new_pair, persistence_interval);
-                std::cout << endl << persistence_interval.first << " -> after -> " << persistence_interval.second << endl;
+                std::cout << endl << persistence_interval.first << " -> after -> " << persistence_interval.second
+                          << endl;
             }
 
         }
@@ -208,15 +215,13 @@ int main() {
     }
 
     std::vector<std::vector<std::pair<double, double>>> mean_landscape;
-    for (auto& landscape: all_persistence_diagrams) {
+    for (auto &landscape: all_persistence_diagrams) {
         mean_landscape.emplace_back(get_mean_persistence(landscape));
     }
 
     for (int i = 0; i < mean_landscape.size(); ++i) {
         cout << i << ": " << mean_landscape[i].size() << endl;
     }
-
-
 
 
     return 0;
