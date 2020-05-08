@@ -18,8 +18,9 @@ using namespace std;
 using Persistence_landscape = Gudhi::Persistence_representations::Persistence_landscape;
 
 vector<Persistence_landscape>
-get_average_landscape(tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> all_persistence_diagrams,
-                        std::string path_to_storage) {
+get_average_landscape(
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> all_persistence_diagrams,
+        std::string path_to_storage) {
 
     if (all_persistence_diagrams.empty()) {
         return vector<Persistence_landscape>(0);
@@ -32,8 +33,14 @@ get_average_landscape(tbb::concurrent_vector<tbb::concurrent_vector<std::vector<
     for (const auto &full_landscape: all_persistence_diagrams) {
         for (int i = 0; i < full_landscape.size(); ++i) {
             cout << i << " of " << full_landscape.size() << " with " << full_landscape[i].size() << endl;
-            Persistence_landscape pl(full_landscape[i], 1); //only upper
-//            Persistence_landscape pl(full_landscape[i]);
+            Persistence_landscape pl;
+            if (i == 0) {
+                pl = Persistence_landscape(full_landscape[i]);
+            } else {
+                pl = Persistence_landscape(full_landscape[i], 1); //only upper
+            }
+
+
             persistence_landscapes[i].push_back(pl);
             cout << "\nDim " << i << endl;
             for (const auto &e: full_landscape[i]) {

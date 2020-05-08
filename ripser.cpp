@@ -15,7 +15,7 @@
 #include <set>
 #include <limits>
 
-#define inf 1e30
+#define inf (std::numeric_limits<double>::max())
 //namespace ripser {
 #ifdef USE_GOOGLE_HASHMAP
 #include <sparsehash/dense_hash_map>
@@ -527,10 +527,13 @@ public:
     }
 
     std::vector<std::pair<double, double>> compute_dim_0_pairs(std::vector<diameter_index_t> &edges,
-                                                               std::vector<diameter_index_t> &columns_to_reduce) {
+                                                               std::vector<diameter_index_t> &columns_to_reduce,
+                                                               bool print_pairs = false) {
         std::vector<std::pair<double, double>> persistence_pairs;
 #ifdef PRINT_PERSISTENCE_PAIRS
-        std::cout << "persistence intervals in dim 0:" << std::endl;
+        if (print_pairs) {
+            std::cout << "persistence intervals in dim 0:" << std::endl;
+        }
 #endif
 
         union_find dset(n);
@@ -547,7 +550,9 @@ public:
 #ifdef PRINT_PERSISTENCE_PAIRS
                 if (get_diameter(e) != 0) {
                     auto diam = get_diameter(e);
-                    std::cout << " [0," << get_diameter(e) << ")" << std::endl;
+                    if (print_pairs) {
+                        std::cout << " [0," << get_diameter(e) << ")" << std::endl;
+                    }
                     persistence_pairs.emplace_back(std::make_pair(0, diam));
                 }
 #endif
@@ -561,7 +566,9 @@ public:
 #ifdef PRINT_PERSISTENCE_PAIRS
         for (index_t i = 0; i < n; ++i) {
             if (dset.find(i) == i) {
-                std::cout << " [0, )" << std::endl;
+                if (print_pairs) {
+                    std::cout << " [0, )" << std::endl;
+                }
                 persistence_pairs.emplace_back(std::make_pair(0, inf));
             }
         }
@@ -660,10 +667,13 @@ public:
     }
 
     std::vector<std::pair<double, double>> compute_pairs(const std::vector<diameter_index_t> &columns_to_reduce,
-                                                         entry_hash_map &pivot_column_index, const index_t dim) {
+                                                         entry_hash_map &pivot_column_index, const index_t dim,
+                                                         bool print_pairs = false) {
         std::vector<std::pair<double, double>> persistence_pairs;
 #ifdef PRINT_PERSISTENCE_PAIRS
-        std::cout << "persistence intervals in dim " << dim << ":" << std::endl;
+        if (print_pairs) {
+            std::cout << "persistence intervals in dim " << dim << ":" << std::endl;
+        }
 #endif
 
         compressed_sparse_matrix<diameter_entry_t> reduction_matrix;
@@ -718,7 +728,9 @@ public:
 #endif
 
                             persistence_pairs.emplace_back(std::make_pair(diameter, death));
-                            std::cout << " [" << diameter << "," << death << ")" << std::endl;
+                            if (print_pairs) {
+                                std::cout << " [" << diameter << "," << death << ")" << std::endl;
+                            }
                         }
 #endif
                         pivot_column_index.insert({get_entry(pivot), index_column_to_reduce});
@@ -737,7 +749,9 @@ public:
                     std::cerr << clear_line << std::flush;
 #endif
                     persistence_pairs.emplace_back(std::make_pair((double) diameter, (double) inf));
-                    std::cout << " [" << diameter << ", )" << std::endl;
+                    if (print_pairs) {
+                        std::cout << " [" << diameter << ", )" << std::endl;
+                    }
 #endif
                     break;
                 }
@@ -751,30 +765,37 @@ public:
 
     std::vector<diameter_index_t> get_edges();
 
-    std::vector<std::vector<std::pair<double, double>>> compute_barcodes() {
+    std::vector<std::vector<std::pair<double, double>>> compute_barcodes(bool print_pairs = false) {
         std::vector<diameter_index_t> simplices, columns_to_reduce;
         std::vector<std::vector<std::pair<double, double>>> persistence_diagram;
         persistence_diagram.emplace_back(compute_dim_0_pairs(simplices, columns_to_reduce));
-        for (const auto &pers: persistence_diagram[persistence_diagram.size() - 1]) {
-            std::cout << pers.first << " & " << pers.second << std::endl;
+        if (print_pairs) {
+            for (const auto &pers: persistence_diagram[persistence_diagram.size() - 1]) {
+                std::cout << pers.first << " & " << pers.second << std::endl;
+            }
         }
         for (index_t dim = 1; dim <= dim_max; ++dim) {
 //            persistence_diagram.push_back({});
             entry_hash_map pivot_column_index;
             pivot_column_index.reserve(columns_to_reduce.size());
-            std::cout << "started pairs" << std::endl;
+//            std::cout << "started pairs" << std::endl;
             auto vector_of_pairs = compute_pairs(columns_to_reduce, pivot_column_index, dim);
             persistence_diagram.emplace_back(vector_of_pairs);
-            for (const auto &pers: persistence_diagram[persistence_diagram.size() - 1]) {
-                std::cout << pers.first << " & " << pers.second << std::endl;
+
+            if (print_pairs) {
+                for (const auto &pers: persistence_diagram[persistence_diagram.size() - 1]) {
+                    std::cout << pers.first << " & " << pers.second << std::endl;
+                }
             }
 
-            std::cout << "__________________" << std::endl;
+//            std::cout << "__________________" << std::endl;
+
             if (dim < dim_max) {
                 assemble_columns_to_reduce(simplices, columns_to_reduce, pivot_column_index,
                                            dim + 1);
             }
-            std::cout << "finished pairs " << std::endl;
+
+//            std::cout << "finished pairs " << std::endl;
         }
         return persistence_diagram;
     }
@@ -936,7 +957,8 @@ T read(std::istream &input_stream) {
     return result;
 }
 
-compressed_lower_distance_matrix read_point_cloud(std::istream &input_stream, const std::set<int> &subcloud) {
+compressed_lower_distance_matrix
+read_point_cloud(std::istream &input_stream, const std::set<int> &subcloud, bool print_pairs = false) {
     std::vector<std::vector<value_t>> points;
 
     std::string line;
@@ -967,8 +989,10 @@ compressed_lower_distance_matrix read_point_cloud(std::istream &input_stream, co
 
     euclidean_distance_matrix eucl_dist(std::move(points));
     index_t n = eucl_dist.size();
-    std::cout << "point cloud with " << n << " points in dimension "
-              << eucl_dist.points.front().size() << std::endl;
+    if (print_pairs) {
+        std::cout << "point cloud with " << n << " points in dimension "
+                  << eucl_dist.points.front().size() << std::endl;
+    }
 
     std::vector<value_t> distances;
     for (int i = 0; i < n; ++i) {
@@ -1181,14 +1205,17 @@ void print_usage_and_exit(int exit_code) {
 }
 
 std::atomic<int> special_counter = 0;
-std::mutex cout_mutex;
+
+static std::mutex cout_mutex;
 
 tbb::concurrent_vector<std::vector<std::pair<double, double>>>
 main_ripser(int argc, std::vector<std::string> argv, std::set<int> subcloud,
             tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> &all_persistence_diagrams) {
+
     std::string filename = "";
+    bool print_pairs = false;
     tbb::concurrent_vector<std::vector<std::pair<double, double>>> resulting_persistence_diagram;
-    file_format format = DISTANCE_MATRIX;
+    file_format format = POINT_CLOUD;
 
     index_t dim_max = 1;
     value_t threshold = std::numeric_limits<value_t>::max();
@@ -1216,22 +1243,22 @@ main_ripser(int argc, std::vector<std::string> argv, std::set<int> subcloud,
             if (next_pos != parameter.size()) print_usage_and_exit(-1);
         } else if (arg == "--format") {
             std::string parameter = std::string(argv[++i]);
-            if (parameter.rfind("lower", 0) == 0)
-                format = LOWER_DISTANCE_MATRIX;
-            else if (parameter.rfind("upper", 0) == 0)
-                format = UPPER_DISTANCE_MATRIX;
-            else if (parameter.rfind("dist", 0) == 0)
-                format = DISTANCE_MATRIX;
-            else if (parameter.rfind("point", 0) == 0)
-                format = POINT_CLOUD;
-            else if (parameter == "dipha")
-                format = DIPHA;
-            else if (parameter == "sparse")
-                format = SPARSE;
-            else if (parameter == "binary")
-                format = BINARY;
-            else
-                print_usage_and_exit(-1);
+//            if (parameter.rfind("lower", 0) == 0)
+//                format = LOWER_DISTANCE_MATRIX;
+//            else if (parameter.rfind("upper", 0) == 0)
+//                format = UPPER_DISTANCE_MATRIX;
+//            else if (parameter.rfind("dist", 0) == 0)
+//                format = DISTANCE_MATRIX;
+//            else if (parameter.rfind("point", 0) == 0)
+//                format = POINT_CLOUD;
+//            else if (parameter == "dipha")
+//                format = DIPHA;
+//            else if (parameter == "sparse")
+//                format = SPARSE;
+//            else if (parameter == "binary")
+//                format = BINARY;
+//            else
+//                print_usage_and_exit(-1);
 
         } else if (arg == "--modulus") {
             std::string parameter = std::string(argv[++i]);
@@ -1282,11 +1309,15 @@ main_ripser(int argc, std::vector<std::string> argv, std::set<int> subcloud,
                 ++num_edges;
             }
         }
-        std::cout << "value range: [" << min << "," << max_finite << "]" << std::endl;
+        if (print_pairs) {
+            std::cout << "value range: [" << min << "," << max_finite << "]" << std::endl;
+        }
 
         if (threshold >= max) {
-            std::cout << "distance matrix with " << dist.size() << " points" << std::endl;
-            std::cout << "started calculating persistence " << std::endl;
+            if (print_pairs) {
+                std::cout << "distance matrix with " << dist.size() << " points" << std::endl;
+                std::cout << "started calculating persistence " << std::endl;
+            }
             auto resulting_persistence_diagram_1 = ripser<compressed_lower_distance_matrix>(std::move(dist), dim_max,
                                                                                             threshold, ratio,
                                                                                             modulus)
@@ -1294,19 +1325,25 @@ main_ripser(int argc, std::vector<std::string> argv, std::set<int> subcloud,
             for (const auto &e: resulting_persistence_diagram_1) {
                 resulting_persistence_diagram.push_back(e);
             }
-            std::cout << "finished calculating persistence " << std::endl;
+            if (print_pairs) {
+                std::cout << "finished calculating persistence " << std::endl;
+            }
         } else {
-            std::cout << "sparse distance matrix with " << dist.size() << " points and "
-                      << num_edges << "/" << (dist.size() * dist.size() - 1) / 2 << " entries"
-                      << std::endl;
-            std::cout << "sparse started calculating persistence " << std::endl;
+            if (print_pairs) {
+                std::cout << "sparse distance matrix with " << dist.size() << " points and "
+                          << num_edges << "/" << (dist.size() * dist.size() - 1) / 2 << " entries"
+                          << std::endl;
+                std::cout << "sparse started calculating persistence " << std::endl;
+            }
             auto resulting_persistence_diagram_1 = ripser<sparse_distance_matrix>(
                     sparse_distance_matrix(std::move(dist), threshold),
                     dim_max, threshold, ratio, modulus).compute_barcodes();
             for (const auto &e: resulting_persistence_diagram_1) {
                 resulting_persistence_diagram.push_back(e);
             }
-            std::cout << "sparse finished calculating persistence " << std::endl;
+            if (print_pairs) {
+                std::cout << "sparse finished calculating persistence " << std::endl;
+            }
 
         }
         all_persistence_diagrams.emplace_back(resulting_persistence_diagram);
