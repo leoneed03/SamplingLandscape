@@ -34,3 +34,18 @@ new logalgorithm.n r=0.5 sampled 953707 1.90741e+06 2.86112e+06 3.81483e+06 4.76
 
 new logalgorithm.n r=0.5 sampled 953707 953707 953707 953707 953707 
  E = 953707 D = 0
+
+
+
+new logalgorithm.n r=0.5 sampled 0 0 0 0 0 
+ E = 0 D = 0
+
+
+
+new logalgorithm.n r=0.5 sampled 1 15 4 23 11 
+ E = 10.8 D = 7.85875
+
+
+
+new logalgorithm.n r=0.5 sampled 1.10814e+06 936328 1.32386e+06 1.03025e+06 986175 
+ E = 1.07695e+06 D = 135746

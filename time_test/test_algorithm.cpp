@@ -24,11 +24,14 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
             
             std::clog << "\n\nCOMPUTED " << i << std::endl;
             v.push_back(time);
+            av.push_back(matrix_size_cntr);
             out << time << ' ';
         }
         auto p = get_M_D(v);
+        auto total_size = get_M_D(av);
         out << "\n E = " << p.first << " D = " << p.second << '\n';
         std::cout << "\n E = " << p.first << " D = " << p.second << '\n';
+        std::cout << "\n size E = " << total_size.first << " size D = " << total_size.second << '\n';
         out.close();
         
     }

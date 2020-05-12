@@ -34,7 +34,7 @@
 #include <boost/asio.hpp>
 #include <boost/dynamic_bitset.hpp>
 
-#include "samples.cpp"
+//#include "samples.cpp"
 #define space 5
 #define max_rad 100
 
@@ -45,6 +45,7 @@ using namespace std;
 
 
 std::atomic_int zero_cntr = 0;
+std::atomic_int matrix_size_cntr = 0;
 std::atomic_int extra_cntr = 0;
 std::mutex mute;
 
@@ -1563,11 +1564,11 @@ get_persistence_pairs(const Cloud &cloud, int count) {
     }
 
     std::unique_ptr<SubCloud> subcloud(new SubCloud(cloud, dots, 8, max_number_of_points_in_simplex));
-   {
-       mute.lock();
-       cout << "started building tree" << std::endl;
-       mute.unlock();
-   }
+    {
+        mute.lock();
+        cout << "started building tree" << std::endl;
+        mute.unlock();
+    }
     subcloud->insert_all_simplices_including(max_number_of_points_in_simplex);
     vector<vector<pair<double, double >>> result;
     {
@@ -1594,18 +1595,18 @@ vector<int> get_random_sample(vector<int> &vector_of_points, int size_of_one_sam
     //cout << endl;
     sort(vector_of_points.begin(), vector_of_points.begin() + size_of_one_sample);
     std::vector<int> subcloud(vector_of_points.begin(), vector_of_points.begin() + size_of_one_sample);
-    std::set<int> set_of_points = std::set<int>(vector_of_points.begin(),
-                                                vector_of_points.begin() + size_of_one_sample);
+    std::vector<int> set_of_points = std::vector<int>(vector_of_points.begin(),
+                                                      vector_of_points.begin() + size_of_one_sample);
     //cout << endl;
     for (const auto &e: set_of_points) {
         //cout << e << " ";
     }
     //cout << endl;
-    m_cntr.lock();
-    auto subset = vector_of_sets[cntr];
-    ++cntr;
-    m_cntr.unlock();
-    return subset;
+//    m_cntr.lock();
+//    auto subset = vector_of_sets[cntr];
+//    ++cntr;
+//    m_cntr.unlock();
+    return set_of_points;
 }
 
 void
@@ -1630,14 +1631,14 @@ get_persistence_pairs_sparse(const Cloud &cloud, double radii, double subsample_
         std::cout << "trying construct tree" << std::endl;
         mute.unlock();
     }
-    std::unique_ptr<SubCloud> subcloud(new SubCloud(cloud, subsample, radii, max_number_of_points_in_simplex));
-    
+    SubCloud* subcloud = new SubCloud(cloud, subsample, radii, max_number_of_points_in_simplex);
+
     if (flag) {
         mute.lock();
         std::cout << "constructed tree" << std::endl;
         mute.unlock();
     }
-   
+
 
     cout << number_of_dots << " started building tree \n\n\n\n" << subsample.size() << std::endl;
     for (const auto &e: subsample) {
@@ -1657,13 +1658,15 @@ get_persistence_pairs_sparse(const Cloud &cloud, double radii, double subsample_
     }
 
     cout << "started calculating boundary matrix compressed " << ss << std::endl;
+    matrix_size_cntr += ss;
     mute.unlock();
-//only  1
+    //only  1
 
 
 
     auto persistence_landscape = subcloud->get_all_dimensions_landscape<phat::chunk_reduction, phat::vector_vector>(); //flag cohomology //58 Mb memory 332 (282) ms (50 dots r = 8)
     delete subcloud->root;
+    delete subcloud;
 
     mute.lock();
 
@@ -1679,11 +1682,11 @@ get_average_landscape(const Cloud &cloud, int number_of_thread_workers, double r
 
     boost::asio::thread_pool pool(number_of_thread_workers);
     if (flag) {
-          std::cout << "Created pool" << std::endl;
-      }
+        std::cout << "Created pool" << std::endl;
+    }
     tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> all_persistence_diagrams(
             number_of_samples);
-    
+
     for (int i = 0; i < number_of_samples; ++i) {
         boost::asio::post(pool,
                           std::bind(get_persistence_pairs_sparse, cloud, radii, subsample_density_coefficient,
@@ -1698,7 +1701,7 @@ get_average_landscape(const Cloud &cloud, int number_of_thread_workers, double r
     }
     int counter = 1;
     vector<vector<Persistence_landscape>> persistence_landscapes(cloud.dimension);
-    
+
     {
         mute.lock();
         for (const auto &full_landscape: all_persistence_diagrams) {
@@ -1741,23 +1744,24 @@ get_average_landscape(const Cloud &cloud, int number_of_thread_workers, double r
 }
 
 double main_algorithm(std::string from, std::string to,
-                    int max_rank,
-                    double max_edge_length,
-                    bool gudhi_format,
-                    int number_of_thread_workers = 1,
-                    int number_of_samples = 1,
-                    double subsample_density_coefficient = 1.0,
-                    bool print_pairs = false) {
+                      int max_rank,
+                      double max_edge_length,
+                      bool gudhi_format,
+                      int number_of_thread_workers = 1,
+                      int number_of_samples = 1,
+                      double subsample_density_coefficient = 1.0,
+                      bool print_pairs = false) {
     zero_cntr = 0;
     extra_cntr = 0;
+    matrix_size_cntr = 0;
     flag = false;
     number_of_dots_in_file = 0;
-    cntr = 0;
+//    cntr = 0;
     int max_number_of_points_in_simplex = max_rank + 2;
     if (flag) {
         std::cout << "Trying to create" << std::endl;
     }
-    std::unique_ptr<Cloud> matrix(new Cloud(from, max_number_of_points_in_simplex));
+    Cloud* matrix = new Cloud(from, max_number_of_points_in_simplex);
     if (flag) {
         std::cout << "Created" << std::endl;
     }
@@ -1788,8 +1792,22 @@ double main_algorithm(std::string from, std::string to,
 
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
     delete matrix->simplex_tree;
+    delete matrix;
 
     cout << zero_cntr << " so " << extra_cntr << endl << "duration " << duration << endl;
 
     return extra_cntr;
 }
+std::pair<double, double> get_M_D(const std::vector<double> &v) {
+    double s1 = 0;
+    double s2 = 0;
+
+    for (int i = 0; i < v.size(); ++i) {
+        s1 += v[i];
+        s2 += v[i] * v[i];
+    }
+    s1 /= v.size();
+    s2 = s2 / v.size() - s1 * s1;
+    return {s1, sqrt(s2)};
+}
+
