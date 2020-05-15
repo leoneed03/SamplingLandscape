@@ -1,9 +1,6 @@
 #define BOOST_TEST_MODULE testSuiteCalculator
 
 int num_ = 10;
-int sum(int a, int b) {
-    return a + b;
-}
 #include <boost/test/included/unit_test.hpp>
 #include "/Users/leonardbee/CLionProjects/SubsamplingMethodsForPersistenceLandscape1/tests.cpp"
 #include <iostream>

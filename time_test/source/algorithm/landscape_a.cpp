@@ -20,14 +20,23 @@
 
 #include <gudhi/Persistence_landscape.h>
 
+/*
 #include <phat/compute_persistence_pairs.h>
-#include <phat/helpers/dualize.h>
 #include <phat/representations/vector_vector.h>
-#include <phat/representations/heap_pivot_column.h>
-#include <phat/algorithms/standard_reduction.h>
 #include <phat/algorithms/chunk_reduction.h>
-#include <phat/algorithms/row_reduction.h>
-#include <phat/algorithms/twist_reduction.h>
+
+*/
+//#include <phat/helpers/dualize.h>
+//#include <phat/representations/heap_pivot_column.h>
+//#include <phat/algorithms/standard_reductistrion.h>
+//#include <phat/algorithms/row_reduction.h>
+//#include <phat/algorithms/twist_reduction.h>
+
+
+
+#include "../../../phat/compute_persistence_pairs.h"
+//#include "../../../phat/representations/vector_vector.h"
+#include "../../../phat/algorithms/chunk_reduction.h"
 
 #include <boost/bind.hpp>
 #include <boost/thread/thread.hpp>
@@ -501,29 +510,82 @@ public:
 
 
 struct Cloud {
-    unsigned int dimension, size;
+    int dimension, size;
     std::vector <std::vector<double>> points;
     std::vector <std::vector<double>> distances;
     Simplex_tree *simplex_tree;
 
     Cloud(const std::string &path, int n) {
-        std::ifstream fin(path);
-        if (!fin.is_open()) {
+        std::ifstream input_stream(path);
+        std::cout << path << std::endl;
+        if (!input_stream) {
             std::cout << "problems opening file" << std::endl;
             exit(1);
         }
-        fin >> size >> dimension;
+
+        int counter = 0;
+        int dim = -1;
+        std::string line;
+        std::vector<std::vector<double>> points;
+
+//        std::cout << "_" << line << std::endl;
+//        std::getline(input_stream, line);
+//        std::cout << "_" << line << std::endl;
+
+        while (std::getline(input_stream, line)) {
+//            std::cout << "_________" << line << std::endl;
+            ++counter;
+            std::vector<double> point;
+            std::istringstream s(line);
+            double value;
+            while (s >> value) {
+                point.push_back(value);
+                s.ignore();
+            }
+
+            if (!point.empty()) {
+                if (dim == -1) {
+                    dim = point.size();
+                    points.push_back(point);
+                    continue;
+                }
+                if (dim != point.size()) {
+                    std::cout << "Wrong file format" << std::endl;
+                    exit(10);
+                }
+                points.push_back(point);
+            }
+            assert(point.size() == points.front().size());
+        }
+
+
+
+
+
+
+//        fin >> size >> dimension;
+        size = counter;
+        dimension = dim;
         simplex_tree = new Simplex_tree(n, size);
+
+        std::cout << points.size() << " vs cntr " << counter << std::endl;
+        for (const auto& e: points) {
+            std::cout << e.size() << ": ";
+            for (const auto& a: e) {
+                std::cout << a << ' ';
+            }
+            std::cout << std::endl;
+        }
 //        simplex_tree->print();
 //         //std::cout << "printed|n\n\n\n" << std::endl;
-        number_of_dots_in_file = size;
+//        number_of_dots_in_file = size;
 
-        points = std::vector < std::vector < double >> (size, std::vector<double>(dimension, 0));
-        for (int i = 0; i < points.size(); ++i) {
-            for (int j = 0; j < dimension; ++j) {
-                fin >> points[i][j];
-            }
-        }
+//        points = std::vector < std::vector < double >> (size, std::vector<double>(dimension, 0));
+//        for (int i = 0; i < points.size(); ++i) {
+//            for (int j = 0; j < dimension; ++j) {
+//                fin >> points[i][j];
+//            }
+//        }
         distances = std::vector < std::vector < double >> (size);
         for (int i = 0; i < distances.size(); ++i) {
             distances[i] = std::vector<double>(i);
@@ -825,9 +887,9 @@ struct SubCloud {
 //        delete root;
     }
 
-    template<typename T>
-    phat::boundary_matrix <T> get_boundary_matrix_compressed() {
-        phat::boundary_matrix <T> boundary_matrix;
+//    template<typename T>
+    phat::boundary_matrix <phat::vector_vector> get_boundary_matrix_compressed() {
+        phat::boundary_matrix <phat::vector_vector> boundary_matrix;
         std::vector<int> number_of_simplices;
         for (int i = 0; i < root->simplices.size(); ++i) {
             auto bigger_simplices = &root->simplices[i];
@@ -931,11 +993,11 @@ struct SubCloud {
     }
 
 
-    template<typename T, typename U>
+//    template<typename T, typename U>
     tbb::concurrent_vector <std::vector<std::pair < double, double>>>
 
     get_all_dimensions_landscape(bool with_cohomology = false) {
-        auto boundary_matrix = get_boundary_matrix_compressed<U>();
+        auto boundary_matrix = get_boundary_matrix_compressed();
 
         int max_dim = root->simplices.size() - 2;
         tbb::concurrent_vector < std::vector < std::pair < double, double >> > landscape(max_dim + 1);
@@ -966,7 +1028,7 @@ struct SubCloud {
         //////block cohomology ends
 
 
-        T chunk_reduce;
+        phat::chunk_reduction chunk_reduce;
         chunk_reduce(boundary_matrix);
         std::unordered_map<int, int> zero_column_ind;
 
@@ -1335,15 +1397,15 @@ std::ostream &operator<<(std::ostream &os, const std::vector <std::vector<double
     }
     return os;
 }
-
-template<typename T>
-std::ostream &operator<<(std::ostream &os, const std::vector <T> &matrix) {
-    for (const auto &row: matrix) {
-        os << std::setw(space) << row;
-    }
-
-    return os;
-}
+//
+//template<typename T>
+//std::ostream &operator<<(std::ostream &os, const std::vector <T> &matrix) {
+//    for (const auto &row: matrix) {
+//        os << std::setw(space) << row;
+//    }
+//
+//    return os;
+//}
 
 
 
@@ -1448,7 +1510,7 @@ void get_persistence_pairs_sparse(Cloud* cloud, double radii, double subsample_d
         mute.unlock();
     }
     int max_number_of_points_in_simplex = 4;
-    int number_of_dots = number_of_dots_in_file;
+    int number_of_dots = cloud->size;
     std::vector<int> dots(number_of_dots);
 
     for (int i = 0; i < number_of_dots; ++i) {
@@ -1494,14 +1556,21 @@ void get_persistence_pairs_sparse(Cloud* cloud, double radii, double subsample_d
 
 
 
-    auto persistence_landscape = subcloud->get_all_dimensions_landscape<phat::chunk_reduction, phat::vector_vector>(); //flag cohomology //58 Mb memory 332 (282) ms (50 dots r = 8)
+    auto persistence_landscape = subcloud->get_all_dimensions_landscape(); //flag cohomology //58 Mb memory 332 (282) ms (50 dots r = 8)
+
     std::cout << "delete subcloud root" << std::endl;
 //    delete subcloud->root;
     std::cout << "delete subcloud" << std::endl;
     delete subcloud;
 
     mute.lock();
-
+    for (int i = 0; i < persistence_landscape.size(); ++i) {
+        std::cout << "DIM " << i << std::endl;
+        sort(persistence_landscape[i].begin(), persistence_landscape[i].end());
+        for (const auto& e: persistence_landscape[i]) {
+            std::cout << e.first << " " << e.second << std::endl;
+        }
+    }
     v_pairs.push_back(persistence_landscape);
     mute.unlock();
 
@@ -1562,7 +1631,7 @@ double main_algorithm(std::string from, std::string to,
 //    fout << matrix->distances;
     std::vector<int> dots;
 
-    int number_of_dots = number_of_dots_in_file;
+    int number_of_dots = matrix->size;
     std::set<int> not_include = {0, 2, 6, 8, 23, 25};
     for (int i = 0; i < number_of_dots; ++i) {
         if (not_include.find(i) == not_include.end()) {

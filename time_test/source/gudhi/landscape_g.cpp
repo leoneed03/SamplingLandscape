@@ -27,9 +27,9 @@ using Point = std::vector<double>;
 using Points_off_reader = Gudhi::Points_off_reader<Point>;
 
 
-set<int> get_random_sample(int number_of_points,
+std::set<int> get_random_sample(int number_of_points,
                            int size_of_one_sample, bool print_pairs = false) {
-    vector<int> vector_of_points;
+    std::vector<int> vector_of_points;
     for (int i = 0; i < number_of_points; ++i) {
         vector_of_points.push_back(i);
     }
@@ -39,9 +39,9 @@ set<int> get_random_sample(int number_of_points,
 
     if (print_pairs) {
         for (const auto &e: vector_of_points) {
-            cout << e << " ";
+            std::cout << e << " ";
         }
-        cout << endl;
+        std::cout << std::endl;
     }
     sort(vector_of_points.begin(), vector_of_points.begin() + size_of_one_sample);
     std::set<int> subcloud(vector_of_points.begin(), vector_of_points.begin() + size_of_one_sample);
@@ -53,27 +53,35 @@ std::vector<Point> points_off_reader(const std::string &name_file, double coeff,
 
 
     std::vector<std::vector<double>> points;
-
+    int number_of_points = 0;
+    {
+        std::ifstream input_stream(name_file);
+        std::string temp_string;
+        while (std::getline(input_stream, temp_string)) {
+            ++number_of_points;
+        }
+    }
+    std::cout << "NUMBER OF POINTS " << number_of_points <<  std::endl;
     std::ifstream input_stream(name_file);
     std::string line;
     int counter = -1;
 
-    std::getline(input_stream, line);
+//    std::getline(input_stream, line);
 
-//    cout << line;
-    std::istringstream s(line);
-    int number_of_points = 0;
-    s >> number_of_points;
+//    std::cout << line;
+//    std::istringstream s(line);
+
+//    s >> number_of_points;
     auto subcloud = get_random_sample(number_of_points, (int) (number_of_points * coeff));
 
     if (print_pairs) {
-        cout << subcloud.size() << endl;
+        std::cout << subcloud.size() << std::endl;
         for (const auto &e: subcloud) {
-            cout << e << " ";
+            std::cout << e << " ";
         }
-        cout << endl;
+        std::cout << std::endl;
     }
-//    std::cout << line << std::endl;
+//    std::cout << line <<  std::endl;
 //    exit(1);
     while (std::getline(input_stream, line)) {
         ++counter;
@@ -96,13 +104,13 @@ std::vector<Point> points_off_reader(const std::string &name_file, double coeff,
 
 
     if (print_pairs) {
-        cout << points.size() << endl;
+        std::cout << points.size() << std::endl;
         for (const auto &e: points) {
 
             for (const auto &p: e) {
-                cout << p << '_';
+                std::cout << p << '_';
             }
-            cout << points.size() << endl;
+            std::cout << points.size() << std::endl;
         }
     }
 
@@ -129,7 +137,7 @@ void get_diagram(tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::
     rips_complex_from_file.create_complex(simplex_tree, dim_max);
     simplex_tree.initialize_filtration();
     mute.lock();
-    cout << simplex_tree.num_simplices() << " simplices" << std::endl;
+    std::cout << simplex_tree.num_simplices() << " simplices" <<  std::endl;
     mute.unlock();
     Persistent_cohomology pcoh(simplex_tree);
     pcoh.init_coefficients(2);
@@ -153,14 +161,16 @@ void get_diagram(tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::
         sort(e.begin(), e.end());
     }
     diagram.push_back(all_dimension_pairs);
-//    for (int i = 0; i < all_dimension_pairs.size(); ++i) {
-//        cout << "\nDim " << i << std::endl;
-//        sort(all_dimension_pairs[i].begin(), all_dimension_pairs[i].end());
-//        for (const auto &e: all_dimension_pairs[i]) {
-//            cout << e.first << " : " << e.second << endl;
-//        }
-//
-//    }
+    if (print_pairs) {
+        for (int i = 0; i < all_dimension_pairs.size(); ++i) {
+            std::cout << "\nDim " << i <<  std::endl;
+            sort(all_dimension_pairs[i].begin(), all_dimension_pairs[i].end());
+            for (const auto &e: all_dimension_pairs[i]) {
+                std::cout << e.first << " : " << e.second << std::endl;
+            }
+
+        }
+    }
 //    exit(17);
 
 }
@@ -188,7 +198,7 @@ get_diagrams(const std::string &filename,
                                     max_edge_length, gudhi_format, subsample_density_coefficient, false));
     }
     pool.join();
-    cout << all_persistence_diagrams.size() << std::endl;
+    std::cout << all_persistence_diagrams.size() <<  std::endl;
     return all_persistence_diagrams;
 }
 
@@ -220,25 +230,25 @@ double main_gudhi(std::string from, std::string to,
 
     if (print_points) {
         for (int i = 0; i < all_persistence_diagrams.size(); ++i) {
-            cout << "\n\n\nSAMPLE " << i + 1 << std::endl;
+            std::cout << "\n\n\nSAMPLE " << i + 1 <<  std::endl;
             for (int j = 0; j < all_persistence_diagrams[i].size(); ++j) {
-                cout << "\nDim " << j << std::endl;
+                std::cout << "\nDim " << j <<  std::endl;
 //            sort(all_persistence_diagrams[i][j].begin(), all_persistence_diagrams[i][j].end());
                 for (const auto &e: all_persistence_diagrams[i][j]) {
-                    cout << e.first << " : " << e.second << endl;
+                    std::cout << e.first << " : " << e.second << std::endl;
                 }
 
             }
         }
     }
 
-    cout << "total samples " << all_persistence_diagrams.size() << endl;
+    std::cout << "total samples " << all_persistence_diagrams.size() << std::endl;
 
 
     get_average_landscape(all_persistence_diagrams, "/Users/leonardbee/Desktop/dataset/new_examples");
     std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
-    std::cout << "total duration " << duration << std::endl;
+    std::cout << "total duration " << duration <<  std::endl;
 
 
     return duration;

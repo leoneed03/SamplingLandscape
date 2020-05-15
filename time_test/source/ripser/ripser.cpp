@@ -964,7 +964,7 @@ read_point_cloud(std::istream &input_stream, const std::set<int> &subcloud, bool
     std::string line;
     value_t value;
     int counter = -1;
-    std::getline(input_stream, line);
+//    std::getline(input_stream, line);
     while (std::getline(input_stream, line)) {
         ++counter;
 

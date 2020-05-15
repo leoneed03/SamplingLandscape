@@ -67,9 +67,9 @@ get_diagrams(const std::string &filename,
         std::vector <value_t> point;
         std::istringstream s(line);
     }
-    if (gudhi_format && number_of_points > 0) {
-        --number_of_points;
-    }
+//    if (gudhi_format && number_of_points > 0) {
+//        --number_of_points;
+//    }
     if (print_pairs) {
         std::cout << "total number of points " << number_of_points << std::endl;
     }
@@ -102,6 +102,7 @@ get_diagrams(const std::string &filename,
              << endl;
     }
     for (int i = 0; i < all_persistence_diagrams.size(); ++i) {
+
         if (print_pairs) {
             cout << "\n\n\n\ncurrently in " << i << endl;
         }
@@ -114,6 +115,7 @@ get_diagrams(const std::string &filename,
 //                if (e.second > 1e10) {
 //                    e.second = std::numeric_limits<double>::max();
 //                }
+                sort(all_persistence_diagrams[i][j].begin(), all_persistence_diagrams[i][j].end());
                 if (print_pairs) {
                     cout << e.first << " and " << e.second << endl;
                 }
