@@ -7,7 +7,7 @@ int sum(int a, int b) {
 #include <boost/test/included/unit_test.hpp>
 //#include "/Users/leonardbee/CLionProjects/SubsamplingMethodsForPersistenceLandscape1/ripser.cpp"
 //#include "/Users/leonardbee/CLionProjects/SubsamplingMethodsForPersistenceLandscape1/mean_landscapes.cpp"
-#include "source/gudhi/main.cpp"
+#include "source/gudhi/landscape_g.cpp"
 #include <iostream>
 BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
     

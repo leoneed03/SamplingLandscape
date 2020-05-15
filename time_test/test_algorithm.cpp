@@ -1,13 +1,9 @@
 #define BOOST_TEST_MODULE testSuiteCalculator
 
 int num_ = 10;
-int sum(int a, int b) {
-    return a + b;
-}
+
 #include <boost/test/included/unit_test.hpp>
-//#include "/Users/leonardbee/CLionProjects/SubsamplingMethodsForPersistenceLandscape1/ripser.cpp"
-//#include "/Users/leonardbee/CLionProjects/SubsamplingMethodsForPersistenceLandscape1/mean_landscapes.cpp"
-#include "source/algorithm/main.cpp"
+#include "source/algorithm/landscape_a.cpp"
 #include <iostream>
 BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
     
@@ -17,10 +13,10 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
         out << "\n\n\nnew logalgorithm.n r=0.5 sampled ";
         std::cout << "\n\nTest sampled diagram with r = 0.5" << std::endl;
         std::vector<double> v, av;
-        for (int i = 0; i < num_ / 2; ++i) {
+        for (int i = 0; i < num_ ; ++i) {
                std::clog << "\n\nSTARTED " << i << std::endl;
             double time = main_algorithm("dataset/human500.txt", "/Users/leonardbee/Desktop/dataset/tore/sampled_persistence",
-                        2, 0.5, true, 4, 10, 0.4);
+                        2, 0.5, true, 4, 7, 0.1);
             
             std::clog << "\n\nCOMPUTED " << i << std::endl;
             v.push_back(time);

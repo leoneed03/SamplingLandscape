@@ -5,8 +5,6 @@ int sum(int a, int b) {
     return a + b;
 }
 #include <boost/test/included/unit_test.hpp>
-//#include "/Users/leonardbee/CLionProjects/SubsamplingMethodsForPersistenceLandscape1/ripser.cpp"
-//#include "/Users/leonardbee/CLionProjects/SubsamplingMethodsForPersistenceLandscape1/mean_landscapes.cpp"
 #include "/Users/leonardbee/CLionProjects/SubsamplingMethodsForPersistenceLandscape1/tests.cpp"
 #include <iostream>
 BOOST_AUTO_TEST_SUITE(testSuiteCalculator)

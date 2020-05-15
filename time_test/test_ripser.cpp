@@ -1,13 +1,9 @@
 #define BOOST_TEST_MODULE testSuiteCalculator
 
 int num_ = 10;
-int sum(int a, int b) {
-    return a + b;
-}
+
 #include <boost/test/included/unit_test.hpp>
-//#include "/Users/leonardbee/CLionProjects/SubsamplingMethodsForPersistenceLandscape1/ripser.cpp"
-//#include "/Users/leonardbee/CLionProjects/SubsamplingMethodsForPersistenceLandscape1/mean_landscapes.cpp"
-#include "source/ripser/test.cpp"
+#include "source/ripser/landscape_r.cpp"
 #include <iostream>
 BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
     

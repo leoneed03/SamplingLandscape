@@ -15,7 +15,7 @@
 #include <gudhi/Points_off_io.h>
 
 
-#include "mean_landscapes.cpp"
+#include "../mean_landscapes/mean_landscapes.cpp"
 
 
 using Simplex_tree = Gudhi::Simplex_tree<Gudhi::Simplex_tree_options_fast_persistence>;
@@ -108,28 +108,6 @@ std::vector<Point> points_off_reader(const std::string &name_file, double coeff,
 
 
     return points;
-    exit(11);
-
-    std::ifstream stream(name_file);
-    std::vector<Point> point_cloud;
-    if (stream.is_open()) {
-        Gudhi::Off_reader off_reader(stream);
-        Gudhi::Points_off_visitor_reader<Point> off_visitor;
-        point_cloud = off_visitor.get_point_cloud();
-        cout << point_cloud.size() << endl;
-        for (const auto &e: point_cloud) {
-
-            for (const auto &p: e) {
-                cout << p << '_';
-            }
-            cout << endl;
-        }
-
-
-    } else {
-        std::cerr << "Points_off_reader::Points_off_reader could not open file " << name_file << "\n";
-    }
-    exit(11);
 }
 
 
