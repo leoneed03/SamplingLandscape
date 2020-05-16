@@ -1193,7 +1193,7 @@ void print_usage_and_exit(int exit_code) {
             << "  --threshold <t>  compute Rips complexes up to diameter t" << std::endl
             #ifdef USE_COEFFICIENTS
             << "  --modulus <p>    compute homology with coefficients in the prime field Z/pZ"
-	    << std::endl
+        << std::endl
             #endif
             << "  --ratio <r>      only show persistence pairs with death/birth ratio > r" << std::endl
             << std::endl;
@@ -1205,7 +1205,7 @@ std::atomic<int> special_counter = 0;
 static std::mutex cout_mutex;
 
 tbb::concurrent_vector<std::vector<std::pair<double, double>>>
-main_ripser(int argc, std::vector<std::string> argv, std::set<int> subcloud,
+main_ripser_init(int argc, std::vector<std::string> argv, std::set<int> subcloud,
             tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> &all_persistence_diagrams) {
 
     std::string filename = "";
@@ -1349,4 +1349,3 @@ main_ripser(int argc, std::vector<std::string> argv, std::set<int> subcloud,
 
 
 }
-//}

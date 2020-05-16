@@ -48,7 +48,6 @@
 #define max_rad 100
 
 #define epsilon_a (1e-10)
-#define inf 9e9
 
 //using namespace std;
 
@@ -907,14 +906,14 @@ struct SubCloud {
         {
             mute.lock();
 
-            std::ofstream fout("bunny_log.txt");
-            fout << "simplices: ";
+//            std::ofstream fout("bunny_log.txt");
+//            fout << "simplices: ";
             std::cout << "simplices: ";
             for (const auto &e: number_of_simplices) {
-                fout << e << ' ';
+//                fout << e << ' ';
                 std::cout << e << ' ';
             }
-            fout << '\n';
+//            fout << '\n';
             std::cout << std::endl << total_size << std::endl;
             mute.unlock();
         }
@@ -1577,7 +1576,8 @@ void get_persistence_pairs_sparse(Cloud* cloud, double radii, double subsample_d
 }
 
 void
-get_average_landscape_once(Cloud* cloud, int number_of_thread_workers, double radii = 0.5,
+get_average_landscape_once(tbb::concurrent_vector<std::vector<std::pair<double, double>>>& diagram,
+        Cloud* cloud, int number_of_thread_workers, double radii = 0.5,
                            double subsample_density_coefficient = 0.3,
                            int number_of_samples = 10, bool print_pairs = false) {
 
@@ -1601,17 +1601,22 @@ get_average_landscape_once(Cloud* cloud, int number_of_thread_workers, double ra
     }
     int counter = 1;
     std::vector <std::vector<Persistence_landscape>> persistence_landscapes(cloud->dimension);
+    if (all_persistence_diagrams.empty()) {
+        return;
+    }
+    diagram = all_persistence_diagrams[0];
     get_average_landscape(all_persistence_diagrams);
 }
 
-double main_algorithm(std::string from, std::string to,
-                      int max_rank,
-                      double max_edge_length,
-                      bool gudhi_format,
-                      int number_of_thread_workers = 1,
-                      int number_of_samples = 1,
-                      double subsample_density_coefficient = 1.0,
-                      bool print_pairs = false) {
+double main_algorithm(tbb::concurrent_vector<std::vector<std::pair<double, double>>>& diagram,
+                        std::string from, std::string to,
+                        int max_rank,
+                        double max_edge_length,
+                        bool gudhi_format,
+                        int number_of_thread_workers = 1,
+                        int number_of_samples = 1,
+                        double subsample_density_coefficient = 1.0,
+                        bool print_pairs = false) {
     zero_cntr = 0;
     extra_cntr = 0;
     matrix_size_cntr = 0;
@@ -1643,7 +1648,7 @@ double main_algorithm(std::string from, std::string to,
     if (flag) {
         std::cout << "Started calculating" << std::endl;
     }
-    get_average_landscape_once(matrix, number_of_thread_workers, max_edge_length, subsample_density_coefficient,
+    get_average_landscape_once(diagram, matrix, number_of_thread_workers, max_edge_length, subsample_density_coefficient,
                           number_of_samples);
     if (flag) {
         std::cout << "Finished calculating" << std::endl;

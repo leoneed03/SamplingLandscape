@@ -20,18 +20,9 @@ using namespace std;
 
 std::atomic<int> r = 0;
 
-int s(int a, int b) {
-    return a + b;
-}
 
-struct Calculator {
-    int sum(int a, int b) {
-        return a + b;
-    }
-};
-
-set<int> get_random_sample(vector<int> &vector_of_points,
-                           int size_of_one_sample, bool print_pairs = false) {
+set<int> get_random_sample_ripser(vector<int> &vector_of_points,
+                                  int size_of_one_sample, bool print_pairs = false) {
     std::random_device rd;
     std::mt19937 g(rd());
     std::shuffle(vector_of_points.begin(), vector_of_points.end(), g);
@@ -50,14 +41,15 @@ set<int> get_random_sample(vector<int> &vector_of_points,
 
 tbb::concurrent_vector <tbb::concurrent_vector<std::vector < std::pair < double, double>>>>
 
-get_diagrams(const std::string &filename,
-             int max_rank,
-             double max_edge_length,
-             bool gudhi_format,
-             int number_of_thread_workers = 1,
-             int number_of_samples = 1,
-             double subsample_density_coefficient = 1.0,
-             bool print_pairs = false) {
+get_diagrams_ripser(tbb::concurrent_vector<std::vector<std::pair<double, double>>>& diagram,
+                    const std::string &filename,
+                    int max_rank,
+                    double max_edge_length,
+                    bool gudhi_format,
+                    int number_of_thread_workers = 1,
+                    int number_of_samples = 1,
+                    double subsample_density_coefficient = 1.0,
+                    bool print_pairs = false) {
 
     std::ifstream file_stream(filename);
     int number_of_points = 0;
@@ -90,9 +82,9 @@ get_diagrams(const std::string &filename,
     tbb::concurrent_vector < tbb::concurrent_vector < std::vector < std::pair < double, double >>
                                                                                                >> all_persistence_diagrams;
     for (int i = 0; i < number_of_samples; ++i) {
-        auto sample = get_random_sample(cloud, (int) (cloud.size() * subsample_density_coefficient));
+        auto sample = get_random_sample_ripser(cloud, (int) (cloud.size() * subsample_density_coefficient));
         boost::asio::post(pool,
-                          std::bind(main_ripser, 10, argv_strings, sample,
+                          std::bind(main_ripser_init, 10, argv_strings, sample,
                                     std::ref(all_persistence_diagrams)));
     }
     pool.join();
@@ -102,7 +94,7 @@ get_diagrams(const std::string &filename,
              << endl;
     }
     for (int i = 0; i < all_persistence_diagrams.size(); ++i) {
-
+        diagram = all_persistence_diagrams[i];
         if (print_pairs) {
             cout << "\n\n\n\ncurrently in " << i << endl;
         }
@@ -124,18 +116,21 @@ get_diagrams(const std::string &filename,
 
     }
     get_average_landscape(all_persistence_diagrams, "/Users/leonardbee/Desktop/dataset/tore/sampled_persistence");
-
+    if (!all_persistence_diagrams.empty()) {
+        diagram = all_persistence_diagrams[0];
+    }
     return all_persistence_diagrams;
 }
 
-double main_ripser(std::string from, std::string to,
-                   int max_rank,
-                   double max_edge_length,
-                   bool gudhi_format,
-                   int number_of_thread_workers = 1,
-                   int number_of_samples = 1,
-                   double subsample_density_coefficient = 1.0,
-                   bool print_pairs = false) {
+double main_ripser(tbb::concurrent_vector<std::vector<std::pair<double, double>>>& diagram,
+                    std::string from, std::string to,
+                    int max_rank,
+                    double max_edge_length,
+                    bool gudhi_format,
+                    int number_of_thread_workers = 1,
+                    int number_of_samples = 1,
+                    double subsample_density_coefficient = 1.0,
+                    bool print_pairs = false) {
     vector<int> v;
 //
 //    std::string filetore = "/Users/leonardbee/Desktop/dataset/human500.txt";
@@ -144,11 +139,11 @@ double main_ripser(std::string from, std::string to,
 //    std::string filename = "/Users/leonardbee/CLionProjects/SubsamplingMethodsForPersistenceLandscape1/dots_50.txt";
 
     std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
-//    get_diagrams(filetore, 2, 0.5, true, 10, 10, 0.4, true); //not sampled
-    get_diagrams(from, max_rank, max_edge_length, true, number_of_thread_workers, number_of_samples,
+//    get_diagrams_ripser(filetore, 2, 0.5, true, 10, 10, 0.4, true); //not sampled
+    get_diagrams_ripser(diagram, from, max_rank, max_edge_length, true, number_of_thread_workers, number_of_samples,
                  subsample_density_coefficient, print_pairs);
-//    get_diagrams(filetore, 2, 0.5, true); //sampled  persistence
-//    get_diagrams(filetore, 2, 0.5, true, 4, 10, 0.4); //sampled  persistence
+//    get_diagrams_ripser(filetore, 2, 0.5, true); //sampled  persistence
+//    get_diagrams_ripser(filetore, 2, 0.5, true, 4, 10, 0.4); //sampled  persistence
     std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
     std::cout << "total duration " << duration << std::endl;
