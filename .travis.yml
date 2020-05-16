@@ -1,8 +1,6 @@
 language: cpp
 compiler: gcc
 
-dist: bionic
-
 before_install:
 - sudo cp -r phat /usr/local/include/
 - ls /usr/local/include/
