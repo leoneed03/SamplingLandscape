@@ -1,6 +1,8 @@
 language: cpp
 compiler: gcc
 
+dist: bionic
+
 before_install:
 - sudo apt-get -y install libboost-unit-test-framework-dev
 - sudo apt-get -y install libboost-dev
