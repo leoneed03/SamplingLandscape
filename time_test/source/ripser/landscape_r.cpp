@@ -12,6 +12,10 @@
 #include <boost/asio.hpp>
 #include <algorithm>
 
+
+#include <thread_pool/thread_pool.hpp>
+#include <thread>
+
 #include "ripser.cpp"
 #include "../mean_landscapes/mean_landscapes.cpp"
 
@@ -78,16 +82,44 @@ get_diagrams_ripser(tbb::concurrent_vector<std::vector<std::pair<double, double>
 //
 //    double subsample_density_coefficient = 1;
 //    int number_of_samples = 1;
-    boost::asio::thread_pool pool(number_of_thread_workers);
-    tbb::concurrent_vector < tbb::concurrent_vector < std::vector < std::pair < double, double >>
-                                                                                               >> all_persistence_diagrams;
+//    boost::asio::thread_pool pool(number_of_thread_workers);
+//    tbb::concurrent_vector < tbb::concurrent_vector < std::vector < std::pair < double, double >>
+//                                                                                               >> all_persistence_diagrams;
+//    for (int i = 0; i < number_of_samples; ++i) {
+//        auto sample = get_random_sample_ripser(cloud, (int) (cloud.size() * subsample_density_coefficient));
+//        boost::asio::post(pool,
+//                          std::bind(main_ripser_init, 10, argv_strings, sample,
+//                                    std::ref(all_persistence_diagrams)));
+//    }
+//    pool.join();
+    tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> all_persistence_diagrams;
+    tp::ThreadPoolOptions options;
+    options.setThreadCount(number_of_thread_workers);
+    tp::ThreadPool pool(options);
+    std::vector<std::future<int>> futures(number_of_samples);
+
     for (int i = 0; i < number_of_samples; ++i) {
-        auto sample = get_random_sample_ripser(cloud, (int) (cloud.size() * subsample_density_coefficient));
-        boost::asio::post(pool,
-                          std::bind(main_ripser_init, 10, argv_strings, sample,
-                                    std::ref(all_persistence_diagrams)));
+        std::packaged_task<int()> t([&cloud, &argv_strings, &all_persistence_diagrams, &subsample_density_coefficient]()
+            {
+
+                auto sample = get_random_sample_ripser(cloud, (int) (cloud.size() * subsample_density_coefficient));
+                main_ripser_init(10, argv_strings, sample, all_persistence_diagrams);
+//                get_persistence_pairs_sparse(cloud, radii, subsample_density_coefficient, all_persistence_diagrams);
+                return 1;
+            });
+        futures[i] = t.get_future();
+        pool.post(t);
     }
-    pool.join();
+    for (int i = 0; i < futures.size(); ++i) {
+        int r = futures[i].get();
+    }
+
+
+
+
+
+
+
     cout << number_of_thread_workers << " on samples: " << number_of_samples << endl;
     if (print_pairs) {
         cout << "____________________________________________________\n\n\n\n" << all_persistence_diagrams.size()

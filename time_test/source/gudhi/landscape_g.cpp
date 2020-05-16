@@ -5,6 +5,10 @@
 #include <random>
 #include <atomic>
 
+
+#include <thread_pool/thread_pool.hpp>
+#include <thread>
+
 #include <boost/asio/io_service.hpp>
 #include <boost/bind.hpp>
 #include <boost/thread/thread.hpp>
@@ -190,16 +194,42 @@ get_diagrams(const std::string &filename,
              double subsample_density_coefficient = 1.0,
              bool print_pairs = false) {
 //    tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram;
-    boost::asio::thread_pool pool(number_of_thread_workers);
+
     tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> all_persistence_diagrams;
 
+
+//    boost::asio::thread_pool pool(number_of_thread_workers);
+//    for (int i = 0; i < number_of_samples; ++i) {
+//        boost::asio::post(pool,
+//                          std::bind(get_diagram, std::ref(all_persistence_diagrams), filename, max_rank,
+//                                    max_edge_length, gudhi_format, subsample_density_coefficient, false));
+//    }
+//    pool.join();
+
+
+//    tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> all_persistence_diagrams;
+    tp::ThreadPoolOptions options;
+    options.setThreadCount(number_of_thread_workers);
+    tp::ThreadPool pool(options);
+    std::vector<std::future<int>> futures(number_of_samples);
+
     for (int i = 0; i < number_of_samples; ++i) {
-        boost::asio::post(pool,
-                          std::bind(get_diagram, std::ref(all_persistence_diagrams), filename, max_rank,
-                                    max_edge_length, gudhi_format, subsample_density_coefficient, false));
+        std::packaged_task<int()> t([&filename, &max_rank, &max_edge_length, &gudhi_format, &subsample_density_coefficient, &all_persistence_diagrams]()
+            {
+//                get_persistence_pairs_sparse(cloud, radii, subsample_density_coefficient, all_persistence_diagrams);
+                get_diagram(all_persistence_diagrams, filename, max_rank,
+                max_edge_length, gudhi_format, subsample_density_coefficient, false);
+                return 1;
+            });
+        futures[i] = t.get_future();
+        pool.post(t);
     }
-    pool.join();
-    std::cout << all_persistence_diagrams.size() <<  std::endl;
+    for (int i = 0; i < futures.size(); ++i) {
+        int r = futures[i].get();
+    }
+
+
+    std::cout << all_persistence_diagrams.size() << std::endl;
     return all_persistence_diagrams;
 }
 

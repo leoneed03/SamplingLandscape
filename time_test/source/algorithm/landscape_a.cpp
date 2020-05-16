@@ -1,10 +1,12 @@
 #include <phat/compute_persistence_pairs.h>
 #include <phat/algorithms/chunk_reduction.h>
 
+#include <future>
 #include <atomic>
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <thread>
 #include <set>
 #include <iomanip>
 #include <fstream>
@@ -14,6 +16,8 @@
 #include <shared_mutex>
 #include <mutex>
 #include <queue>
+
+#include <thread_pool/thread_pool.hpp>
 
 #include <tbb/concurrent_unordered_map.h>
 #include <tbb/concurrent_vector.h>
@@ -1584,27 +1588,49 @@ get_average_landscape_once(tbb::concurrent_vector<std::vector<std::pair<double, 
                            double subsample_density_coefficient = 0.3,
                            int number_of_samples = 10, bool print_pairs = false) {
 
-    boost::asio::thread_pool pool(number_of_thread_workers);
+//    boost::asio::thread_pool pool(number_of_thread_workers);
     if (flag) {
         std::cout << "Created pool" << std::endl;
     }
-    tbb::concurrent_vector < tbb::concurrent_vector < std::vector < std::pair < double, double >> >>
-                                                                                               all_persistence_diagrams;
+//    for (int i = 0; i < number_of_samples; ++i) {
+//        boost::asio::post(pool,
+//                          bind(get_persistence_pairs_sparse, cloud, radii, subsample_density_coefficient,
+////                                    ref(all_persistence_diagrams)));
+//    }
+//    pool.join();
+
+
+
+
+    tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> all_persistence_diagrams;
+    tp::ThreadPoolOptions options;
+    options.setThreadCount(number_of_thread_workers);
+    tp::ThreadPool pool(options);
+    std::vector<std::future<int>> futures(number_of_samples);
 
     for (int i = 0; i < number_of_samples; ++i) {
-        boost::asio::post(pool,
-                          bind(get_persistence_pairs_sparse, cloud, radii, subsample_density_coefficient,
-                                    ref(all_persistence_diagrams)));
+        std::packaged_task<int()> t([&cloud, &radii, &subsample_density_coefficient, &all_persistence_diagrams]()
+             {
+                 get_persistence_pairs_sparse(cloud, radii, subsample_density_coefficient, all_persistence_diagrams);
+                 return 1;
+             });
+        futures[i] = t.get_future();
+        pool.post(t);
     }
-    pool.join();
+    for (int i = 0; i < futures.size(); ++i) {
+        int r = futures[i].get();
+    }
+
+
     {
         mute.lock();
         std::cout << "joined" << std::endl;
         mute.unlock();
     }
     int counter = 1;
-    std::vector <std::vector<Persistence_landscape>> persistence_landscapes(cloud->dimension);
+    std::vector<std::vector<Persistence_landscape>> persistence_landscapes(cloud->dimension);
     if (all_persistence_diagrams.empty()) {
+        std::cout << "no landscapes" << std::endl;
         return;
     }
     diagram = all_persistence_diagrams[0];

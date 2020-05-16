@@ -234,7 +234,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
             tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram_a;
             tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram_r;
 
-            for (int i = 0; i < 1; ++i) {
+            for (int i = 0; i < 5; ++i) {
                 double time1 = main_ripser(diagram_r, path, "/Users/leonardbee/Desktop/dataset/tore/sampled_persistence",
                         2, radii, true, 1, 1, 1, true);
                 double time2 = main_algorithm(diagram_a, path, "/Users/leonardbee/Desktop/dataset/tore/sampled_persistence",
@@ -242,6 +242,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
             }
 
             auto p = get_M_D(v);
+//            diagram_a[0][0].first = 188;
             auto res = compare(diagram_a, diagram_r);
 
             BOOST_CHECK_EQUAL(res, true);
