@@ -2,10 +2,9 @@ language: cpp
 compiler: gcc
 
 before_install:
-- sudo apt-get update
-- sudo apt-get -y install libgudhi-dev
-- sudo apt-get -y install libtbb-dev
 - sudo apt-get -y install libphat-dev
+- sudo apt-get -y install libtbb-dev
+- sudo apt-get -y install libgudhi-dev
 
 script:
 - cd time_test
