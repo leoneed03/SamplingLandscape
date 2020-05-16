@@ -27,4 +27,5 @@ int main() {
     auto p = get_M_D(v);
     auto res = compare(diagram_a, diagram_r);
     std::cout << (res) << std::endl;
+    return 0;
 }
