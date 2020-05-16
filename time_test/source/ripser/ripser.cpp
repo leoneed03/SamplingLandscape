@@ -2,6 +2,7 @@
 
 #define PRINT_PERSISTENCE_PAIRS
 
+#include <atomic>
 #include <algorithm>
 #include <cassert>
 #include <chrono>

@@ -3,6 +3,7 @@
 #include <limits>
 #include <chrono>
 #include <random>
+#include <atomic>
 
 #include <boost/asio/io_service.hpp>
 #include <boost/bind.hpp>

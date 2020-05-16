@@ -1,6 +1,7 @@
 #include <phat/compute_persistence_pairs.h>
 #include <phat/algorithms/chunk_reduction.h>
 
+#include <atomic>
 #include <iostream>
 #include <vector>
 #include <algorithm>
