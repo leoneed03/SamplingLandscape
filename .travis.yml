@@ -5,6 +5,8 @@ before_install:
 - sudo apt-get -y install libboost-dev
 - sudo apt-get -y install libboost-system-dev
 - sudo apt-get -y install libboost-filesystem-dev
+- sudo apt-get -y install libboost-thread-dev
+- sudo apt-get -y install libboost-program-options-dev
 - sudo cp -r phat /usr/local/include/
 - ls /usr/local/include/
 - git clone https://github.com/GUDHI/gudhi-devel.git
