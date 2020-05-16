@@ -2,6 +2,7 @@ language: cpp
 compiler: gcc
 
 before_install:
+- sudo apt-get -y install libboost-dev
 - sudo cp -r phat /usr/local/include/
 - ls /usr/local/include/
 - git clone https://github.com/GUDHI/gudhi-devel.git
