@@ -1,10 +1,11 @@
 #define BOOST_TEST_MODULE testSuiteCalculator
 
-int num_ = 10;
+int num_ = 3;
 
 #include <boost/test/included/unit_test.hpp>
 #include "source/ripser/landscape_r.cpp"
 #include <iostream>
+
 BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
     
     BOOST_AUTO_TEST_CASE(testCalculator1) {
