@@ -1201,7 +1201,7 @@ void print_usage_and_exit(int exit_code) {
     exit(exit_code);
 }
 
-std::atomic<int> special_counter = 0;
+std::atomic<int> special_counter = std::atomic_int(0);
 
 static std::mutex cout_mutex;
 

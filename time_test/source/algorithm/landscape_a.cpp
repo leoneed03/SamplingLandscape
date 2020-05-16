@@ -55,9 +55,9 @@
 //using namespace std;
 
 
-std::atomic_int zero_cntr = 0;
-std::atomic_int matrix_size_cntr = 0;
-std::atomic_int extra_cntr = 0;
+std::atomic_int zero_cntr = std::atomic_int(0);
+std::atomic_int matrix_size_cntr = std::atomic_int(0);
+std::atomic_int extra_cntr = std::atomic_int(0);
 std::mutex mute;
 
 
