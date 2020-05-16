@@ -4,8 +4,10 @@ compiler: gcc
 dist: bionic
 
 before_install:
+- sudo add-apt-repository ppa:boost-latest/ppa
+- sudo apt-get update
+- sudo apt-get install libboost1X.55-all-dev
 - sudo apt-get -y install libboost-test-dev
-- sudo apt-get -y install libboost-dev
 - sudo apt-get -y install libboost-system-dev
 - sudo apt-get -y install libboost-filesystem-dev
 - sudo apt-get -y install libboost-thread-dev
