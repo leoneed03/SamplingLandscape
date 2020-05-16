@@ -18,7 +18,7 @@
 #define space 5
 using namespace std;
 
-std::atomic<int> r = std::atomic_int(0);
+std::atomic<int> r = {0};
 
 
 set<int> get_random_sample_ripser(vector<int> &vector_of_points,
