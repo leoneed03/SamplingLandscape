@@ -4,6 +4,7 @@ compiler: gcc
 dist: bionic
 
 before_install:
+- sudo apt-get -y install libboost-dev
 - sudo apt-get -y install libboost-test-dev
 - sudo apt-get -y install libboost-system-dev
 - sudo apt-get -y install libboost-filesystem-dev
