@@ -2,9 +2,10 @@
 
 int num_ = 10;
 
-#include <boost/test/included/unit_test.hpp>
+
 #include "source/algorithm/landscape_a.cpp"
 #include "source/ripser/landscape_r.cpp"
+#include <boost/test/included/unit_test.hpp>
 #include "../util/compare.cpp"
 #include <iostream>
 
