@@ -5,7 +5,6 @@ before_install:
 - sudo cp -r phat /usr/local/include/
 - ls /usr/local/include/
 - sudo apt-get -y install libtbb-dev
-- sudo apt-get -y install libgudhi-dev
 
 script:
 - cd time_test

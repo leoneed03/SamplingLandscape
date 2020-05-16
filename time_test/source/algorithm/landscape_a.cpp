@@ -1,3 +1,6 @@
+#include <phat/compute_persistence_pairs.h>
+#include <phat/algorithms/chunk_reduction.h>
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -32,8 +35,7 @@
 //#include <phat/algorithms/row_reduction.h>
 //#include <phat/algorithms/twist_reduction.h>
 
-#include <phat/compute_persistence_pairs.h>
-#include <phat/algorithms/chunk_reduction.h>
+
 //#include "../../../phat/compute_persistence_pairs.h"
 //#include "../../../phat/representations/vector_vector.h"
 //#include "../../../phat/algorithms/chunk_reduction.h"
