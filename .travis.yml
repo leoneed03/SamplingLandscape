@@ -10,7 +10,8 @@ before_install:
 - sudo apt-get -y install libboost-filesystem-dev
 - sudo apt-get -y install libboost-thread-dev
 - sudo apt-get -y install libboost-program-options-dev
-- sudo cp -r thread_pool/ /usr/local/include/
+- sudo cp -r thread_pool/thread_pool /usr/local/include/
+- sudo cp -r thread_pool/thread_pool.hpp /usr/local/include/
 - sudo cp -r phat /usr/local/include/
 - sudo cp -r gudhi /usr/local/include/
 - sudo apt-get -y install libtbb-dev
