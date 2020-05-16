@@ -32,11 +32,11 @@
 //#include <phat/algorithms/row_reduction.h>
 //#include <phat/algorithms/twist_reduction.h>
 
-
-
-#include "../../../phat/compute_persistence_pairs.h"
+#include <phat/compute_persistence_pairs.h>
+#include <phat/algorithms/chunk_reduction.h>
+//#include "../../../phat/compute_persistence_pairs.h"
 //#include "../../../phat/representations/vector_vector.h"
-#include "../../../phat/algorithms/chunk_reduction.h"
+//#include "../../../phat/algorithms/chunk_reduction.h"
 
 #include <boost/bind.hpp>
 #include <boost/thread/thread.hpp>
