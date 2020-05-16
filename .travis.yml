@@ -4,8 +4,8 @@ compiler: gcc
 dist: bionic
 
 before_install:
-- apt-cache search gudhi
-- sudo apt-get -y install libphat-dev
+- sudo cp -r phat /usr/local/include/
+- ls /usr/local/include/
 - sudo apt-get -y install libtbb-dev
 - sudo apt-get -y install libgudhi-dev
 
