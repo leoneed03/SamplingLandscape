@@ -17,7 +17,7 @@
 #include <mutex>
 #include <queue>
 
-#include <thread_pool/thread_pool.hpp>
+#include "../../../thread_pool/thread_pool/thread_pool.hpp"
 
 #include <tbb/concurrent_unordered_map.h>
 #include <tbb/concurrent_vector.h>
@@ -786,7 +786,7 @@ struct Betti_matrix {
         return persistence_pairs;
     }
 
-    std::vector <std::pair<int, int>> construct_betti_matrix(boost::dynamic_bitset<> &already_paired_simplices,
+    std::vector<std::pair<int, int>> construct_betti_matrix(boost::dynamic_bitset<> &already_paired_simplices,
                                                    bool is_max_simplex_rank,
                                                    int current_number_of_vertices) {
         bool f = true;

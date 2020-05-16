@@ -13,7 +13,8 @@
 #include <algorithm>
 
 
-#include <thread_pool/thread_pool.hpp>
+//#include <thread_pool/thread_pool.hpp>
+#include "../../../thread_pool/thread_pool/thread_pool.hpp"
 #include <thread>
 
 #include "ripser.cpp"
