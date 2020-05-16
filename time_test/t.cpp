@@ -8,6 +8,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
     
     BOOST_AUTO_TEST_CASE(testCalculator1) {
         std::ofstream out;
+
         out.open("log.txt", std::ios::app);
         out << "\n\n\nnew log\n r=0.5 sampled ";
         std::cout << "\n\nTest sampled diagram with r = 0.5" << std::endl;
