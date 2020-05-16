@@ -4,6 +4,13 @@ compiler: gcc
 before_install:
 - sudo cp -r phat /usr/local/include/
 - ls /usr/local/include/
+- git clone https://github.com/GUDHI/gudhi-devel.git
+- cd gudhi-devel
+- mkdir build
+- cd build
+- cmake ..
+- make
+- make install
 - sudo apt-get -y install libtbb-dev
 
 script:
