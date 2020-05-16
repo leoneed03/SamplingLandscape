@@ -1638,7 +1638,8 @@ get_average_landscape_once(tbb::concurrent_vector<std::vector<std::pair<double, 
 }
 
 double main_algorithm(tbb::concurrent_vector<std::vector<std::pair<double, double>>>& diagram,
-                        std::string from, std::string to,
+                        std::string from,
+                        std::string to,
                         int max_rank,
                         double max_edge_length,
                         bool gudhi_format,

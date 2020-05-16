@@ -69,7 +69,8 @@ get_average_landscape(
 
         std::vector<std::string> to(average_landscape_all_dimensions.size());
         for (int i = 0; i < average_landscape_all_dimensions.size(); ++i) {
-            std::string new_name = path_to_storage + "/landscape_" + std::to_string(i);
+            std::string new_name = path_to_storage + "/landscape_" + std::to_string(i) + ".txt";
+            std::cout << "to file " << new_name << std::endl;
             {
                 std::ofstream fout(new_name);
             }

@@ -61,7 +61,7 @@ get_diagrams_ripser(tbb::concurrent_vector<std::vector<std::pair<double, double>
     std::string line;
     while (std::getline(file_stream, line)) {
         ++number_of_points;
-        std::vector <value_t> point;
+        std::vector<value_t> point;
         std::istringstream s(line);
     }
 //    if (gudhi_format && number_of_points > 0) {
@@ -75,7 +75,7 @@ get_diagrams_ripser(tbb::concurrent_vector<std::vector<std::pair<double, double>
     for (int i = 0; i < number_of_points; ++i) {
         cloud[i] = i;
     }
-    std::vector <std::string> argv_strings = {"./ripser", "--dim", std::to_string(max_rank), "--threshold",
+    std::vector<std::string> argv_strings = {"./ripser", "--dim", std::to_string(max_rank), "--threshold",
                                               std::to_string(max_edge_length),
                                               "--modulus", "2", "--format", "point-cloud",
                                               filename};
@@ -102,21 +102,18 @@ get_diagrams_ripser(tbb::concurrent_vector<std::vector<std::pair<double, double>
     for (int i = 0; i < number_of_samples; ++i) {
         std::packaged_task<int()> t([&cloud, &argv_strings, &all_persistence_diagrams, &subsample_density_coefficient]()
             {
-
                 auto sample = get_random_sample_ripser(cloud, (int) (cloud.size() * subsample_density_coefficient));
                 main_ripser_init(10, argv_strings, sample, all_persistence_diagrams);
 //                get_persistence_pairs_sparse(cloud, radii, subsample_density_coefficient, all_persistence_diagrams);
                 return 1;
             });
+
         futures[i] = t.get_future();
         pool.post(t);
     }
     for (int i = 0; i < futures.size(); ++i) {
         int r = futures[i].get();
     }
-
-
-
 
 
 
@@ -148,7 +145,7 @@ get_diagrams_ripser(tbb::concurrent_vector<std::vector<std::pair<double, double>
         }
 
     }
-    get_average_landscape(all_persistence_diagrams, "/Users/leonardbee/Desktop/dataset/tore/sampled_persistence");
+    get_average_landscape(all_persistence_diagrams, "");
     if (!all_persistence_diagrams.empty()) {
         diagram = all_persistence_diagrams[0];
     }
@@ -156,7 +153,8 @@ get_diagrams_ripser(tbb::concurrent_vector<std::vector<std::pair<double, double>
 }
 
 double main_ripser(tbb::concurrent_vector<std::vector<std::pair<double, double>>>& diagram,
-                    std::string from, std::string to,
+                    std::string from,
+                    std::string to,
                     int max_rank,
                     double max_edge_length,
                     bool gudhi_format,
