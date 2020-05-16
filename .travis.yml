@@ -17,5 +17,5 @@ before_install:
 
 script:
 - cd time_test
-- g++ test.cpp -std=c++17 -Os -lpthread -lboost_system -ltbb -o test1
+- g++ test.cpp -std=c++17 -Os -lpthread -lboost_system -fopenmp -ltbb -o test1
 - ./test1
