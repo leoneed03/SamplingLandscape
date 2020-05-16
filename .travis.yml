@@ -10,13 +10,7 @@ before_install:
 - sudo apt-get -y install libboost-program-options-dev
 - sudo cp -r phat /usr/local/include/
 - ls /usr/local/include/
-- git clone https://github.com/GUDHI/gudhi-devel.git
-- cd gudhi-devel
-- mkdir build
-- cd build
-- cmake ..
-- make
-- make install
+- sudo cp -r gudhi /usr/local/include/
 - sudo apt-get -y install libtbb-dev
 
 script:
