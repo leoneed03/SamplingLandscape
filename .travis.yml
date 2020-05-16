@@ -3,6 +3,8 @@ compiler: gcc
 
 before_install:
 - sudo apt-get -y install libboost-dev
+- sudo apt-get -y install libboost-system-dev
+- sudo apt-get -y install libboost-filesystem-dev
 - sudo cp -r phat /usr/local/include/
 - ls /usr/local/include/
 - git clone https://github.com/GUDHI/gudhi-devel.git
