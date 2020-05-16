@@ -1,6 +1,6 @@
-#define BOOST_TEST_MODULE testSuiteCalculator
+//#define BOOST_TEST_MODULE testSuiteCalculator
 
-#include <boost/test/unit_test.hpp>
+//#include <boost/test/unit_test.hpp>
 
 #include <iostream>
 #include <random>
