@@ -52,6 +52,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
 
             auto p = get_M_D(v);
             auto res = compare(diagram_a, diagram_r);
+
             BOOST_CHECK_EQUAL(res, true);
     }
 
@@ -98,6 +99,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
 
             auto p = get_M_D(v);
             auto res = compare(diagram_a, diagram_r);
+
             BOOST_CHECK_EQUAL(res, true);
     }
 
@@ -121,6 +123,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
 
             auto p = get_M_D(v);
             auto res = compare(diagram_a, diagram_r);
+
             BOOST_CHECK_EQUAL(res, true);
     }
     BOOST_AUTO_TEST_CASE(testDiagram5) {
@@ -143,6 +146,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
 
             auto p = get_M_D(v);
             auto res = compare(diagram_a, diagram_r);
+
             BOOST_CHECK_EQUAL(res, true);
     }
 
@@ -166,6 +170,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
 
             auto p = get_M_D(v);
             auto res = compare(diagram_a, diagram_r);
+
             BOOST_CHECK_EQUAL(res, true);
     }
 
@@ -189,6 +194,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
 
             auto p = get_M_D(v);
             auto res = compare(diagram_a, diagram_r);
+
             BOOST_CHECK_EQUAL(res, true);
     }
 
@@ -212,6 +218,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
 
             auto p = get_M_D(v);
             auto res = compare(diagram_a, diagram_r);
+
             BOOST_CHECK_EQUAL(res, true);
     }
 
@@ -235,6 +242,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
 
             auto p = get_M_D(v);
             auto res = compare(diagram_a, diagram_r);
+
             BOOST_CHECK_EQUAL(res, true);
     }
 
