@@ -13,7 +13,7 @@
 #include <gudhi/Persistence_landscape.h>
 
 #define DEBUG_FLAG_MEAN_LANDSCAPES false
-#define PLOT_LANDSCAPES true
+#define PLOT_LANDSCAPES false
 //using namespace std;
 
 #define infinity_1 (1e30)
