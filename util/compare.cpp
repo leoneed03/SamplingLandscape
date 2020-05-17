@@ -4,15 +4,17 @@
 #include <cmath>
 
 
-bool compare (const tbb::concurrent_vector<std::vector<std::pair<double, double>>>& lhs, const tbb::concurrent_vector<std::vector<std::pair<double, double>>>& rhs) {
+bool compare (tbb::concurrent_vector<std::vector<std::pair<double, double>>>& lhs, tbb::concurrent_vector<std::vector<std::pair<double, double>>>& rhs) {
 
     double special_e = 1e-10;
     double special_E = 1e30;
 
-    if (lhs.size() != rhs.size()) {
-        return false;
+    while (lhs.size() < rhs.size()) {
+        lhs.push_back(std::vector<std::pair<double, double>> (0));
     }
-
+    while (lhs.size() > rhs.size()) {
+        rhs.push_back(std::vector<std::pair<double, double>> (0));
+    }
 
     for (int i = 0; i < lhs.size(); ++i) {
         if (lhs[i].size() != rhs[i].size()) {

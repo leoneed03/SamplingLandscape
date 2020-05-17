@@ -1017,7 +1017,7 @@ compressed_lower_distance_matrix read_point_cloud(std::istream &input_stream) {
         if (!point.empty()) {
             points.push_back(point);
         }
-        assert(point.size() == points.front().size());
+//        assert(point.size() == points.front().size());
     }
 
     euclidean_distance_matrix eucl_dist(std::move(points));
@@ -1027,7 +1027,9 @@ compressed_lower_distance_matrix read_point_cloud(std::istream &input_stream) {
 
     std::vector<value_t> distances;
     for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < i; ++j) distances.push_back(eucl_dist(i, j));
+        for (int j = 0; j < i; ++j) {
+            distances.push_back(eucl_dist(i, j));
+        }
     }
 
     return compressed_lower_distance_matrix(std::move(distances));
@@ -1210,7 +1212,7 @@ main_ripser_init(int argc, std::vector<std::string> argv, std::set<int> subcloud
             tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> &all_persistence_diagrams) {
 
     std::string filename = "";
-    bool print_pairs = false;
+    bool print_pairs = true;
     tbb::concurrent_vector<std::vector<std::pair<double, double>>> resulting_persistence_diagram;
     file_format format = POINT_CLOUD;
 
@@ -1317,10 +1319,12 @@ main_ripser_init(int argc, std::vector<std::string> argv, std::set<int> subcloud
             }
             auto resulting_persistence_diagram_1 = ripser<compressed_lower_distance_matrix>(std::move(dist), dim_max,
                                                                                             threshold, ratio,
-                                                                                            modulus)
-                    .compute_barcodes();
+                                                                                            modulus).compute_barcodes();
             for (const auto &e: resulting_persistence_diagram_1) {
                 resulting_persistence_diagram.push_back(e);
+            }
+            while (resulting_persistence_diagram.size() < dim_max + 1) {
+                resulting_persistence_diagram.push_back(std::vector<std::pair<double, double>> (0));
             }
             if (print_pairs) {
                 std::cout << "finished calculating persistence " << std::endl;
@@ -1337,6 +1341,9 @@ main_ripser_init(int argc, std::vector<std::string> argv, std::set<int> subcloud
                     dim_max, threshold, ratio, modulus).compute_barcodes();
             for (const auto &e: resulting_persistence_diagram_1) {
                 resulting_persistence_diagram.push_back(e);
+            }
+            while (resulting_persistence_diagram.size() < dim_max + 1) {
+                resulting_persistence_diagram.push_back(std::vector<std::pair<double, double>> (0));
             }
             if (print_pairs) {
                 std::cout << "sparse finished calculating persistence " << std::endl;

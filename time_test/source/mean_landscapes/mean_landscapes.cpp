@@ -26,25 +26,27 @@ get_average_landscape(
         std::string path_to_storage = "results",
         bool print_pairs = false) {
 
+    std::cout << "Total size " << all_persistence_diagrams.size() << std::endl;
     if (all_persistence_diagrams.empty()) {
         return std::vector<Persistence_landscape>(0);
     }
     std::vector<std::vector<Persistence_landscape>> persistence_landscapes(all_persistence_diagrams[0].size());
 
-    if (all_persistence_diagrams.empty()) {
-        return std::vector<Persistence_landscape>(0);
-    }
     for (const auto &full_landscape: all_persistence_diagrams) {
         for (int i = 0; i < full_landscape.size(); ++i) {
+            print_pairs = true;
             if (print_pairs) {
                 std::cout << i << " of " << full_landscape.size() << " with " << full_landscape[i].size() << std::endl;
             }
             Persistence_landscape pl;
-            if (i == 0) {
-                pl = Persistence_landscape(full_landscape[i], 3 + 1);
-            } else {
-//                pl = Persistence_landscape(full_landscape[i], 1); //only upper
-                pl = Persistence_landscape(full_landscape[i], 3);
+            if (!full_landscape[i].empty()) {
+
+                if (i == 0) {
+                    pl = Persistence_landscape(full_landscape[i], 3 + 1);
+                } else {
+                    //                pl = Persistence_landscape(full_landscape[i], 1); //only upper
+                    pl = Persistence_landscape(full_landscape[i], 3);
+                }
             }
 
 

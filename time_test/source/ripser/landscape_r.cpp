@@ -44,17 +44,16 @@ set<int> get_random_sample_ripser(vector<int> &vector_of_points,
     return std::set<int>(vector_of_points.begin(), vector_of_points.begin() + size_of_one_sample);
 }
 
-tbb::concurrent_vector <tbb::concurrent_vector<std::vector < std::pair < double, double>>>>
-
-get_diagrams_ripser(tbb::concurrent_vector<std::vector<std::pair<double, double>>>& diagram,
-                    const std::string &filename,
-                    int max_rank,
-                    double max_edge_length,
-                    bool gudhi_format,
-                    int number_of_thread_workers = 1,
-                    int number_of_samples = 1,
-                    double subsample_density_coefficient = 1.0,
-                    bool print_pairs = false) {
+tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> get_diagrams_ripser(
+        tbb::concurrent_vector<std::vector<std::pair<double, double>>>& diagram,
+        const std::string &filename,
+        int max_rank,
+        double max_edge_length,
+        bool gudhi_format,
+        int number_of_thread_workers = 1,
+        int number_of_samples = 1,
+        double subsample_density_coefficient = 1.0,
+        bool print_pairs = true) {
 
     std::ifstream file_stream(filename);
     int number_of_points = 0;
@@ -63,6 +62,12 @@ get_diagrams_ripser(tbb::concurrent_vector<std::vector<std::pair<double, double>
         ++number_of_points;
         std::vector<value_t> point;
         std::istringstream s(line);
+    }
+
+    if (number_of_points == 0) {
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> tbcv (1, tbb::concurrent_vector<std::vector<std::pair<double, double>>>(max_rank + 1));
+        diagram = tbb::concurrent_vector<std::vector<std::pair<double, double>>> (max_rank + 1);
+        return tbcv;
     }
 //    if (gudhi_format && number_of_points > 0) {
 //        --number_of_points;
@@ -104,7 +109,6 @@ get_diagrams_ripser(tbb::concurrent_vector<std::vector<std::pair<double, double>
             {
                 auto sample = get_random_sample_ripser(cloud, (int) (cloud.size() * subsample_density_coefficient));
                 main_ripser_init(10, argv_strings, sample, all_persistence_diagrams);
-//                get_persistence_pairs_sparse(cloud, radii, subsample_density_coefficient, all_persistence_diagrams);
                 return 1;
             });
 
@@ -118,11 +122,12 @@ get_diagrams_ripser(tbb::concurrent_vector<std::vector<std::pair<double, double>
 
 
 
-    cout << number_of_thread_workers << " on samples: " << number_of_samples << endl;
     if (print_pairs) {
+        cout << number_of_thread_workers << " on samples: " << number_of_samples << endl;
         cout << "____________________________________________________\n\n\n\n" << all_persistence_diagrams.size()
              << endl;
     }
+
     for (int i = 0; i < all_persistence_diagrams.size(); ++i) {
         diagram = all_persistence_diagrams[i];
         if (print_pairs) {
@@ -163,18 +168,13 @@ double main_ripser(tbb::concurrent_vector<std::vector<std::pair<double, double>>
                     double subsample_density_coefficient = 1.0,
                     bool print_pairs = false) {
     vector<int> v;
-//
-//    std::string filetore = "/Users/leonardbee/Desktop/dataset/human500.txt";
-//
-//    std::string filetore = "/Users/leonardbee/CLionProjects/SubsamplingMethodsForPersistenceLandscape1/cloud_50";
-//    std::string filename = "/Users/leonardbee/CLionProjects/SubsamplingMethodsForPersistenceLandscape1/dots_50.txt";
-
     std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
 //    get_diagrams_ripser(filetore, 2, 0.5, true, 10, 10, 0.4, true); //not sampled
     get_diagrams_ripser(diagram, from, max_rank, max_edge_length, true, number_of_thread_workers, number_of_samples,
                  subsample_density_coefficient, print_pairs);
-//    get_diagrams_ripser(filetore, 2, 0.5, true); //sampled  persistence
-//    get_diagrams_ripser(filetore, 2, 0.5, true, 4, 10, 0.4); //sampled  persistence
+//    while (diagram.size() < max_rank + 1) {
+//        diagram.push_back(std::vector<std::pair<double, double>> (0));
+//    }
     std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
     std::cout << "total duration " << duration << std::endl;
