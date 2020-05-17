@@ -20,6 +20,7 @@
 #include "ripser.cpp"
 #include "../mean_landscapes/mean_landscapes.cpp"
 
+#define DEBUG_RIPSER_0 (false)
 #define space 5
 using namespace std;
 
@@ -32,7 +33,7 @@ set<int> get_random_sample_ripser(vector<int> &vector_of_points,
     std::mt19937 g(rd());
     std::shuffle(vector_of_points.begin(), vector_of_points.end(), g);
 
-    if (print_pairs) {
+    if (DEBUG_RIPSER_0) {
         for (const auto &e: vector_of_points) {
             cout << e << " ";
         }
@@ -72,7 +73,7 @@ tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, doub
 //    if (gudhi_format && number_of_points > 0) {
 //        --number_of_points;
 //    }
-    if (print_pairs) {
+    if (DEBUG_RIPSER_0) {
         std::cout << "total number of points " << number_of_points << std::endl;
     }
 
@@ -122,7 +123,7 @@ tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, doub
 
 
 
-    if (print_pairs) {
+    if (DEBUG_RIPSER_0) {
         cout << number_of_thread_workers << " on samples: " << number_of_samples << endl;
         cout << "____________________________________________________\n\n\n\n" << all_persistence_diagrams.size()
              << endl;
@@ -130,11 +131,11 @@ tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, doub
 
     for (int i = 0; i < all_persistence_diagrams.size(); ++i) {
         diagram = all_persistence_diagrams[i];
-        if (print_pairs) {
+        if (DEBUG_RIPSER_0) {
             cout << "\n\n\n\ncurrently in " << i << endl;
         }
         for (int j = 0; j < all_persistence_diagrams[i].size(); ++j) {
-            if (print_pairs) {
+            if (DEBUG_RIPSER_0) {
                 cout << "                 into j " << j << endl;
             }
             for (auto &e: all_persistence_diagrams[i][j]) {
@@ -143,7 +144,7 @@ tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, doub
 //                    e.second = std::numeric_limits<double>::max();
 //                }
                 sort(all_persistence_diagrams[i][j].begin(), all_persistence_diagrams[i][j].end());
-                if (print_pairs) {
+                if (DEBUG_RIPSER_0) {
                     cout << e.first << " and " << e.second << endl;
                 }
             }

@@ -12,6 +12,7 @@
 
 #include <gudhi/Persistence_landscape.h>
 
+#define DEBUG_FLAG_MEAN_LANDSCAPES (false)
 //using namespace std;
 
 #define infinity_1 (1e30)
@@ -26,7 +27,9 @@ get_average_landscape(
         std::string path_to_storage = "results",
         bool print_pairs = false) {
 
-    std::cout << "Total size " << all_persistence_diagrams.size() << std::endl;
+    if (DEBUG_FLAG_MEAN_LANDSCAPES) {
+        std::cout << "Total size " << all_persistence_diagrams.size() << std::endl;
+    }
     if (all_persistence_diagrams.empty()) {
         return std::vector<Persistence_landscape>(0);
     }
@@ -35,7 +38,7 @@ get_average_landscape(
     for (const auto &full_landscape: all_persistence_diagrams) {
         for (int i = 0; i < full_landscape.size(); ++i) {
             print_pairs = true;
-            if (print_pairs) {
+            if (DEBUG_FLAG_MEAN_LANDSCAPES) {
                 std::cout << i << " of " << full_landscape.size() << " with " << full_landscape[i].size() << std::endl;
             }
             Persistence_landscape pl;
@@ -51,7 +54,7 @@ get_average_landscape(
 
 
             persistence_landscapes[i].push_back(pl);
-            if (print_pairs) {
+            if (DEBUG_FLAG_MEAN_LANDSCAPES) {
                 std::cout << "\nDim " << i << std::endl;
                 for (const auto &e: full_landscape[i]) {
                     std::cout << "    " << i << "::: " << e.first << " -> " << e.second << std::endl;
@@ -72,7 +75,9 @@ get_average_landscape(
         std::vector<std::string> to(average_landscape_all_dimensions.size());
         for (int i = 0; i < average_landscape_all_dimensions.size(); ++i) {
             std::string new_name = path_to_storage + "/landscape_" + std::to_string(i) + ".txt";
-            std::cout << "to file " << new_name << std::endl;
+            if (DEBUG_FLAG_MEAN_LANDSCAPES) {
+                std::cout << "to file " << new_name << std::endl;
+            }
             {
                 std::ofstream fout(new_name);
             }

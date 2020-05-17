@@ -460,14 +460,16 @@ struct Cloud {
 
         simplex_tree = new Simplex_tree(n, size);
 
-        std::cout << points.size() << " vs cntr " << counter << std::endl;
+        if (DEBUG_FLAG_0) {
+            std::cout << points.size() << " vs cntr " << counter << std::endl;
 
-        for (const auto& e: points) {
-            std::cout << e.size() << ": ";
-            for (const auto& a: e) {
-                std::cout << a << ' ';
+            for (const auto &e: points) {
+                std::cout << e.size() << ": ";
+                for (const auto &a: e) {
+                    std::cout << a << ' ';
+                }
+                std::cout << std::endl;
             }
-            std::cout << std::endl;
         }
         distances = std::vector<std::vector<double>> (size);
         for (int i = 0; i < distances.size(); ++i) {
@@ -483,7 +485,9 @@ struct Cloud {
     }
 
     ~Cloud() {
-        std::cout << "Destructor Cloud" << std::endl;
+        if (DEBUG_FLAG_0) {
+            std::cout << "Destructor Cloud" << std::endl;
+        }
         if (simplex_tree == nullptr) {
             std::cout << "NULL" << std::endl;
         }
@@ -783,7 +787,8 @@ struct SubCloud {
 
         auto boundary_matrix = get_boundary_matrix_compressed();
         int max_dim = root->simplices.size() - 2;
-        std::cout << "Total dim " << max_dim << std::endl;
+        if (DEBUG_FLAG_0)
+            std::cout << "Total dim " << max_dim << std::endl;
         tbb::concurrent_vector<std::vector<std::pair<double, double>>> landscape(max_dim + 1);
 
 
@@ -1104,11 +1109,13 @@ void get_persistence_pairs_sparse(Cloud* cloud, double radii, double subsample_d
     }
 
 
-    std::cout << number_of_dots << " started building tree \n\n\n\n" << subsample.size() <<std::endl;
-    for (const auto &e: subsample) {
-        std::cout << e << ',';
+    if (DEBUG_FLAG_0) {
+        std::cout << number_of_dots << " started building tree \n\n\n\n" << subsample.size() <<std::endl;
+        for (const auto &e: subsample) {
+            std::cout << e << ',';
+        }
+        std::cout << "_________________________________________________________________________" << std::endl;
     }
-    std::cout << "_________________________________________________________________________" << std::endl;
 
 
     subcloud->insert_all_simplices_including(max_number_of_points_in_simplex);
@@ -1121,7 +1128,9 @@ void get_persistence_pairs_sparse(Cloud* cloud, double radii, double subsample_d
         ss += e.size();
     }
 
-    std::cout << "started calculating boundary matrix compressed " << ss << std::endl;
+    if (DEBUG_FLAG_0) {
+        std::cout << "started calculating boundary matrix compressed " << ss << std::endl;
+    }
     matrix_size_cntr += ss;
     mute.unlock();
     //only  1
@@ -1255,10 +1264,15 @@ double main_algorithm(tbb::concurrent_vector<std::vector<std::pair<double, doubl
 
 
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
-    std::cout << "Deleting tree" << std::endl;
+
+    if (DEBUG_FLAG_0) {
+        std::cout << "Deleting tree" << std::endl;
+    }
     delete matrix;
 
+    mute.lock();
     std::cout << zero_cntr << " so " << extra_cntr << std::endl << "duration " << duration << std::endl;
+    mute.unlock();
 
     return duration;
 }

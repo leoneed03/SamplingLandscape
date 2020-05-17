@@ -16,6 +16,7 @@
 #include <set>
 #include <limits>
 
+#define DEBUG_RIPSER_1 (false)
 #define inf (std::numeric_limits<double>::max())
 //namespace ripser {
 #ifdef USE_GOOGLE_HASHMAP
@@ -1308,7 +1309,7 @@ main_ripser_init(int argc, std::vector<std::string> argv, std::set<int> subcloud
                 ++num_edges;
             }
         }
-        if (print_pairs) {
+        if (DEBUG_RIPSER_1) {
             std::cout << "value range: [" << min << "," << max_finite << "]" << std::endl;
         }
 
@@ -1326,11 +1327,11 @@ main_ripser_init(int argc, std::vector<std::string> argv, std::set<int> subcloud
             while (resulting_persistence_diagram.size() < dim_max + 1) {
                 resulting_persistence_diagram.push_back(std::vector<std::pair<double, double>> (0));
             }
-            if (print_pairs) {
+            if (DEBUG_RIPSER_1) {
                 std::cout << "finished calculating persistence " << std::endl;
             }
         } else {
-            if (print_pairs) {
+            if (DEBUG_RIPSER_1) {
                 std::cout << "sparse distance matrix with " << dist.size() << " points and "
                           << num_edges << "/" << (dist.size() * dist.size() - 1) / 2 << " entries"
                           << std::endl;
@@ -1345,7 +1346,7 @@ main_ripser_init(int argc, std::vector<std::string> argv, std::set<int> subcloud
             while (resulting_persistence_diagram.size() < dim_max + 1) {
                 resulting_persistence_diagram.push_back(std::vector<std::pair<double, double>> (0));
             }
-            if (print_pairs) {
+            if (DEBUG_RIPSER_1) {
                 std::cout << "sparse finished calculating persistence " << std::endl;
             }
 
