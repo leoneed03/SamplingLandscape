@@ -13,6 +13,7 @@
 #include <gudhi/Persistence_landscape.h>
 
 #define DEBUG_FLAG_MEAN_LANDSCAPES (false)
+#define PLOT_LANDSCAPES (false)
 //using namespace std;
 
 #define infinity_1 (1e30)
@@ -83,7 +84,9 @@ get_average_landscape(
             }
             average_landscape_all_dimensions[i].print_to_file(new_name.data());
         }
-        average_landscape_all_dimensions[i].plot(ss);
+        if (PLOT_LANDSCAPES) {
+            average_landscape_all_dimensions[i].plot(ss);
+        }
     }
     return average_landscape_all_dimensions;
 }
