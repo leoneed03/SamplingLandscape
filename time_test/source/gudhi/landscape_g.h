@@ -18,6 +18,8 @@
 #include <gudhi/Simplex_tree.h>
 #include <gudhi/Persistent_cohomology.h>
 #include <gudhi/Points_off_io.h>
+#include <future>
+#include <mutex>
 
 
 #include "../mean_landscapes/mean_landscapes.h"
