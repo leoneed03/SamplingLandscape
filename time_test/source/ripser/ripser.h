@@ -46,6 +46,9 @@
 #include <unordered_map>
 #include <set>
 #include <limits>
+#include <mutex>
+#include <future>
+
 
 namespace smpl {
     #define DEBUG_RIPSER_1 (false)
