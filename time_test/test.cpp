@@ -8,6 +8,8 @@ int num_ = 10;
 #include <iostream>
 
 
+using namespace smpl;
+
 int main() {
     std::string path = "dataset/magnetometer/s50.txt";
     double radii = 1e11;

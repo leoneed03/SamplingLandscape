@@ -8,6 +8,9 @@ int num_ = 3;
 #include "source/gudhi/landscape_g.h"
 #include <iostream>
 
+
+using namespace smpl;
+
 BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
     
     BOOST_AUTO_TEST_CASE(testCalculator1) {

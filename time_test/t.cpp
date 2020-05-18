@@ -4,6 +4,9 @@ int num_ = 10;
 #include <boost/test/included/unit_test.hpp>
 #include "/Users/leonardbee/CLionProjects/SubsamplingMethodsForPersistenceLandscape1/tests.cpp"
 #include <iostream>
+
+using namespace smpl;
+
 BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
     
     BOOST_AUTO_TEST_CASE(testCalculator1) {
