@@ -17,8 +17,6 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
             std::vector<double> v;
             tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram;
             for (int i = 0; i < 1; ++i) {
-    //            double time = main_ripser("dataset/figures/dots50_no_number.txt", "/Users/leonardbee/Desktop/dataset/tore/sampled_persistence",
-    //                        2, 8, true, 1, 1, 1, true);
                 double time = main_algorithm(diagram, "dataset/magnetometer/s50.txt", "/Users/leonardbee/Desktop/dataset/tore/sampled_persistence",
                                           2, rad, true, 1, 1, 1, true);
 //                double time2 =
