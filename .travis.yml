@@ -23,7 +23,9 @@ script:
 - valgrind --leak-check=full ./testd_a_1
 - g++ test_diagram_computation_v.cpp  -std=c++17 -Os -lpthread -lboost_system -fopenmp -ltbb -o testd_v_1
 - valgrind --leak-check=full ./testd_v_1
-- g++ test.cpp  -std=c++17 -Os -lpthread -lboost_system -fopenmp -ltbb -o testd
-- g++ test_ripser.cpp  -std=c++17 -Os -lpthread -lboost_system -fopenmp -ltbb -o testd
-- g++ test_gudhi.cpp  -std=c++17 -Os -lpthread -lboost_system -fopenmp -ltbb -o testd
-- g++ test_diagram_computation.cpp  -std=c++17 -Os -lpthread -lboost_system -fopenmp -ltbb -o testd
+- g++ test_ripser.cpp  -std=c++17 -Os -lpthread -lboost_system -fopenmp -ltbb -o test_r
+- ./test_r
+- g++ test_gudhi.cpp  -std=c++17 -Os -lpthread -lboost_system -fopenmp -ltbb -o test_g
+- ./test_g
+- g++ test_diagram_computation.cpp  -std=c++17 -Os -lpthread -lboost_system -fopenmp -ltbb -o test_d_c
+- test_d_c

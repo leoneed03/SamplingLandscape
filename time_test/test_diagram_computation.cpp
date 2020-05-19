@@ -3,8 +3,8 @@
 int num_test_diagram_1 = 10;
 
 #include <atomic>
-#include "source/algorithm/landscape_a.h"
-#include "source/ripser/landscape_r.h"
+#include "../source/algorithm/landscape_a.h"
+#include "../source/ripser/landscape_r.h"
 #include <boost/test/included/unit_test.hpp>
 #include "../util/compare.cpp"
 #include <iostream>
@@ -15,7 +15,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
 
     BOOST_AUTO_TEST_CASE(testOne2) {
 
-            std::string path = "dataset/magnetometer/s2.txt";
+            std::string path = "../dataset/magnetometer/s2.txt";
             double radii =  0.1;
              
             std::vector<double> v;
@@ -37,7 +37,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
 
     BOOST_AUTO_TEST_CASE(testOne3) {
 
-        std::string path = "dataset/magnetometer/s3.txt";
+        std::string path = "../dataset/magnetometer/s3.txt";
         double radii = 0.1;
          
         std::vector<double> v;
@@ -60,7 +60,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
 
     BOOST_AUTO_TEST_CASE(testEmpty0) {
 
-        std::string path = "dataset/magnetometer/s0.txt";
+        std::string path = "../dataset/magnetometer/s0.txt";
         double radii = 1e11;
          
         std::vector<double> v;
@@ -84,7 +84,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
    
     BOOST_AUTO_TEST_CASE(testDiagram0) {
 
-            std::string path = "dataset/magnetometer/s50.txt";
+            std::string path = "../dataset/magnetometer/s50.txt";
             double radii = 1e11;
              
             std::vector<double> v;
@@ -105,7 +105,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
 
     BOOST_AUTO_TEST_CASE(testDiagram1) {
 
-        std::string path = "dataset/figures/dots50.txt";
+        std::string path = "../dataset/figures/dots50.txt";
         double radii = 1e11;
          
         std::vector<double> v;
@@ -127,7 +127,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
 
     BOOST_AUTO_TEST_CASE(testDiagram2) {
 
-        std::string path = "dataset/figures/dots50_no_number.txt";
+        std::string path = "../dataset/figures/dots50_no_number.txt";
         double radii = 1e11;
          
         std::vector<double> v;
@@ -149,7 +149,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
 
     BOOST_AUTO_TEST_CASE(testDiagram3) {
 
-        std::string path = "dataset/magnetometer/s50.txt";
+        std::string path = "../dataset/magnetometer/s50.txt";
         double radii = 5;
          
         std::vector<double> v;
@@ -172,7 +172,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
 
     BOOST_AUTO_TEST_CASE(testDiagram4) {
 
-        std::string path = "dataset/figures/dots50.txt";
+        std::string path = "../dataset/figures/dots50.txt";
         double radii = 0.5;
          
         std::vector<double> v;
@@ -196,7 +196,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
    
     BOOST_AUTO_TEST_CASE(testDiagram5) {
 
-            std::string path = "dataset/magnetometer/s1000.txt";
+            std::string path = "../dataset/magnetometer/s1000.txt";
             double radii = 5;
              
             std::vector<double> v;
@@ -217,7 +217,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
 
     BOOST_AUTO_TEST_CASE(testDiagram6) {
 
-            std::string path = "dataset/figures/bunny500.txt";
+            std::string path = "../dataset/figures/bunny500.txt";
             double radii = 0.2;
              
             std::vector<double> v;
@@ -238,7 +238,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
 
     BOOST_AUTO_TEST_CASE(testDiagram7) {
 
-            std::string path = "dataset/figures/sphere500.txt";
+            std::string path = "../dataset/figures/sphere500.txt";
             double radii = 0.2;
              
             std::vector<double> v;
@@ -259,7 +259,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
 
     BOOST_AUTO_TEST_CASE(testDiagram8) {
 
-            std::string path = "dataset/figures/tore500.txt";
+            std::string path = "../dataset/figures/tore500.txt";
             double radii = 0.2;
              
             std::vector<double> v;
@@ -281,7 +281,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
 
     BOOST_AUTO_TEST_CASE(testDiagram9) {
 
-            std::string path = "dataset/figures/human500.txt";
+            std::string path = "../dataset/figures/human500.txt";
             double radii = 0.2;
              
             std::vector<double> v;

@@ -5,7 +5,7 @@ int num_ = 3;
 #include <boost/test/included/unit_test.hpp>
 //#include "/Users/leonardbee/CLionProjects/SubsamplingMethodsForPersistenceLandscape1/ripser.cpp"
 //#include "/Users/leonardbee/CLionProjects/SubsamplingMethodsForPersistenceLandscape1/mean_landscapes.cpp"
-#include "source/gudhi/landscape_g.h"
+#include "../source/gudhi/landscape_g.h"
 #include <iostream>
 
 
@@ -17,7 +17,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
         std::cout << "\n\nTest sampled diagram with r = 0.5" << std::endl;
         std::vector<double> v;
         for (int i = 0; i < 1; ++i) {
-            double time = main_gudhi("dataset/figures/dots50_no_number.txt", "/Users/leonardbee/Desktop/dataset/tore/sampled_persistence",
+            double time = main_gudhi("../dataset/figures/dots50_no_number.txt", "/Users/leonardbee/Desktop/dataset/tore/sampled_persistence",
                         2, 8, true, 1, 1, 1);
             v.push_back(time);
         }
@@ -30,7 +30,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
         std::cout << "\n\nTest full diagram with r = 0.5" << std::endl;
         std::vector<double> v;
         for (int i = 0; i < 1; ++i) {
-            double time = main_gudhi("dataset/figures/human500.txt", "/Users/leonardbee/Desktop/dataset/tore/sampled_persistence",
+            double time = main_gudhi("../dataset/figures/human500.txt", "/Users/leonardbee/Desktop/dataset/tore/sampled_persistence",
                         2, 0.5, true, 1, 1, 0.3);
             v.push_back(time);
         }
@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
         std::cout << "\n\nTest sampled diagram with r =  diam" << std::endl;
         std::vector<double> v;
         for (int i = 0; i < num_; ++i) {
-            double time = main_gudhi("dataset/figures/human500.txt", "/Users/leonardbee/Desktop/dataset/tore/sampled_persistence",
+            double time = main_gudhi("../dataset/figures/human500.txt", "/Users/leonardbee/Desktop/dataset/tore/sampled_persistence",
                         2, 0.5, true, 4, 10, 0.4);
             v.push_back(time);
         }
@@ -59,7 +59,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
         std::cout << "\n\nTest full diagram with r = 0.5" << std::endl;
         std::vector<double> v;
         for (int i = 0; i < num_; ++i) {
-            double time = main_gudhi("dataset/figures/human500.txt", "/Users/leonardbee/Desktop/dataset/tore/sampled_persistence",
+            double time = main_gudhi("../dataset/figures/human500.txt", "/Users/leonardbee/Desktop/dataset/tore/sampled_persistence",
                         2, 1e11, true, 1, 1, 1);
             v.push_back(time);
             out << time << ' ';

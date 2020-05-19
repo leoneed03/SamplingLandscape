@@ -17,7 +17,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
         std::cout << "\n\nTest sampled diagram with r = 0.5" << std::endl;
         std::vector<double> v;
         for (int i = 0; i < num_; ++i) {
-            double time = main_ripser("dataset/human500.txt", "/Users/leonardbee/Desktop/dataset/tore/sampled_persistence",
+            double time = main_ripser("..dataset/human500.txt", "/Users/leonardbee/Desktop/dataset/tore/sampled_persistence",
                         2, 0.5, true, 4, 10, 0.4);
             v.push_back(time);
             out << time << ' ';
@@ -35,7 +35,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
         std::cout << "\n\nTest full diagram with r = 0.5" << std::endl;
         std::vector<double> v;
         for (int i = 0; i < num_; ++i) {
-            double time = main_ripser("dataset/human500.txt", "/Users/leonardbee/Desktop/dataset/tore/sampled_persistence",
+            double time = main_ripser("..dataset/human500.txt", "/Users/leonardbee/Desktop/dataset/tore/sampled_persistence",
                         2, 0.5, true, 1, 1, 1);
             v.push_back(time);
             out << time << ' ';
@@ -54,7 +54,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
         std::cout << "\n\nTest sampled diagram with r =  diam" << std::endl;
         std::vector<double> v;
         for (int i = 0; i < num_; ++i) {
-            double time = main_ripser("dataset/human500.txt", "/Users/leonardbee/Desktop/dataset/tore/sampled_persistence",
+            double time = main_ripser("..dataset/human500.txt", "/Users/leonardbee/Desktop/dataset/tore/sampled_persistence",
                         2, 1e11, true, 4, 10, 0.4);
             v.push_back(time);
             out << time << ' ';
@@ -71,7 +71,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
         std::cout << "\n\nTest full diagram with r = 0.5" << std::endl;
         std::vector<double> v;
         for (int i = 0; i < num_; ++i) {
-            double time = main_ripser("dataset/human500.txt", "/Users/leonardbee/Desktop/dataset/tore/sampled_persistence",
+            double time = main_ripser("..dataset/human500.txt", "/Users/leonardbee/Desktop/dataset/tore/sampled_persistence",
                         2, 1e11, true, 1, 1, 1);
             v.push_back(time);
             out << time << ' ';

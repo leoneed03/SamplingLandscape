@@ -2,8 +2,8 @@
 int num_ = 10;
 
 #include <atomic>
-#include "source/algorithm/landscape_a.h"
-#include "source/ripser/landscape_r.h"
+#include "..source/algorithm/landscape_a.h"
+#include "..source/ripser/landscape_r.h"
 #include "../util/compare.cpp"
 #include <iostream>
 
@@ -11,7 +11,7 @@ int num_ = 10;
 using namespace smpl;
 
 int main() {
-    std::string path = "dataset/magnetometer/s50.txt";
+    std::string path = "..dataset/magnetometer/s50.txt";
     double radii = 1e11;
     std::cout << "\n\nTest " << path << " diagram with r = 1e11" << std::endl;
     std::vector<double> v;
