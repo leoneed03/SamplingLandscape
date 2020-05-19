@@ -59,7 +59,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
             std::cout << "\n size E = " << total_size.first << " size D = " << total_size.second << '\n';
 
 
-    }*/
+    }
 
 /*
 
@@ -67,7 +67,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
         std::cout << "\n\nTest sampled diagram with r = 0.5" << std::endl;
         std::vector<double> v, av;
         tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram;
-        for (int i = 0; i < 1 /*num_*/ ; ++i) {
+        for (int i = 0; i < 1; ++i) {
                std::clog << "\n\nSTARTED " << i << std::endl;
             double time = main_algorithm(diagram, "dataset/figures/human500.txt", "",
                         2, 0.5, true, 4, 8, 0.2);
