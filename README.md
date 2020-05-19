@@ -10,8 +10,8 @@ sudo apt-get -y install libphat-dev
 Thread pool can be installed from https://github.com/inkooboo/thread-pool-cpp
 or by commands 
 ```
-- sudo cp -r thread_pool/thread_pool /usr/local/include/
-- sudo cp -r thread_pool/thread_pool.hpp /usr/local/include/
+sudo cp -r thread_pool/thread_pool /usr/local/include/
+sudo cp -r thread_pool/thread_pool.hpp /usr/local/include/
 ```
 
 ## Usage
