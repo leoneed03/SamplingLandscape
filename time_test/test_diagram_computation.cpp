@@ -10,6 +10,7 @@ int num_test_diagram_1 = 10;
 #include <iostream>
 
 using namespace smpl;
+
 BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
 
     BOOST_AUTO_TEST_CASE(testDiagram5) {
