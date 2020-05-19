@@ -3,7 +3,7 @@
 int num_ = 3;
 
 #include <boost/test/included/unit_test.hpp>
-#include "../source/ripser/landscape_r.h"
+#include "../include/ripser/landscape_r.h"
 #include <iostream>
 
 

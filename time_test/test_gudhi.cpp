@@ -5,7 +5,7 @@ int num_ = 3;
 #include <boost/test/included/unit_test.hpp>
 //#include "/Users/leonardbee/CLionProjects/SubsamplingMethodsForPersistenceLandscape1/ripser.cpp"
 //#include "/Users/leonardbee/CLionProjects/SubsamplingMethodsForPersistenceLandscape1/mean_landscapes.cpp"
-#include "../source/gudhi/landscape_g.h"
+#include "../include/gudhi/landscape_g.h"
 #include <iostream>
 
 
