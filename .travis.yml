@@ -11,10 +11,10 @@ before_install:
 - sudo apt-get -y install libboost-thread-dev
 - sudo apt-get -y install libboost-program-options-dev
 - sudo apt-get -y install valgrind
-- sudo cp -r thread_pool/thread_pool /usr/local/include/
-- sudo cp -r thread_pool/thread_pool.hpp /usr/local/include/
-- sudo cp -r phat /usr/local/include/
-- sudo cp -r gudhi /usr/local/include/
+- sudo cp -r dep/thread_pool/thread_pool /usr/local/include/
+- sudo cp -r dep/thread_pool/thread_pool.hpp /usr/local/include/
+- sudo cp -r dep/phat /usr/local/include/
+- sudo cp -r dep/gudhi /usr/local/include/
 - sudo apt-get -y install libtbb-dev
 
 script:
