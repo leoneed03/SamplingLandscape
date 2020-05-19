@@ -1123,6 +1123,7 @@ namespace smpl {
             std::cout << "delete subcloud" << std::endl;
         }
         delete subcloud;
+        delete subcloud->root;
 
         mute.lock();
         for (int i = 0; i < persistence_landscape.size(); ++i) {
