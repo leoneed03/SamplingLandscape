@@ -13,7 +13,7 @@
 #include <gudhi/Persistence_landscape.h>
 
 #define DEBUG_FLAG_MEAN_LANDSCAPES false
-#define PLOT_LANDSCAPES false
+#define PLOT_LANDSCAPES true
 //using namespace std;
 
 #define infinity_1 (1e30)
@@ -21,6 +21,50 @@
 
 namespace smpl {
     using Persistence_landscape = Gudhi::Persistence_representations::Persistence_landscape;
+
+    Persistence_landscape compute_average(const std::vector<Persistence_landscape>& to_average) {
+        bool dbg = false;
+
+        if (dbg) {
+            std::cerr << "to_average.size() : " << to_average.size() << std::endl;
+        }
+
+        std::vector<Persistence_landscape> nextLevelMerge(to_average.size());
+        for (size_t i = 0; i != to_average.size(); ++i) {
+            nextLevelMerge[i] = to_average[i];
+        }
+        bool is_this_first_level = true;
+
+        while (nextLevelMerge.size() != 1) {
+            if (dbg) {
+                std::cerr << "nextLevelMerge.size() : " << nextLevelMerge.size() << std::endl;
+            }
+            std::vector<Persistence_landscape> nextNextLevelMerge;
+            nextNextLevelMerge.reserve(to_average.size());
+            for (size_t i = 0; i < nextLevelMerge.size(); i = i + 2) {
+                if (dbg) {
+                    std::cerr << "i : " << i << std::endl;
+                }
+                Persistence_landscape l;
+                if (i + 1 != nextLevelMerge.size()) {
+                    l = nextLevelMerge[i] + nextLevelMerge[i + 1];
+                } else {
+                    l = nextLevelMerge[i];
+                }
+                nextNextLevelMerge.push_back(l);
+            }
+            if (dbg) {
+                std::cerr << "After this iteration \n";
+                getchar();
+            }
+
+            is_this_first_level = false;
+            nextLevelMerge.swap(nextNextLevelMerge);
+        }
+        nextLevelMerge[0] *= 1 / static_cast<double>(to_average.size());
+        return nextLevelMerge[0];
+    }
+
 
     std::vector<Persistence_landscape>
     get_average_landscape(
@@ -34,9 +78,10 @@ namespace smpl {
         if (all_persistence_diagrams.empty()) {
             return std::vector<Persistence_landscape>(0);
         }
+//        std::vector<std::vector<Persistence_landscape*>> persistence_landscapes(all_persistence_diagrams[0].size());
         std::vector<std::vector<Persistence_landscape>> persistence_landscapes(all_persistence_diagrams[0].size());
 
-        for (const auto &full_landscape: all_persistence_diagrams) {
+for (const auto &full_landscape: all_persistence_diagrams) {
             for (int i = 0; i < full_landscape.size(); ++i) {
                 print_pairs = true;
                 if (DEBUG_FLAG_MEAN_LANDSCAPES) {
@@ -52,9 +97,12 @@ namespace smpl {
                         pl = Persistence_landscape(full_landscape[i], 3);
                     }
                 }
-
+                std::string s = "average_" + std::to_string(i);
+                const char *ss(s.data());
+                pl.plot(ss);
 
                 persistence_landscapes[i].push_back(pl);
+//                persistence_landscapes[i].push_back(&pl);
                 if (DEBUG_FLAG_MEAN_LANDSCAPES) {
                     std::cout << "\nDim " << i << std::endl;
                     for (const auto &e: full_landscape[i]) {
@@ -65,13 +113,15 @@ namespace smpl {
         }
         std::vector<Persistence_landscape> average_landscape_all_dimensions(all_persistence_diagrams[0].size());
         
-        /*
+
         for (int i = 0; i < average_landscape_all_dimensions.size(); ++i) {
-            std::vector<Persistence_landscape *> plv;
+            std::vector<Persistence_landscape> plv;
+            //std::vector<Persistence_landscape*> plv;
             for (auto &e: persistence_landscapes[i]) {
-                plv.push_back(&e);
+                plv.push_back(e);
             }
-            average_landscape_all_dimensions[i].compute_average(plv);
+//            average_landscape_all_dimensions[i].compute_average(plv);
+            average_landscape_all_dimensions[i] = compute_average(plv);
             std::string s = "average_" + std::to_string(i);
             const char *ss(s.data());
 
@@ -89,7 +139,7 @@ namespace smpl {
             if (PLOT_LANDSCAPES) {
                 average_landscape_all_dimensions[i].plot(ss);
             }
-        }*/
+        }
         return average_landscape_all_dimensions;
     }
 

@@ -19,10 +19,11 @@ before_install:
 
 script:
 - cd time_test
-- g++ test_diagram_computation_v.cpp  -std=c++17 -Os -lpthread -lboost_system -fopenmp -ltbb -o testd
-- valgrind --leak-check=full ./testd
+- g++ test_algorithm.cpp  -std=c++17 -Os -lpthread -lboost_system -fopenmp -ltbb -o testd_a_1
+- valgrind --leak-check=full ./testd_a_1
+- g++ test_diagram_computation_v.cpp  -std=c++17 -Os -lpthread -lboost_system -fopenmp -ltbb -o testd_v_1
+- valgrind --leak-check=full ./testd_v_1
 - g++ test.cpp  -std=c++17 -Os -lpthread -lboost_system -fopenmp -ltbb -o testd
 - g++ test_ripser.cpp  -std=c++17 -Os -lpthread -lboost_system -fopenmp -ltbb -o testd
 - g++ test_gudhi.cpp  -std=c++17 -Os -lpthread -lboost_system -fopenmp -ltbb -o testd
-- g++ test_algorithm.cpp  -std=c++17 -Os -lpthread -lboost_system -fopenmp -ltbb -o testd
 - g++ test_diagram_computation.cpp  -std=c++17 -Os -lpthread -lboost_system -fopenmp -ltbb -o testd
