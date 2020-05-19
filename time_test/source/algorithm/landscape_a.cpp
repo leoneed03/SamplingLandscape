@@ -389,7 +389,9 @@ namespace smpl {
         }
 
         ~Simplex_tree() {
-
+            if (to_delete) {
+                delete all_first_vertices;
+            }
         }
 
     private:
@@ -481,8 +483,8 @@ namespace smpl {
             if (simplex_tree == nullptr) {
                 std::cout << "NULL" << std::endl;
             }
-            simplex_tree->free_tree();
-            delete simplex_tree;
+//            simplex_tree->free_tree();
+//            delete simplex_tree;
         }
 
         friend std::ostream &operator<<(std::ostream &os, const std::vector<std::vector<double>> &matrix);
@@ -1161,24 +1163,27 @@ namespace smpl {
 
 
         tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> all_persistence_diagrams;
-        tp::ThreadPoolOptions options;
-        options.setThreadCount(number_of_thread_workers);
-        tp::ThreadPool pool(options);
-        std::vector<std::future<int>> futures(number_of_samples);
+//        tp::/**/ThreadPoolOptions options;
+//        options.setThreadCount(number_of_thread_workers);
+//        tp::ThreadPool pool(options);
+//        std::vector<std::future<int>> futures(number_of_samples);
+//
+//        for (int i = 0; i < number_of_samples; ++i) {
+//            std::packaged_task<int()> t([&cloud, &radii, &subsample_density_coefficient, &all_persistence_diagrams]()
+//                 {
+//                     get_persistence_pairs_sparse(cloud, radii, subsample_density_coefficient, all_persistence_diagrams);
+//                     return 1;
+//                 });
+//            futures[i] = t.get_future();
+//            pool.post(t);
+//        }
+//        for (int i = 0; i < futures.size(); ++i) {
+//            int r = futures[i].get();
+//        }
 
         for (int i = 0; i < number_of_samples; ++i) {
-            std::packaged_task<int()> t([&cloud, &radii, &subsample_density_coefficient, &all_persistence_diagrams]()
-                 {
-                     get_persistence_pairs_sparse(cloud, radii, subsample_density_coefficient, all_persistence_diagrams);
-                     return 1;
-                 });
-            futures[i] = t.get_future();
-            pool.post(t);
+            get_persistence_pairs_sparse(cloud, radii, subsample_density_coefficient, all_persistence_diagrams);
         }
-        for (int i = 0; i < futures.size(); ++i) {
-            int r = futures[i].get();
-        }
-
 
         {
             if (DEBUG_FLAG_0) {
@@ -1250,7 +1255,7 @@ namespace smpl {
             std::cout << "Deleting tree" << std::endl;
         }
         delete matrix;
-
+        delete matrix->simplex_tree;
         mute.lock();
         std::cout << zero_cntr << " so " << extra_cntr << std::endl << "duration " << duration << std::endl;
         mute.unlock();
