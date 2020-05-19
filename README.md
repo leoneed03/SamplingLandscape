@@ -17,13 +17,6 @@ sudo cp -r thread_pool/thread_pool /usr/local/include/
 sudo cp -r thread_pool/thread_pool.hpp /usr/local/include/
 ```
 
-## Usage
-
-```c++
-cd time_test
-g++ test_{version}.cpp -std=c++17 -ltbb [-Xpreprocessor] -fopenmp -Os -lomp -o algo
-./algo
-```
 ## Dependencies
 
 1. GUDHI: https://github.com/GUDHI/gudhi-devel
