@@ -27,7 +27,7 @@
 #include <chrono>
 #include <random>
 
-#include <gudhi/Persistence_landscape.h>
+
 
 #include <boost/bind.hpp>
 #include <boost/thread/thread.hpp>
@@ -48,7 +48,7 @@ namespace smpl {
     std::mutex mute;
 
 
-    using Persistence_landscape = Gudhi::Persistence_representations::Persistence_landscape;
+    using Persistence_landscape_a = Gudhi::Persistence_representations::Persistence_landscape;
     
     void xor_vector(std::vector<int> &l, std::vector<int> &r) {
         std::vector<int> v(l.size() + r.size());                  
@@ -389,9 +389,7 @@ namespace smpl {
         }
 
         ~Simplex_tree() {
-            if (to_delete) {
-                delete all_first_vertices;
-            }
+
         }
 
     private:
@@ -483,8 +481,8 @@ namespace smpl {
             if (simplex_tree == nullptr) {
                 std::cout << "NULL" << std::endl;
             }
-//            simplex_tree->free_tree();
-//            delete simplex_tree;
+            simplex_tree->free_tree();
+            delete simplex_tree;
         }
 
         friend std::ostream &operator<<(std::ostream &os, const std::vector<std::vector<double>> &matrix);
@@ -1118,28 +1116,27 @@ namespace smpl {
         //only  1
 
 
-        auto persistence_landscape = subcloud->get_all_dimensions_landscape(); //DEBUG_FLAG_0 cohomology //58 Mb memory 332 (282) ms (50 dots r = 8)
+        auto Persistence_landscape_a = subcloud->get_all_dimensions_landscape(); //DEBUG_FLAG_0 cohomology //58 Mb memory 332 (282) ms (50 dots r = 8)
 
         if (DEBUG_FLAG_0) {
             std::cout << "delete subcloud root" << std::endl;
             std::cout << "delete subcloud" << std::endl;
         }
         delete subcloud;
-        delete subcloud->root;
 
         mute.lock();
-        for (int i = 0; i < persistence_landscape.size(); ++i) {
+        for (int i = 0; i < Persistence_landscape_a.size(); ++i) {
             if (DEBUG_FLAG_0) {
                 std::cout << "DIM_" << i << std::endl;
             }
-            sort(persistence_landscape[i].begin(), persistence_landscape[i].end());
+            sort(Persistence_landscape_a[i].begin(), Persistence_landscape_a[i].end());
             if (DEBUG_FLAG_0) {
-                for (const auto& e: persistence_landscape[i]) {
+                for (const auto& e: Persistence_landscape_a[i]) {
                     std::cout << e.first << " " << e.second << std::endl;
                 }
             }
         }
-        v_pairs.push_back(persistence_landscape);
+        v_pairs.push_back(Persistence_landscape_a);
         mute.unlock();
     }
 
@@ -1163,27 +1160,24 @@ namespace smpl {
 
 
         tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> all_persistence_diagrams;
-//        tp::/**/ThreadPoolOptions options;
-//        options.setThreadCount(number_of_thread_workers);
-//        tp::ThreadPool pool(options);
-//        std::vector<std::future<int>> futures(number_of_samples);
-//
-//        for (int i = 0; i < number_of_samples; ++i) {
-//            std::packaged_task<int()> t([&cloud, &radii, &subsample_density_coefficient, &all_persistence_diagrams]()
-//                 {
-//                     get_persistence_pairs_sparse(cloud, radii, subsample_density_coefficient, all_persistence_diagrams);
-//                     return 1;
-//                 });
-//            futures[i] = t.get_future();
-//            pool.post(t);
-//        }
-//        for (int i = 0; i < futures.size(); ++i) {
-//            int r = futures[i].get();
-//        }
+        tp::ThreadPoolOptions options;
+        options.setThreadCount(number_of_thread_workers);
+        tp::ThreadPool pool(options);
+        std::vector<std::future<int>> futures(number_of_samples);
 
         for (int i = 0; i < number_of_samples; ++i) {
-            get_persistence_pairs_sparse(cloud, radii, subsample_density_coefficient, all_persistence_diagrams);
+            std::packaged_task<int()> t([&cloud, &radii, &subsample_density_coefficient, &all_persistence_diagrams]()
+                 {
+                     get_persistence_pairs_sparse(cloud, radii, subsample_density_coefficient, all_persistence_diagrams);
+                     return 1;
+                 });
+            futures[i] = t.get_future();
+            pool.post(t);
         }
+        for (int i = 0; i < futures.size(); ++i) {
+            int r = futures[i].get();
+        }
+
 
         {
             if (DEBUG_FLAG_0) {
@@ -1193,7 +1187,7 @@ namespace smpl {
             }
         }
         int counter = 1;
-        std::vector<std::vector<Persistence_landscape>> persistence_landscapes(cloud->dimension);
+        std::vector<std::vector<Persistence_landscape_a>> persistence_landscapes(cloud->dimension);
         if (all_persistence_diagrams.empty()) {
             if (DEBUG_FLAG_0) {
                 std::cout << "no landscapes" << std::endl;
@@ -1255,7 +1249,7 @@ namespace smpl {
             std::cout << "Deleting tree" << std::endl;
         }
         delete matrix;
-        delete matrix->simplex_tree;
+
         mute.lock();
         std::cout << zero_cntr << " so " << extra_cntr << std::endl << "duration " << duration << std::endl;
         mute.unlock();
