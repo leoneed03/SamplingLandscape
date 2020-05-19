@@ -1,12 +1,15 @@
 # SubsamplingMethodsForPersistenceLandscape
 
-## Other sources (Linux)
+## Libraries installation (Linux)
 
+TBB, GUDHI, PHAT can be installed with package manager
 ```
 sudo apt-get -y install libtbb-dev
 sudo apt-get -y install libgudhi-dev
 sudo apt-get -y install libphat-dev
 ```
+or directly from their repositories (see "Dependencies")
+
 Thread pool can be installed from https://github.com/inkooboo/thread-pool-cpp
 or by commands 
 ```
@@ -27,3 +30,4 @@ g++ test_{version}.cpp -std=c++17 -ltbb [-Xpreprocessor] -fopenmp -Os -lomp -o a
 2. PHAT: https://github.com/blazs/phat
 3. TBB: https://github.com/oneapi-src/oneTBB
 4. Boost: https://www.boost.org/users/download/
+5. Thread pool: https://github.com/inkooboo/thread-pool-cpp
