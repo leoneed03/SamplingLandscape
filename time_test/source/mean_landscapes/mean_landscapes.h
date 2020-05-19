@@ -64,6 +64,8 @@ namespace smpl {
             }
         }
         std::vector<Persistence_landscape> average_landscape_all_dimensions(all_persistence_diagrams[0].size());
+        
+        /*
         for (int i = 0; i < average_landscape_all_dimensions.size(); ++i) {
             std::vector<Persistence_landscape *> plv;
             for (auto &e: persistence_landscapes[i]) {
@@ -87,7 +89,7 @@ namespace smpl {
             if (PLOT_LANDSCAPES) {
                 average_landscape_all_dimensions[i].plot(ss);
             }
-        }
+        }*/
         return average_landscape_all_dimensions;
     }
 

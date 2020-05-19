@@ -690,6 +690,7 @@ namespace smpl {
         std::vector<std::pair<double, int>> v_pairs;
 
         ~SubCloud() {
+        	delete root;
         }
 
         phat::boundary_matrix <phat::vector_vector> get_boundary_matrix_compressed() {
