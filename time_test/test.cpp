@@ -2,7 +2,7 @@
 int num_ = 10;
 
 #include <atomic>
-#include "source/algorithm/landscape_a.cpp"
+#include "source/algorithm/landscape_a.h"
 #include "source/ripser/landscape_r.h"
 #include "../util/compare.cpp"
 #include <iostream>

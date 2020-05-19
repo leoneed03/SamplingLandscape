@@ -3,7 +3,7 @@
 int num_ = 3;
 
 #include <boost/test/included/unit_test.hpp>
-#include "source/algorithm/landscape_a.cpp"
+#include "source/algorithm/landscape_a.h"
 #include <iostream>
 
 using namespace smpl;

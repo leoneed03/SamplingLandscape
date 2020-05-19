@@ -10,6 +10,7 @@ before_install:
 - sudo apt-get -y install libboost-filesystem-dev
 - sudo apt-get -y install libboost-thread-dev
 - sudo apt-get -y install libboost-program-options-dev
+- sudo apt-get -y install valgrind
 - sudo cp -r thread_pool/thread_pool /usr/local/include/
 - sudo cp -r thread_pool/thread_pool.hpp /usr/local/include/
 - sudo cp -r phat /usr/local/include/
@@ -18,9 +19,10 @@ before_install:
 
 script:
 - cd time_test
+- g++ test_diagram_computation_v.cpp  -std=c++17 -Os -lpthread -lboost_system -fopenmp -ltbb -o testd
+- valgrind --leak-check=full ./testd
 - g++ test.cpp  -std=c++17 -Os -lpthread -lboost_system -fopenmp -ltbb -o testd
 - g++ test_ripser.cpp  -std=c++17 -Os -lpthread -lboost_system -fopenmp -ltbb -o testd
 - g++ test_gudhi.cpp  -std=c++17 -Os -lpthread -lboost_system -fopenmp -ltbb -o testd
 - g++ test_algorithm.cpp  -std=c++17 -Os -lpthread -lboost_system -fopenmp -ltbb -o testd
 - g++ test_diagram_computation.cpp  -std=c++17 -Os -lpthread -lboost_system -fopenmp -ltbb -o testd
-- ./testd

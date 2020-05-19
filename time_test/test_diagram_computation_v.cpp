@@ -193,7 +193,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
 
 
 
-   
+   /*
     BOOST_AUTO_TEST_CASE(testDiagram5) {
 
             std::string path = "dataset/magnetometer/s1000.txt";
@@ -213,7 +213,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
             auto res = compare(diagram_a, diagram_r);
 
             BOOST_CHECK_EQUAL(res, true);
-    }
+    }*/
 
     BOOST_AUTO_TEST_CASE(testDiagram6) {
 
