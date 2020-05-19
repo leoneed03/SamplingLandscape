@@ -37,17 +37,17 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
 
     }*/
 
-/*
+
 
     BOOST_AUTO_TEST_CASE(testCalculator1) {
 
             std::cout << "\n\nTest sampled diagram with r = 8" << std::endl;
             std::vector<double> v, av;
             tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram;
-            for (int i = 0; i < 1; ++i) {
+            for (int i = 0; i < 2; ++i) {
                 std::clog << "\n\nSTARTED " << i << std::endl;
                 double time = main_algorithm(diagram, "dataset/figures/dots50_no_number.txt", "",
-                                             2, 800, true, 4,8,0.4);
+                                             2, 8, true, 4,8,0.4);
 
                 std::clog << "\n\nCOMPUTED " << i << std::endl;
                 v.push_back(time);
@@ -61,7 +61,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
 
     }*/
 
-
+/*
 
     BOOST_AUTO_TEST_CASE(testCalculator2) {
         std::cout << "\n\nTest sampled diagram with r = 0.5" << std::endl;
@@ -70,7 +70,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
         for (int i = 0; i < 1 /*num_*/ ; ++i) {
                std::clog << "\n\nSTARTED " << i << std::endl;
             double time = main_algorithm(diagram, "dataset/figures/human500.txt", "",
-                        2, 0.5, true, 4, 8, 0.4);
+                        2, 0.5, true, 4, 8, 0.2);
             
             std::clog << "\n\nCOMPUTED " << i << std::endl;
             v.push_back(time);
@@ -81,6 +81,6 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
         std::cout << "\n E = " << p.first << " D = " << p.second << '\n';
         std::cout << "\n size E = " << total_size.first << " size D = " << total_size.second << '\n';
         
-    }
+    }*/
 
 BOOST_AUTO_TEST_SUITE_END()
