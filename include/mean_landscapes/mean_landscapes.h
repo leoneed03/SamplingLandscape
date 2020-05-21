@@ -17,7 +17,7 @@
 //using namespace std;
 
 #define infinity_1 (1e30)
-#define epsilon 1e-10
+#define epsilon_r 1e-10
 
 namespace smpl {
     using Persistence_landscape = Gudhi::Persistence_representations::Persistence_landscape;
@@ -81,7 +81,7 @@ namespace smpl {
 //        std::vector<std::vector<Persistence_landscape*>> persistence_landscapes(all_persistence_diagrams[0].size());
         std::vector<std::vector<Persistence_landscape>> persistence_landscapes(all_persistence_diagrams[0].size());
 
-for (const auto &full_landscape: all_persistence_diagrams) {
+    for (const auto &full_landscape: all_persistence_diagrams) {
             for (int i = 0; i < full_landscape.size(); ++i) {
                 print_pairs = true;
                 if (DEBUG_FLAG_MEAN_LANDSCAPES) {

@@ -18,7 +18,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
             tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram;
             for (int i = 0; i < 1; ++i) {
                 double time = main_algorithm(diagram, "../dataset/magnetometer/s50.txt", "/Users/leonardbee/Desktop/dataset/tore/sampled_persistence",
-                                          2, rad, true, 1, 1, 1, true);
+                                          2, rad,  1, 1, 1, true);
 //                double time2 =
                 v.push_back(time);
             }
@@ -47,7 +47,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
             for (int i = 0; i < 2; ++i) {
                 std::clog << "\n\nSTARTED " << i << std::endl;
                 double time = main_algorithm(diagram, "../dataset/figures/dots50_no_number.txt", "",
-                                             2, 8, true, 4,8,0.4);
+                                             2, 8,  4, 8, 0.4);
 
                 std::clog << "\n\nCOMPUTED " << i << std::endl;
                 v.push_back(time);
@@ -70,7 +70,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
         for (int i = 0; i < 1; ++i) {
                std::clog << "\n\nSTARTED " << i << std::endl;
             double time = main_algorithm(diagram, "../dataset/figures/human500.txt", "",
-                        2, 0.5, true, 4, 8, 0.2);
+                        2, 0.5,  4, 8, 0.2);
             
             std::clog << "\n\nCOMPUTED " << i << std::endl;
             v.push_back(time);

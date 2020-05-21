@@ -200,7 +200,7 @@ namespace smpl {
         }
     };
 
-    struct Simplex_tree {
+    struct Simplex_tree_owner {
 
     private:
         Simplex_tree_node_inner *all_first_vertices;
@@ -228,7 +228,7 @@ namespace smpl {
 
         }
 
-        Simplex_tree(int n, int cloud_size) {
+        Simplex_tree_owner(int n, int cloud_size) {
             all_first_vertices = new Simplex_tree_node_inner();
             simplices = std::vector< std::vector< Simplex_tree_node * >> (n);
             for (int i = 0; i < cloud_size; ++i) {
@@ -238,7 +238,7 @@ namespace smpl {
             }
         }
 
-        Simplex_tree(Simplex_tree *simplex_tree, int n) {
+        Simplex_tree_owner(Simplex_tree_owner *simplex_tree, int n) {
             to_delete = false;
             all_first_vertices = simplex_tree->all_first_vertices;
             simplices = std::vector< std::vector< Simplex_tree_node * >> (n);
@@ -388,12 +388,12 @@ namespace smpl {
 
         }
 
-        ~Simplex_tree() {
+        ~Simplex_tree_owner() {
 
         }
 
     private:
-        Simplex_tree(const Simplex_tree& other_simplex_tree) {
+        Simplex_tree_owner(const Simplex_tree_owner& other_simplex_tree) {
 
         }
 
@@ -404,7 +404,7 @@ namespace smpl {
         int dimension, size;
         std::vector<std::vector<double>> points;
         std::vector<std::vector<double>> distances;
-        Simplex_tree *simplex_tree;
+        Simplex_tree_owner *simplex_tree;
 
         Cloud(const std::string &path, int n) {
             std::ifstream input_stream(path);
@@ -448,7 +448,7 @@ namespace smpl {
             dim = std::max(dim, 0);
             dimension = dim;
 
-            simplex_tree = new Simplex_tree(n, size);
+            simplex_tree = new Simplex_tree_owner(n, size);
 
             if (DEBUG_FLAG_0) {
                 std::cout << points.size() << " vs cntr " << counter << std::endl;
@@ -496,7 +496,7 @@ namespace smpl {
 
     struct Betti_matrix {
         int number_of_points_in_the_less_simplex;
-        Simplex_tree *simplex_tree;
+        Simplex_tree_owner *simplex_tree;
         std::vector<Simplex_tree_node *> *less_simplices;
         std::vector<Simplex_tree_node *> *bigger_simplices;
         std::vector<int> *original_numbers_of_points;
@@ -504,7 +504,7 @@ namespace smpl {
         Betti_matrix(int new_number_of_points_in_the_less_simplex,
                      std::vector<Simplex_tree_node *> *new_less_simplices,
                      std::vector<Simplex_tree_node *> *new_bigger_simplices,
-                     Simplex_tree *new_simplex_tree,
+                     Simplex_tree_owner *new_simplex_tree,
                      std::vector<int> *new_original_numbers_of_points,
                      std::unordered_map<Simplex_tree_node *, int> &new_less_simplex_map,
                      std::unordered_map<Simplex_tree_node *, int> &new_bigger_simplex_map) :
@@ -666,7 +666,7 @@ namespace smpl {
                         return (*new_matrix_pointer)[lhs][0] < (*new_matrix_pointer)[rhs][0] ||
                                (!((*new_matrix_pointer)[rhs][0] < (*new_matrix_pointer)[lhs][0]) && lhs < rhs);
                     }, std::move(vector_for_pq)};
-            
+
             return reduce_matrix(new_matrix, already_paired_simplices, is_max_simplex_rank, rows_with_lowest_bits);
         }
 
@@ -676,7 +676,7 @@ namespace smpl {
         std::unordered_map<int, int> new_order_of_points;
         std::vector<boost::dynamic_bitset<>> adjacency_matrix;
         std::vector<int> subcloud_of_points;
-        Simplex_tree *root;
+        Simplex_tree_owner *root;
         const std::vector<std::vector<double>> *matrix_of_distances;
         double max_radii = 1e6;
         int simplex_counter = 0;
@@ -989,7 +989,7 @@ namespace smpl {
             max_radii = max_radius;
             matrix_of_distances = &cloud.distances;
             subcloud_of_points = points;
-            root = new Simplex_tree(cloud.simplex_tree, cloud.simplex_tree->simplices.size());
+            root = new Simplex_tree_owner(cloud.simplex_tree, cloud.simplex_tree->simplices.size());
 
             for (const auto &point: points) {
                 auto found = root->find(std::vector<int>({point}), -1);
@@ -1142,7 +1142,7 @@ namespace smpl {
     }
 
     void
-    get_average_landscape_once(tbb::concurrent_vector<std::vector<std::pair<double, double>>>& diagram,
+    get_average_landscape_once(std::string path, tbb::concurrent_vector<std::vector<std::pair<double, double>>>& diagram,
             Cloud* cloud, int number_of_thread_workers, double radii = 0.5,
                                double subsample_density_coefficient = 0.3,
                                int number_of_samples = 10, bool print_pairs = false) {
@@ -1196,7 +1196,7 @@ namespace smpl {
             return;
         }
         diagram = all_persistence_diagrams[0];
-        get_average_landscape(all_persistence_diagrams);
+        get_average_landscape(all_persistence_diagrams, path);
     }
 
     double main_algorithm(tbb::concurrent_vector<std::vector<std::pair<double, double>>>& diagram,
@@ -1204,11 +1204,11 @@ namespace smpl {
                             std::string to,
                             int max_rank,
                             double max_edge_length,
-                            bool gudhi_format,
                             int number_of_thread_workers = 1,
                             int number_of_samples = 1,
                             double subsample_density_coefficient = 1.0,
-                            bool print_pairs = false) {
+                            bool print_pairs = false,
+                            bool gudhi_format = true) {
         zero_cntr = 0;
         extra_cntr = 0;
         matrix_size_cntr = 0;
@@ -1236,7 +1236,7 @@ namespace smpl {
         if (DEBUG_FLAG_0) {
             std::cout << "Started calculating" << std::endl;
         }
-        get_average_landscape_once(diagram, matrix, number_of_thread_workers, max_edge_length, subsample_density_coefficient,
+        get_average_landscape_once(to, diagram, matrix, number_of_thread_workers, max_edge_length, subsample_density_coefficient,
                               number_of_samples);
         if (DEBUG_FLAG_0) {
             std::cout << "Finished calculating" << std::endl;
@@ -1256,6 +1256,20 @@ namespace smpl {
         mute.unlock();
 
         return duration;
+    }
+    double landscape_algorithm(std::string from,
+                            std::string to,
+                            int max_rank,
+                            double max_edge_length,
+                            int number_of_thread_workers,
+                            int number_of_samples,
+                            double subsample_density_coefficient,
+                            bool print_pairs = false,
+                            bool gudhi_format = true) {
+        tbb::concurrent_vector<std::vector<std::pair<double, double>>> tmp;
+        return main_algorithm(tmp, from, to, max_rank, max_edge_length,
+                number_of_thread_workers, number_of_samples, subsample_density_coefficient, false, true);
+
     }
 }
 

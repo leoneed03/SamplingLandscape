@@ -46,6 +46,7 @@ namespace smpl {
     tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> get_diagrams_ripser(
             tbb::concurrent_vector<std::vector<std::pair<double, double>>>& diagram,
             const std::string &filename,
+            std::string to,
             int max_rank,
             double max_edge_length,
             bool gudhi_format,
@@ -149,30 +150,31 @@ namespace smpl {
             }
 
         }
-        get_average_landscape(all_persistence_diagrams, "");
+        get_average_landscape(all_persistence_diagrams, to);
         if (!all_persistence_diagrams.empty()) {
             diagram = all_persistence_diagrams[0];
         }
         return all_persistence_diagrams;
     }
 
+
     double main_ripser(tbb::concurrent_vector<std::vector<std::pair<double, double>>>& diagram,
                         std::string from,
                         std::string to,
                         int max_rank,
                         double max_edge_length,
-                        bool gudhi_format,
                         int number_of_thread_workers = 1,
                         int number_of_samples = 1,
                         double subsample_density_coefficient = 1.0,
-                        bool print_pairs = false) {
+                        bool print_pairs = false,
+                        bool gudhi_format = true) {
         std::vector<int> v;
         std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
         if (subsample_density_coefficient < 0 || subsample_density_coefficient > 1) {
             subsample_density_coefficient = 1;
         }
     //    get_diagrams_ripser(filetore, 2, 0.5, true, 10, 10, 0.4, true); //not sampled
-        get_diagrams_ripser(diagram, from, max_rank, max_edge_length, true, number_of_thread_workers, number_of_samples,
+        get_diagrams_ripser(diagram, from, to, max_rank, max_edge_length, true, number_of_thread_workers, number_of_samples,
                      subsample_density_coefficient, print_pairs);
     //    while (diagram.size() < max_rank + 1) {
     //        diagram.push_back(std::vector<std::pair<double, double>> (0));
@@ -181,5 +183,15 @@ namespace smpl {
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
         std::cout << "total duration " << duration << std::endl;
         return duration;
+    }
+    double landscape_ripser(std::string from,
+                        std::string to,
+                        int max_rank,
+                        double max_edge_length,
+                        int number_of_thread_workers = 1,
+                        int number_of_samples = 1,
+                        double subsample_density_coefficient = 1.0) {
+        tbb::concurrent_vector<std::vector<std::pair<double, double>>> tmp;
+        return main_ripser(tmp, from, to, max_rank, max_edge_length, number_of_thread_workers, number_of_samples, subsample_density_coefficient, true, true);
     }
 }

@@ -24,8 +24,8 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
         tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram_r;
 
         for (int i = 0; i < 1; ++i) {
-            double time1 = main_ripser(diagram_r, path, "", 2, radii, true, 1, 1, 1, true);
-            double time2 = main_algorithm(diagram_a, path, "", 2, radii, true, 1, 1, 1, true);
+            double time1 = main_ripser(diagram_r, path, "", 2, radii, 1, 1, 1, true);
+            double time2 = main_algorithm(diagram_a, path, "", 2, radii, 1, 1, 1, true);
         }
 
         auto p = get_M_D(v);
@@ -48,8 +48,8 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
         tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram_r;
 
         for (int i = 0; i < 1; ++i) {
-            double time1 = main_ripser(diagram_r, path, "", 2, radii, true, 1, 1, 1, true);
-            double time2 = main_algorithm(diagram_a, path, "", 2, radii, true, 1, 1, 1, true);
+            double time1 = main_ripser(diagram_r, path, "", 2, radii, 1, 1, 1, true);
+            double time2 = main_algorithm(diagram_a, path, "", 2, radii, 1, 1, 1, true);
         }
 
         auto p = get_M_D(v);
@@ -70,8 +70,8 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
         tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram_r;
 
         for (int i = 0; i < 1; ++i) {
-            double time1 = main_ripser(diagram_r, path, "", 2, radii, true, 1, 1, 1, true);
-            double time2 = main_algorithm(diagram_a, path, "", 2, radii, true, 1, 1, 1, true);
+            double time1 = main_ripser(diagram_r, path, "", 2, radii, 1, 1, 1, true);
+            double time2 = main_algorithm(diagram_a, path, "", 2, radii, 1, 1, 1, true);
         }
 
         auto p = get_M_D(v);
@@ -93,8 +93,8 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
         tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram_r;
 
         for (int i = 0; i < 1; ++i) {
-            double time1 = main_ripser(diagram_r, path, "", 2, radii, true, 1, 1, 1, true);
-            double time2 = main_algorithm(diagram_a, path, "", 2, radii, true, 1, 1, 1, true);
+            double time1 = main_ripser(diagram_r, path, "", 2, radii, 1, 1, 1, true);
+            double time2 = main_algorithm(diagram_a, path, "", 2, radii, 1, 1, 1, true);
         }
 
         auto p = get_M_D(v);
@@ -117,8 +117,8 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
         tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram_r;
 
         for (int i = 0; i < 1; ++i) {
-            double time1 = main_ripser(diagram_r, path, "", 2, radii, true, 1, 1, 1, true);
-            double time2 = main_algorithm(diagram_a, path, "", 2, radii, true, 1, 1, 1, true);
+            double time1 = main_ripser(diagram_r, path, "", 2, radii, 1, 1, 1, true);
+            double time2 = main_algorithm(diagram_a, path, "", 2, radii, 1, 1, 1, true);
         }
 
         auto p = get_M_D(v);
@@ -139,8 +139,8 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
 
         for (int i = 0; i < 1; ++i) {
 
-            double time1 = main_ripser(diagram_r, path, "", 2, radii, true, 1, 1, 1, true);
-            double time2 = main_algorithm(diagram_a, path, "", 2, radii, true, 1, 1, 1, true);
+            double time1 = main_ripser(diagram_r, path, "", 2, radii, 1, 1, 1, true);
+            double time2 = main_algorithm(diagram_a, path, "", 2, radii, 1, 1, 1, true);
         }
 
         auto p = get_M_D(v);
@@ -161,8 +161,8 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
 
         for (int i = 0; i < 1; ++i) {
 
-            double time1 = main_ripser(diagram_r, path, "", 2, radii, true, 1, 1, 1, true);
-            double time2 = main_algorithm(diagram_a, path, "", 2, radii, true, 1, 1, 1, true);
+            double time1 = main_ripser(diagram_r, path, "", 2, radii, 1, 1, 1, true);
+            double time2 = main_algorithm(diagram_a, path, "", 2, radii, 1, 1, 1, true);
         }
 
         auto p = get_M_D(v);
@@ -183,9 +183,9 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
 
         for (int i = 0; i < 1; ++i) {
             double time1 = main_ripser(diagram_r, path, "",
-                    2, radii, true, 1, 1, 1, true);
+                    2, radii, 1, 1, 1, true);
             double time2 = main_algorithm(diagram_a, path, "",
-                    2, radii, true, 1, 1, 1, true);
+                    2, radii, 1, 1, 1, true);
         }
 
         auto p = get_M_D(v);
@@ -205,8 +205,8 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
         tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram_r;
 
         for (int i = 0; i < 1; ++i) {
-            double time1 = main_ripser(diagram_r, path, "", 2, radii, true, 1, 1, 1, true);
-            double time2 = main_algorithm(diagram_a, path, "", 2, radii, true, 1, 1, 1, true);
+            double time1 = main_ripser(diagram_r, path, "", 2, radii, 1, 1, 1, true);
+            double time2 = main_algorithm(diagram_a, path, "", 2, radii, 1, 1, 1, true);
         }
 
         auto p = get_M_D(v);
@@ -231,8 +231,8 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
         tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram_r;
 
         for (int i = 0; i < 1; ++i) {
-            double time1 = main_ripser(diagram_r, path, "", 2, radii, true, 1, 1, 1, true);
-            double time2 = main_algorithm(diagram_a, path, "", 2, radii, true, 1, 1, 1, true);
+            double time1 = main_ripser(diagram_r, path, "", 2, radii, 1, 1, 1, true);
+            double time2 = main_algorithm(diagram_a, path, "", 2, radii, 1, 1, 1, true);
         }
 
         auto p = get_M_D(v);
@@ -252,8 +252,8 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
         tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram_r;
 
         for (int i = 0; i < 1; ++i) {
-            double time1 = main_ripser(diagram_r, path, "", 2, radii, true, 1, 1, 1, true);
-            double time2 = main_algorithm(diagram_a, path, "", 2, radii, true, 1, 1, 1, true);
+            double time1 = main_ripser(diagram_r, path, "", 2, radii, 1, 1, 1, true);
+            double time2 = main_algorithm(diagram_a, path, "", 2, radii, 1, 1, 1, true);
         }
 
         auto p = get_M_D(v);
@@ -273,8 +273,8 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
         tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram_r;
 
         for (int i = 0; i < 1; ++i) {
-            double time1 = main_ripser(diagram_r, path, "", 2, radii, true, 1, 1, 1, true);
-            double time2 = main_algorithm(diagram_a, path, "", 2, radii, true, 1, 1, 1, true);
+            double time1 = main_ripser(diagram_r, path, "", 2, radii, 1, 1, 1, true);
+            double time2 = main_algorithm(diagram_a, path, "", 2, radii, 1, 1, 1, true);
         }
 
         auto p = get_M_D(v);
@@ -295,8 +295,8 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
         tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram_r;
 
         for (int i = 0; i < 5; ++i) {
-            double time1 = main_ripser(diagram_r, path, "", 2, radii, true, 1, 1, 1, true);
-            double time2 = main_algorithm(diagram_a, path, "", 2, radii, true, 1, 1, 1, true);
+            double time1 = main_ripser(diagram_r, path, "", 2, radii, 1, 1, 1, true);
+            double time2 = main_algorithm(diagram_a, path, "", 2, radii, 1, 1, 1, true);
         }
 
         auto p = get_M_D(v);

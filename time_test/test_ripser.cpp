@@ -20,9 +20,9 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
         tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram;
         for (int i = 0; i < 1; ++i) {
 //            double time = main_ripser("../dataset/figures/dots50_no_number.txt", "/Users/leonardbee/Desktop/dataset/tore/sampled_persistence",
-//                        2, 8, true, 1, 1, 1, true);
+//                        2, 8, 1, 1, 1);
                 double time = main_ripser(diagram, "../dataset/magnetometer/s50.txt", "/Users/leonardbee/Desktop/dataset/tore/sampled_persistence",
-                                          2, 1e11, true, 1, 1, 1, true);
+                                          2, 1e11, 1, 1, 1);
             v.push_back(time);
             out << time << ' ';
         }
@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
         for (int i = 0; i < num_; ++i) {
             tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram;
             double time = main_ripser(diagram, "../dataset/figures/human500.txt", "/Users/leonardbee/Desktop/dataset/tore/sampled_persistence",
-                        2, 0.5, true, 1, 1, 1);
+                        2, 0.5, 1, 1, 1);
             v.push_back(time);
             out << time << ' ';
         }
@@ -76,7 +76,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
         tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram;
         for (int i = 0; i < num_; ++i) {
             double time = main_ripser(diagram, "../dataset/figures/human500.txt", "/Users/leonardbee/Desktop/dataset/tore/sampled_persistence",
-                        2, 1e11, true, 4, 10, 0.4);
+                        2, 1e11, 4, 10, 0.4);
             v.push_back(time);
             out << time << ' ';
         }
@@ -94,7 +94,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
         std::vector<double> v;
         for (int i = 0; i < num_; ++i) {
             double time = main_ripser(diagram, "../dataset/figures/human500.txt", "/Users/leonardbee/Desktop/dataset/tore/sampled_persistence",
-                        2, 1e11, true, 1, 1, 1);
+                        2, 1e11, 1, 1, 1);
             v.push_back(time);
             out << time << ' ';
         }

@@ -128,7 +128,7 @@ namespace smpl {
 
     // infinity
     // Types definition
-    std::mutex mute;
+    std::mutex mute_gudhi;
     void get_diagram(tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> &diagram,
                      std::string filename,
                      int max_rank,
@@ -143,12 +143,12 @@ namespace smpl {
         Simplex_tree simplex_tree;
         rips_complex_from_file.create_complex(simplex_tree, dim_max);
         simplex_tree.initialize_filtration();
-        mute.lock();
+        mute_gudhi.lock();
         std::cout << simplex_tree.num_simplices() << " simplices" <<  std::endl;
-        mute.unlock();
+        mute_gudhi.unlock();
         Persistent_cohomology pcoh(simplex_tree);
         pcoh.init_coefficients(2);
-        pcoh.compute_persistent_cohomology(epsilon);
+        pcoh.compute_persistent_cohomology(1e-10);
         tbb::concurrent_vector<std::vector<std::pair<double, double>>> all_dimension_pairs(dim_max);
         {
     //        pcoh.output_diagram();
@@ -236,18 +236,17 @@ namespace smpl {
     }
 
 
-    double main_gudhi(std::string from, std::string to,
-                   int max_rank,
-                   double max_edge_length,
-                   bool gudhi_format,
-                   int number_of_thread_workers = 1,
-                   int number_of_samples = 1,
-                   double subsample_density_coefficient = 1.0,
-                   bool print_pairs = false) {
+    double landscape_gudhi(std::string from,
+            std::string to,
+            int max_rank,
+            double max_edge_length,
+            int number_of_thread_workers = 1,
+            int number_of_samples = 1,
+            double subsample_density_coefficient = 1.0,
+            bool print_pairs = false,
+            bool gudhi_format = true) {
 
         bool print_points = false;
-        std::string off_file_points = "/Users/leonardbee/CLionProjects/subsampling_gudhi/human500.txt";
-        std::string filediag;
         Filtration_value threshold;
         int dim_max;
         int p;
@@ -278,7 +277,7 @@ namespace smpl {
         std::cout << "total samples " << all_persistence_diagrams.size() << std::endl;
 
 
-        get_average_landscape(all_persistence_diagrams, "/Users/leonardbee/Desktop/dataset/new_examples");
+        get_average_landscape(all_persistence_diagrams, to);
         std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
         std::cout << "total duration " << duration <<  std::endl;
