@@ -1,4 +1,4 @@
-# SubsamplingMethodsForPersistenceLandscape
+# Subsampling Methods For Persistence Landscape
 
 ## Libraries installation (Linux)
 
