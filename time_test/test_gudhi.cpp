@@ -42,11 +42,20 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
     BOOST_AUTO_TEST_CASE(testCalculator3) {
         std::cout << "\n\nTest sampled diagram with r =  diam" << std::endl;
         std::vector<double> v;
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> apd;
         for (int i = 0; i < num_; ++i) {
-            double time = landscape_gudhi("../dataset/figures/human500.txt", "results",
+            double time = landscape_gudhi_with_diagrams("../dataset/figures/human500.txt", "results", apd,
                         2, 0.5, 4, 10, 0.4);
             v.push_back(time);
         }
+
+//        std::cout << "S_amples " << apd.size() << std::endl;
+//        for (const auto& e: apd) {
+//            std::cout << "            dims " << e.size() << std::endl;
+//            for (const auto& a: e) {
+//                std::cout << "                         intervals " << a.size() << std::endl;
+//            }
+//        }
         auto p = get_M_D(v);
         std::cout << "\n E = " << p.first << " D = " << p.second << '\n';
     }

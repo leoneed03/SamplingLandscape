@@ -22,6 +22,7 @@
 #include <future>
 #include <mutex>
 
+#define DEBUG_GUDHI false
 
 #include "../mean_landscapes/mean_landscapes.h"
 
@@ -51,13 +52,12 @@ namespace smpl {
             std::cout << std::endl;
         }
         sort(vector_of_points.begin(), vector_of_points.begin() + size_of_one_sample);
-        std::set<int> subcloud(vector_of_points.begin(), vector_of_points.begin() + size_of_one_sample);
+//        std::set<int> subcloud(vector_of_points.begin(), vector_of_points.begin() + size_of_one_sample);
 
         return std::set<int>(vector_of_points.begin(), vector_of_points.begin() + size_of_one_sample);
     }
 
     std::vector<Point> points_off_reader(const std::string &name_file, double coeff, bool print_pairs = false) {
-
 
         std::vector<std::vector<double>> points;
         int number_of_points = 0;
@@ -68,7 +68,9 @@ namespace smpl {
                 ++number_of_points;
             }
         }
-        std::cout << "NUMBER OF POINTS " << number_of_points <<  std::endl;
+        if (DEBUG_GUDHI) {
+            std::cout << "NUMBER OF POINTS " << number_of_points << std::endl;
+        }
         std::ifstream input_stream(name_file);
         std::string line;
         int counter = -1;
@@ -110,7 +112,7 @@ namespace smpl {
         }
 
 
-        if (print_pairs) {
+        if (DEBUG_GUDHI) {
             std::cout << points.size() << std::endl;
             for (const auto &e: points) {
 
@@ -120,7 +122,9 @@ namespace smpl {
                 std::cout << points.size() << std::endl;
             }
         }
-
+        if (DEBUG_GUDHI) {
+            std::cout << "reducted NUMBER OF POINTS " << points.size() << std::endl;
+        }
 
         return points;
     }
@@ -236,15 +240,16 @@ namespace smpl {
     }
 
 
-    double landscape_gudhi(std::string from,
-            std::string to,
-            int max_rank,
-            double max_edge_length,
-            int number_of_thread_workers = 1,
-            int number_of_samples = 1,
-            double subsample_density_coefficient = 1.0,
-            bool print_pairs = false,
-            bool gudhi_format = true) {
+    double landscape_gudhi_with_diagrams(std::string from,
+                                            std::string to,
+                                            tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>>& all_persistence_diagrams,
+                                            int max_rank,
+                                            double max_edge_length,
+                                            int number_of_thread_workers = 1,
+                                            int number_of_samples = 1,
+                                            double subsample_density_coefficient = 1.0,
+                                            bool print_pairs = false,
+                                            bool gudhi_format = true) {
 
         bool print_points = false;
         Filtration_value threshold;
@@ -255,8 +260,7 @@ namespace smpl {
 
         std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
 
-        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> all_persistence_diagrams
-                = get_diagrams(from, max_rank, max_edge_length, true, number_of_thread_workers, number_of_samples, subsample_density_coefficient);
+        all_persistence_diagrams = get_diagrams(from, max_rank, max_edge_length, true, number_of_thread_workers, number_of_samples, subsample_density_coefficient);
     //    tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> all_persistence_diagrams
     //            = get_diagrams(off_file_points, 2, 0.5, true, 1, 1, 0.4);
 
@@ -278,12 +282,27 @@ namespace smpl {
 
 
         get_average_landscape(all_persistence_diagrams, to);
+
         std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
         std::cout << "total duration " << duration <<  std::endl;
 
 
         return duration;
+    }
+double landscape_gudhi(std::string from,
+                        std::string to,
+                        int max_rank,
+                        double max_edge_length,
+                        int number_of_thread_workers = 1,
+                        int number_of_samples = 1,
+                        double subsample_density_coefficient = 1.0,
+                        bool print_pairs = false,
+                        bool gudhi_format = true) {
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> all_persistence_diagrams;
+        return landscape_gudhi_with_diagrams(from, to, all_persistence_diagrams, max_rank, max_edge_length,
+                number_of_thread_workers, number_of_samples, subsample_density_coefficient, print_pairs, gudhi_format);
+
     }
 }
 

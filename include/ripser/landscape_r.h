@@ -25,8 +25,12 @@ namespace smpl {
     std::atomic<int> r = {0};
 
 
-    std::set<int> get_random_sample_ripser(std::vector<int> vector_of_points,
+    std::set<int> get_random_sample_ripser(int total_size,
                                       int size_of_one_sample, bool print_pairs = false) {
+        std::vector<int> vector_of_points(total_size);
+        for (int i = 0; i < vector_of_points.size(); ++i) {
+            vector_of_points[i] = i;
+        }
         std::random_device rd;
         std::mt19937 g(rd());
         std::shuffle(vector_of_points.begin(), vector_of_points.end(), g);
@@ -106,9 +110,9 @@ namespace smpl {
         std::vector<std::future<int>> futures(number_of_samples);
 
         for (int i = 0; i < number_of_samples; ++i) {
-            std::packaged_task<int()> t([&cloud, &argv_strings, &all_persistence_diagrams, &subsample_density_coefficient]()
+            std::packaged_task<int()> t([&number_of_points, &argv_strings, &all_persistence_diagrams, &subsample_density_coefficient]()
                 {
-                    auto sample = get_random_sample_ripser(cloud, (int) (cloud.size() * subsample_density_coefficient));
+                    auto sample = get_random_sample_ripser(number_of_points, (int) (number_of_points * subsample_density_coefficient));
                     std::cout << "sample size " <<  sample.size() << std::endl;
                     main_ripser_init(10, argv_strings, sample, all_persistence_diagrams);
                     return 1;
