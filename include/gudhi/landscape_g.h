@@ -13,11 +13,12 @@
 #include <boost/bind.hpp>
 #include <boost/thread/thread.hpp>
 #include <boost/asio.hpp>
+
 #include <gudhi/Rips_complex.h>
 #include <gudhi/distance_functions.h>
 #include <gudhi/Simplex_tree.h>
 #include <gudhi/Persistent_cohomology.h>
-#include <gudhi/Points_off_io.h>
+
 #include <future>
 #include <mutex>
 
@@ -31,7 +32,6 @@ namespace smpl {
     using Field_Zp = Gudhi::persistent_cohomology::Field_Zp;
     using Persistent_cohomology = Gudhi::persistent_cohomology::Persistent_cohomology<Simplex_tree, Field_Zp>;
     using Point = std::vector<double>;
-    using Points_off_reader = Gudhi::Points_off_reader<Point>;
 
 
     std::set<int> get_random_sample(int number_of_points,
