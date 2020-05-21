@@ -8,7 +8,8 @@ sudo apt-get -y install libtbb-dev
 sudo apt-get -y install libgudhi-dev
 sudo apt-get -y install libphat-dev
 ```
-or directly from their repositories (see "Dependencies") or from "dep"
+or directly from their repositories (see "Dependencies") 
+or manually from "dep"
 
 Thread pool can be installed from https://github.com/inkooboo/thread-pool-cpp
 or by commands 
@@ -16,6 +17,9 @@ or by commands
 sudo cp -r thread_pool/thread_pool /usr/local/include/
 sudo cp -r thread_pool/thread_pool.hpp /usr/local/include/
 ```
+
+## Usage
+see time_test/example.cpp
 
 ## Dependencies
 
