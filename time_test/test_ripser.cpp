@@ -17,7 +17,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
         out << "\n\n\nnew log\n r=0.5 sampled ";
         std::cout << "\n\nTest sampled diagram with r = 0.5" << std::endl;
         std::vector<double> v;
-        tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram;
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram;
         for (int i = 0; i < 1; ++i) {
 //            double time = main_ripser("../dataset/figures/dots50_no_number.txt", "/Users/leonardbee/Desktop/dataset/tore/sampled_persistence",
 //                        2, 8, 1, 1, 1);
@@ -34,8 +34,12 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
 
         for (int i = 0; i < diagram.size(); ++i) {
             std::cout << "\nTested " << i << std::endl;
+            int c = 0;
             for (const auto& e: diagram[i]) {
-                std::cout << e.first << ' ' << e.second << std::endl;
+                std::cout << c++ << std::endl;
+                for (const auto& a: e) {
+                    std::cout << a.first << ' ' << a.second << std::endl;
+                }
             }
 
         }
@@ -54,7 +58,8 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
         std::cout << "\n\nTest full diagram with r = 0.5" << std::endl;
         std::vector<double> v;
         for (int i = 0; i < num_; ++i) {
-            tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram;
+
+            tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram;
             double time = main_ripser(diagram, "../dataset/figures/human500.txt", "/Users/leonardbee/Desktop/dataset/tore/sampled_persistence",
                         2, 0.5, 1, 1, 1);
             v.push_back(time);
@@ -73,7 +78,8 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
         out << "\n\n\nnew log\n r=diam sampled ";
         std::cout << "\n\nTest sampled diagram with r =  diam" << std::endl;
         std::vector<double> v;
-        tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram;
+
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram;
         for (int i = 0; i < num_; ++i) {
             double time = main_ripser(diagram, "../dataset/figures/human500.txt", "/Users/leonardbee/Desktop/dataset/tore/sampled_persistence",
                         2, 1e11, 4, 10, 0.4);
@@ -90,7 +96,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
         out.open("log.txt", std::ios::app);
         out << "\n\n\nnew log\n r=diam full ";
         std::cout << "\n\nTest full diagram with r = 0.5" << std::endl;
-        tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram;
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram;
         std::vector<double> v;
         for (int i = 0; i < num_; ++i) {
             double time = main_ripser(diagram, "../dataset/figures/human500.txt", "/Users/leonardbee/Desktop/dataset/tore/sampled_persistence",

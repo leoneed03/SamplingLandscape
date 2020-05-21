@@ -51,6 +51,7 @@
 
 
 namespace smpl {
+
     #define DEBUG_RIPSER_1 (false)
     #define inf (std::numeric_limits<double>::max())
     //namespace ripser {

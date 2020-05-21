@@ -20,8 +20,8 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
 
         std::vector<double> v;
 
-        tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram_a;
-        tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram_r;
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_a;
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_r;
 
         for (int i = 0; i < 1; ++i) {
             double time1 = main_ripser(diagram_r, path, "", 2, radii, 1, 1, 1, true);
@@ -29,7 +29,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
         }
 
         auto p = get_M_D(v);
-        auto res = compare(diagram_a, diagram_r);
+        auto res = compare(diagram_a[0], diagram_r[0]);
 
         BOOST_CHECK_EQUAL(res, true);
     }
@@ -44,8 +44,8 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
 
         std::vector<double> v;
 
-        tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram_a;
-        tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram_r;
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_a;
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_r;
 
         for (int i = 0; i < 1; ++i) {
             double time1 = main_ripser(diagram_r, path, "", 2, radii, 1, 1, 1, true);
@@ -66,8 +66,8 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
          
         std::vector<double> v;
 
-        tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram_a;
-        tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram_r;
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_a;
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_r;
 
         for (int i = 0; i < 1; ++i) {
             double time1 = main_ripser(diagram_r, path, "", 2, radii, 1, 1, 1, true);
@@ -89,8 +89,8 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
          
         std::vector<double> v;
 
-        tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram_a;
-        tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram_r;
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_a;
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_r;
 
         for (int i = 0; i < 1; ++i) {
             double time1 = main_ripser(diagram_r, path, "", 2, radii, 1, 1, 1, true);
@@ -113,8 +113,8 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
 
         std::vector<double> v;
 
-        tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram_a;
-        tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram_r;
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_a;
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_r;
 
         for (int i = 0; i < 1; ++i) {
             double time1 = main_ripser(diagram_r, path, "", 2, radii, 1, 1, 1, true);
@@ -134,8 +134,8 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
          
         std::vector<double> v;
 
-        tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram_a;
-        tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram_r;
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_a;
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_r;
 
         for (int i = 0; i < 1; ++i) {
 
@@ -156,8 +156,8 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
          
         std::vector<double> v;
 
-        tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram_a;
-        tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram_r;
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_a;
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_r;
 
         for (int i = 0; i < 1; ++i) {
 
@@ -178,8 +178,8 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
          
         std::vector<double> v;
 
-        tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram_a;
-        tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram_r;
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_a;
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_r;
 
         for (int i = 0; i < 1; ++i) {
             double time1 = main_ripser(diagram_r, path, "",
@@ -201,8 +201,8 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
          
         std::vector<double> v;
 
-        tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram_a;
-        tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram_r;
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_a;
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_r;
 
         for (int i = 0; i < 1; ++i) {
             double time1 = main_ripser(diagram_r, path, "", 2, radii, 1, 1, 1, true);
@@ -227,8 +227,8 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
 
         std::vector<double> v;
 
-        tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram_a;
-        tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram_r;
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_a;
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_r;
 
         for (int i = 0; i < 1; ++i) {
             double time1 = main_ripser(diagram_r, path, "", 2, radii, 1, 1, 1, true);
@@ -248,8 +248,8 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
 
         std::vector<double> v;
 
-        tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram_a;
-        tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram_r;
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_a;
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_r;
 
         for (int i = 0; i < 1; ++i) {
             double time1 = main_ripser(diagram_r, path, "", 2, radii, 1, 1, 1, true);
@@ -269,8 +269,8 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
 
         std::vector<double> v;
 
-        tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram_a;
-        tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram_r;
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_a;
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_r;
 
         for (int i = 0; i < 1; ++i) {
             double time1 = main_ripser(diagram_r, path, "", 2, radii, 1, 1, 1, true);
@@ -291,8 +291,8 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
 
         std::vector<double> v;
 
-        tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram_a;
-        tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram_r;
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_a;
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_r;
 
         for (int i = 0; i < 5; ++i) {
             double time1 = main_ripser(diagram_r, path, "", 2, radii, 1, 1, 1, true);

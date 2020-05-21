@@ -182,8 +182,8 @@ namespace smpl {
 
     }
 
-    void program_options(int argc, char *argv[], std::string &off_file_points, std::string &filediag,
-                         Filtration_value &threshold, int &dim_max, int &p, Filtration_value &min_persistence);
+//    void program_options(int argc, char *argv[], std::string &off_file_points, std::string &filediag,
+//                         Filtration_value &threshold, int &dim_max, int &p, Filtration_value &min_persistence);
 
 
     tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>>

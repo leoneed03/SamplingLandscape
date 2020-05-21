@@ -15,7 +15,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
             double rad = 1e11;
             std::cout << "\n\nTest sampled diagram with r = " << rad << std::endl;
             std::vector<double> v;
-            tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram;
+            tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram;
             for (int i = 0; i < 1; ++i) {
                 double time = main_algorithm(diagram, "../dataset/magnetometer/s50.txt", "/Users/leonardbee/Desktop/dataset/tore/sampled_persistence",
                                           2, rad,  1, 1, 1, true);
@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
 
             std::cout << "\n\nTest sampled diagram with r = 8" << std::endl;
             std::vector<double> v, av;
-            tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram;
+            tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram;
             for (int i = 0; i < 2; ++i) {
                 std::clog << "\n\nSTARTED " << i << std::endl;
                 double time = main_algorithm(diagram, "../dataset/figures/dots50_no_number.txt", "",
@@ -66,7 +66,7 @@ BOOST_AUTO_TEST_SUITE(testSuiteCalculator)
     BOOST_AUTO_TEST_CASE(testCalculator2) {
         std::cout << "\n\nTest sampled diagram with r = 0.5" << std::endl;
         std::vector<double> v, av;
-        tbb::concurrent_vector<std::vector<std::pair<double, double>>> diagram;
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram;
         for (int i = 0; i < 1; ++i) {
                std::clog << "\n\nSTARTED " << i << std::endl;
             double time = main_algorithm(diagram, "../dataset/figures/human500.txt", "",

@@ -295,10 +295,11 @@ namespace smpl {
                 } else {
                     auto found = current_simplex_tree_node->get_successors()->find(vertex);
 
-                    if (found->second->get_vertex_number() > 0) {
+//                    if (found->second->get_vertex_number() > 0)
+                    {
                         simplices[i].emplace_back(found->second);
-                    } else {
-                        ++extra_cntr;
+//                    } else {
+//                        ++extra_cntr;
                     }
 
                     delete new_simplex_node;
@@ -316,10 +317,11 @@ namespace smpl {
                 } else {
                     auto found = current_simplex_tree_node->get_successors()->find(vertex);
 
-                    if (found->second->get_vertex_number() > 0) {
+//                    if (found->second->get_vertex_number() > 0)
+                    {
                         simplices[i].emplace_back(found->second);
-                    } else {
-                        ++extra_cntr;
+//                    } else {
+//                        ++extra_cntr;
                     }
 
                     delete new_simplex_node;
@@ -1142,7 +1144,7 @@ namespace smpl {
     }
 
     void
-    get_average_landscape_once(std::string path, tbb::concurrent_vector<std::vector<std::pair<double, double>>>& diagram,
+    get_average_landscape_once(std::string path, tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>>& diagrams,
             Cloud* cloud, int number_of_thread_workers, double radii = 0.5,
                                double subsample_density_coefficient = 0.3,
                                int number_of_samples = 10, bool print_pairs = false) {
@@ -1195,11 +1197,11 @@ namespace smpl {
             }
             return;
         }
-        diagram = all_persistence_diagrams[0];
+        diagrams = all_persistence_diagrams;
         get_average_landscape(all_persistence_diagrams, path);
     }
 
-    double main_algorithm(tbb::concurrent_vector<std::vector<std::pair<double, double>>>& diagram,
+    double main_algorithm(tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>>& diagrams,
                             std::string from,
                             std::string to,
                             int max_rank,
@@ -1236,7 +1238,7 @@ namespace smpl {
         if (DEBUG_FLAG_0) {
             std::cout << "Started calculating" << std::endl;
         }
-        get_average_landscape_once(to, diagram, matrix, number_of_thread_workers, max_edge_length, subsample_density_coefficient,
+        get_average_landscape_once(to, diagrams, matrix, number_of_thread_workers, max_edge_length, subsample_density_coefficient,
                               number_of_samples);
         if (DEBUG_FLAG_0) {
             std::cout << "Finished calculating" << std::endl;
@@ -1266,9 +1268,23 @@ namespace smpl {
                             double subsample_density_coefficient,
                             bool print_pairs = false,
                             bool gudhi_format = true) {
-        tbb::concurrent_vector<std::vector<std::pair<double, double>>> tmp;
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> tmp;
         return main_algorithm(tmp, from, to, max_rank, max_edge_length,
                 number_of_thread_workers, number_of_samples, subsample_density_coefficient, false, true);
+
+    }
+    double landscape_algorithm_with_diagrams(std::string from,
+                               std::string to,
+                               tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>>& all_persistence_diagrams,
+                               int max_rank,
+                               double max_edge_length,
+                               int number_of_thread_workers,
+                               int number_of_samples,
+                               double subsample_density_coefficient,
+                               bool print_pairs = false,
+                               bool gudhi_format = true) {
+        return main_algorithm(all_persistence_diagrams, from, to, max_rank, max_edge_length,
+                              number_of_thread_workers, number_of_samples, subsample_density_coefficient, false, true);
 
     }
 }

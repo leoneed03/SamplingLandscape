@@ -25,12 +25,12 @@ namespace smpl {
     std::atomic<int> r = {0};
 
 
-    std::set<int> get_random_sample_ripser(std::vector<int> &vector_of_points,
+    std::set<int> get_random_sample_ripser(std::vector<int> vector_of_points,
                                       int size_of_one_sample, bool print_pairs = false) {
         std::random_device rd;
         std::mt19937 g(rd());
         std::shuffle(vector_of_points.begin(), vector_of_points.end(), g);
-
+        std::cout << "size of one sample " << size_of_one_sample << std::endl;
         if (DEBUG_RIPSER_0) {
             for (const auto &e: vector_of_points) {
                 std::cout << e << " ";
@@ -42,9 +42,8 @@ namespace smpl {
 
         return std::set<int>(vector_of_points.begin(), vector_of_points.begin() + size_of_one_sample);
     }
-
     tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> get_diagrams_ripser(
-            tbb::concurrent_vector<std::vector<std::pair<double, double>>>& diagram,
+            tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>>& diagram,
             const std::string &filename,
             std::string to,
             int max_rank,
@@ -54,19 +53,21 @@ namespace smpl {
             int number_of_samples = 1,
             double subsample_density_coefficient = 1.0,
             bool print_pairs = true) {
-
-        std::ifstream file_stream(filename);
         int number_of_points = 0;
-        std::string line;
-        while (std::getline(file_stream, line)) {
-            ++number_of_points;
-            std::vector<value_t> point;
-            std::istringstream s(line);
-        }
 
+        {
+            std::ifstream file_stream(filename);
+
+            std::string line;
+            while (std::getline(file_stream, line)) {
+                ++number_of_points;
+                std::vector<value_t> point;
+                std::istringstream s(line);
+            }
+        }
         if (number_of_points == 0) {
             tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> tbcv (1, tbb::concurrent_vector<std::vector<std::pair<double, double>>>(max_rank + 1));
-            diagram = tbb::concurrent_vector<std::vector<std::pair<double, double>>> (max_rank + 1);
+            diagram = tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> (max_rank + 1);
             return tbcv;
         }
     //    if (gudhi_format && number_of_points > 0) {
@@ -108,6 +109,7 @@ namespace smpl {
             std::packaged_task<int()> t([&cloud, &argv_strings, &all_persistence_diagrams, &subsample_density_coefficient]()
                 {
                     auto sample = get_random_sample_ripser(cloud, (int) (cloud.size() * subsample_density_coefficient));
+                    std::cout << "sample size " <<  sample.size() << std::endl;
                     main_ripser_init(10, argv_strings, sample, all_persistence_diagrams);
                     return 1;
                 });
@@ -129,7 +131,6 @@ namespace smpl {
         }
 
         for (int i = 0; i < all_persistence_diagrams.size(); ++i) {
-            diagram = all_persistence_diagrams[i];
             if (DEBUG_RIPSER_0) {
                 std::cout << "\n\n\n\ncurrently in " << i << std::endl;
             }
@@ -150,15 +151,16 @@ namespace smpl {
             }
 
         }
+        diagram = all_persistence_diagrams;
         get_average_landscape(all_persistence_diagrams, to);
         if (!all_persistence_diagrams.empty()) {
-            diagram = all_persistence_diagrams[0];
+            diagram = all_persistence_diagrams;
         }
         return all_persistence_diagrams;
     }
 
 
-    double main_ripser(tbb::concurrent_vector<std::vector<std::pair<double, double>>>& diagram,
+    double main_ripser(tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>>& diagram,
                         std::string from,
                         std::string to,
                         int max_rank,
@@ -191,7 +193,7 @@ namespace smpl {
                         int number_of_thread_workers = 1,
                         int number_of_samples = 1,
                         double subsample_density_coefficient = 1.0) {
-        tbb::concurrent_vector<std::vector<std::pair<double, double>>> tmp;
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> tmp;
         return main_ripser(tmp, from, to, max_rank, max_edge_length, number_of_thread_workers, number_of_samples, subsample_density_coefficient, true, true);
     }
 }

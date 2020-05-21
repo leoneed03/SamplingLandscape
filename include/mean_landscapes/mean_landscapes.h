@@ -12,7 +12,7 @@
 
 #include <gudhi/Persistence_landscape.h>
 
-#define DEBUG_FLAG_MEAN_LANDSCAPES false
+#define DEBUG_FLAG_MEAN_LANDSCAPES true
 #define PLOT_LANDSCAPES true
 //using namespace std;
 
@@ -71,6 +71,14 @@ namespace smpl {
             tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> all_persistence_diagrams,
             std::string path_to_storage = "results",
             bool print_pairs = false) {
+        std::cout << "Samples " << all_persistence_diagrams.size() << std::endl;
+        for (const auto& e: all_persistence_diagrams) {
+            std::cout << "            dims " << e.size() << std::endl;
+            for (const auto& a: e) {
+                std::cout << "                         intervals " << a.size() << std::endl;
+            }
+        }
+//        exit(1);
 
         if (DEBUG_FLAG_MEAN_LANDSCAPES) {
             std::cout << "Total size " << all_persistence_diagrams.size() << std::endl;
@@ -99,7 +107,7 @@ namespace smpl {
                 }
                 std::string s = "average_" + std::to_string(i);
                 const char *ss(s.data());
-                pl.plot(ss);
+//                pl.plot(ss);
 
                 persistence_landscapes[i].push_back(pl);
 //                persistence_landscapes[i].push_back(&pl);
