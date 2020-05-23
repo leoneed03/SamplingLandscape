@@ -1,0 +1,27 @@
+language: cpp
+compiler: gcc
+
+dist: bionic
+
+before_install:
+- sudo apt-get -y install libboost-dev
+- sudo apt-get -y install libboost-test-dev
+- sudo apt-get -y install libboost-system-dev
+- sudo apt-get -y install libboost-filesystem-dev
+- sudo apt-get -y install libboost-thread-dev
+- sudo apt-get -y install libboost-program-options-dev
+- sudo apt-get -y install valgrind
+- sudo cp -r dep/thread_pool/thread_pool /usr/local/include/
+- sudo cp -r dep/thread_pool/thread_pool.hpp /usr/local/include/
+- sudo cp -r dep/phat /usr/local/include/
+- sudo cp -r dep/gudhi /usr/local/include/
+- sudo apt-get -y install libtbb-dev
+
+script:
+- cd time_test
+- make
+- valgrind --leak-check=full ./algo_a_v
+- ./algo_r_m
+- ./algo_g_m
+- valgrind --leak-check=full ./algo_dc_v
+- ./algo_dc_m
