@@ -3,7 +3,6 @@ compiler: gcc
 
 dist: bionic
 
-
 before_install:
 - sudo apt-get -y install libboost-dev
 - sudo apt-get -y install libboost-test-dev
