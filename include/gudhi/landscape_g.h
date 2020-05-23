@@ -1,3 +1,7 @@
+#pragma once
+#ifndef GUDHI_HPP
+#define GUDHI_HPP
+
 #include <string>
 #include <vector>
 #include <limits>
@@ -23,8 +27,9 @@
 #include <mutex>
 
 #define DEBUG_GUDHI false
+#define infinity_2 1e30
 
-#include "../mean_landscapes/mean_landscapes.h"
+//#include "../mean_landscapes/mean_landscapes.h"
 
 namespace smpl {
     using Simplex_tree = Gudhi::Simplex_tree<Gudhi::Simplex_tree_options_fast_persistence>;
@@ -161,7 +166,7 @@ namespace smpl {
                 int dim = pcoh.cpx_->dimension(get<0>(pair));
                 double b = pcoh.cpx_->filtration(get<0>(pair));
                 double d = pcoh.cpx_->filtration(get<1>(pair));
-                if (d > infinity_1) {
+                if (d > infinity_2) {
                     d = std::numeric_limits<double>::max();
                 }
                 all_dimension_pairs[dim].push_back({b, d});
@@ -281,7 +286,7 @@ namespace smpl {
         std::cout << "total samples " << all_persistence_diagrams.size() << std::endl;
 
 
-        get_average_landscape(all_persistence_diagrams, to);
+//        get_average_landscape(all_persistence_diagrams, to);
 
         std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
@@ -316,3 +321,4 @@ g++ main.cpp -std=c++17 -lboost_program_options -Os -DNDEBUG -o m
 
 
 */
+#endif

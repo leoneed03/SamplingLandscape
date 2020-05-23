@@ -14,12 +14,12 @@
 #include <thread>
 
 #include "ripser.h"
-#include "../mean_landscapes/mean_landscapes.h"
+//#include "../mean_landscapes/mean_landscapes.h"
 
 namespace smpl {
 
     #define DEBUG_RIPSER_0 (false)
-    #define space 5
+//    #define space 5
     //using namespace std;
 
     std::atomic<int> r = {0};
@@ -156,10 +156,10 @@ namespace smpl {
 
         }
         diagram = all_persistence_diagrams;
-        get_average_landscape(all_persistence_diagrams, to);
-        if (!all_persistence_diagrams.empty()) {
-            diagram = all_persistence_diagrams;
-        }
+//        get_average_landscape(all_persistence_diagrams, to);
+//        if (!all_persistence_diagrams.empty()) {
+//            diagram = all_persistence_diagrams;
+//        }
         return all_persistence_diagrams;
     }
 
