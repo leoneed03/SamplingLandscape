@@ -36,7 +36,7 @@
 
 //#include "Simplex_tree_node.h"
 //#include "Simplex_tree_node_inner.h"
-#include "SubCloud.h"
+#include "Subcloud.h"
 //#include "../mean_landscapes/mean_landscapes.h"
 
 namespace smpl {
