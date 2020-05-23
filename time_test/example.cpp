@@ -1,6 +1,7 @@
-#include "../include/algorithm/landscape_a.h"
-#include "../include/ripser/landscape_r.h"
-#include "../include/gudhi/landscape_g.h"
+#include "../include/algorithm/landscapes_algorithm.h"
+//#include "../include/ripser/landscape_r.h"
+//#include "../include/gudhi/landscape_g.h"
+#include "../include/mean_landscapes/mean_landscapes.h"
 #include "../util/compare.cpp"
 #include <iostream>
 
@@ -14,7 +15,7 @@ int main() {
 
 
 
-    std::string path = "../dataset/magnetometer/s50.txt";
+    std::string path = "../dataset/figures/human500.txt";
     double radii = 1e5;
 
     /// args:
@@ -29,11 +30,9 @@ int main() {
 
     tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> apd;
 
-    double time1 = landscape_ripser(path, "results", 2, radii, 3, 9, 1);
-    double time2 = landscape_algorithm(path, "landscapes", 2, radii, 1, 2, 0.9);
-    double time3 = landscape_gudhi(path, "landscapes", 2, radii, 4, 10, 0.5);
-//    double time1 = landscape_ripser(path, "results", 2, radii, 4, 5, 0.9);
-//    double time3 = landscape_algorithm_with_diagrams(path, "landscapes", apd, 2, radii, 4, 15, 0.9);
+//    double time1 = landscape_with_ripser(path, "results", 2, radii, 3, 9, 0.4);
+    double timeg = landscape_with_gudhi(path, "landscapes", 2, radii, 4, 5, 0.2);
+    double time3 = landscape_with_algorithm(path, "landscapes", 2, 0.5, 4, 5, 0.3);
 //    double time2 = landscape_algorithm(path, "landscapes", 2, radii, 4, 15, 0.9);
 
 //    std::cout << "S_amples " << apd.size() << std::endl;

@@ -5,6 +5,7 @@ int num_test_diagram_1 = 10;
 #include <atomic>
 #include "../include/algorithm/landscape_a.h"
 #include "../include/ripser/landscape_r.h"
+#include "../include/mean_landscapes/mean_landscapes.h"
 #include <boost/test/included/unit_test.hpp>
 #include "../util/compare.cpp"
 #include <iostream>

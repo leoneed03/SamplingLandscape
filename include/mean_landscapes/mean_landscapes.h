@@ -10,9 +10,12 @@
 
 #include "tbb/concurrent_vector.h"
 
+#include "../gudhi/landscape_g.h"
+//#include "../algorithm/landscape_a.h"
+#include "../ripser/landscape_r.h"
 #include <gudhi/Persistence_landscape.h>
 
-#define DEBUG_FLAG_MEAN_LANDSCAPES true
+#define DEBUG_FLAG_MEAN_LANDSCAPES false
 #define PLOT_LANDSCAPES true
 //using namespace std;
 
@@ -164,4 +167,38 @@ namespace smpl {
         s2 = s2 / v.size() - s1 * s1;
         return {s1, sqrt(s2)};
     }
+
+    double landscape_with_gudhi(std::string from,
+                                std::string to,
+                                int max_rank,
+                                double max_edge_length,
+                                int number_of_thread_workers = 1,
+                                int number_of_samples = 1,
+                                double subsample_density_coefficient = 1.0,
+                                bool print_pairs = false,
+                                bool gudhi_format = true) {
+
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> apd;
+        double time = landscape_gudhi_with_diagrams(from, to, apd, max_rank, max_edge_length, number_of_thread_workers,
+                                                        number_of_samples, subsample_density_coefficient);
+        get_average_landscape(apd, to);
+        return time;
+    }
+    double landscape_with_ripser(std::string from,
+                                std::string to,
+                                int max_rank,
+                                double max_edge_length,
+                                int number_of_thread_workers = 1,
+                                int number_of_samples = 1,
+                                double subsample_density_coefficient = 1.0,
+                                bool print_pairs = false,
+                                bool gudhi_format = true) {
+
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> apd;
+        double time = main_ripser(apd, from, to, max_rank, max_edge_length, number_of_thread_workers,
+                                                    number_of_samples, subsample_density_coefficient);
+        get_average_landscape(apd, to);
+        return time;
+    }
+
 }
