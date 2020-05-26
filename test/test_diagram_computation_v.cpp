@@ -6,7 +6,7 @@
 #include "../include/ripser/landscape_r.h"
 #include "../include/mean_landscapes/mean_landscapes.h"
 //#include <boost/test/included/unit_test.hpp>
-//#include "../util/compare.cpp"
+#include "../util/compare.cpp"
 #include <iostream>
 
 #define PRINT_PAIR_NUMBER false
