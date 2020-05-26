@@ -1,10 +1,18 @@
-language: cpp
-compiler: gcc
+language: generic # Works better in most cases
 
+matrix:
+  include:
+  - env: CXX=g++ CC=gcc
+    # additional apt settings if needed
+#  - env: CXX=clang++ CC=clang
 dist: bionic
 
-
-
+sources:
+- ubuntu-toolchain-r-test
+packages:
+- gcc-6
+- g++-6
+- cmake
 
 before_install:
 - sudo apt-get -y install libboost-dev
