@@ -5,7 +5,7 @@ matrix:
   - env: CXX=g++ CC=gcc
     # additional apt settings if needed
 #  - env: CXX=clang++ CC=clang
-dist: bionic
+#dist: bionic
 
 sources:
 - ubuntu-toolchain-r-test
