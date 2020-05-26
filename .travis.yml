@@ -4,6 +4,8 @@ compiler: gcc
 dist: bionic
 
 
+
+
 before_install:
 - sudo apt-get -y install libboost-dev
 - sudo apt-get -y install libboost-test-dev
@@ -18,11 +20,32 @@ before_install:
 - sudo cp -r dep/gudhi /usr/local/include/
 - sudo apt-get -y install libtbb-dev
 
+- sudo apt-get -y install libgtest-dev
+- sudo apt-get -y install cmake
+- cd /usr/src/gtest
+- sudo cmake CMakeLists.txt
+- sudo make
+- ls
+#- cd lib
+- sudo cp *.a /usr/lib
+- sudo apt-get -y install libstdc++6
+- sudo apt-get install g++
+
 script:
-- cd time_test
-- make
-- valgrind --leak-check=full ./algo_a_v
-- ./algo_r_m
-- ./algo_g_m
-- valgrind --leak-check=full ./algo_dc_v
-- ./algo_dc_m
+- cd
+- cd build
+- ls
+- cd leoneed03
+- ls
+- cd SamplingLandscape
+- ls
+- mkdir sampling_build
+- cd sampling_build
+#- cd time_test
+- make test
+#- make
+#- valgrind --leak-check=full ./algo_a_v
+#- ./algo_r_m
+#- ./algo_g_m
+#- valgrind --leak-check=full ./algo_dc_v
+#- ./algo_dc_m

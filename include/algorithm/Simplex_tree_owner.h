@@ -1,6 +1,7 @@
 #pragma once
 #ifndef SIMPLEX_TREE_OWNER_H
 #define SIMPLEX_TREE_OWNER_H
+
 #include "Simplex_tree_node.h"
 #include "Simplex_tree_node_inner.h"
 
@@ -11,7 +12,7 @@ namespace smpl {
         Simplex_tree_node_inner *all_first_vertices;
     public:
         bool to_delete = true;
-        std::vector <std::vector<Simplex_tree_node *>> simplices;
+        std::vector<std::vector<Simplex_tree_node *>> simplices;
     public:
 
         void free_tree() {
@@ -36,7 +37,7 @@ namespace smpl {
 
         Simplex_tree_owner(int n, int cloud_size) {
             all_first_vertices = new Simplex_tree_node_inner();
-            simplices = std::vector < std::vector < Simplex_tree_node * >> (n);
+            simplices = std::vector<std::vector<Simplex_tree_node * >>(n);
             for (int i = 0; i < cloud_size; ++i) {
                 auto new_node = new Simplex_tree_node_inner(i, epsilon_a);
                 (*(((Simplex_tree_node_inner *) all_first_vertices)->get_successors()))[i] = new_node;
@@ -47,7 +48,7 @@ namespace smpl {
         Simplex_tree_owner(Simplex_tree_owner *simplex_tree, int n) {
             to_delete = false;
             all_first_vertices = simplex_tree->all_first_vertices;
-            simplices = std::vector < std::vector < Simplex_tree_node * >> (n);
+            simplices = std::vector<std::vector<Simplex_tree_node * >>(n);
         }
 
 
@@ -102,11 +103,11 @@ namespace smpl {
                 } else {
                     auto found = current_simplex_tree_node->get_successors()->find(vertex);
 
-    //                    if (found->second->get_vertex_number() > 0)
+                    //                    if (found->second->get_vertex_number() > 0)
                     {
                         simplices[i].emplace_back(found->second);
-    //                    } else {
-    //                        ++extra_cntr;
+                        //                    } else {
+                        //                        ++extra_cntr;
                     }
 
                     delete new_simplex_node;
@@ -124,11 +125,11 @@ namespace smpl {
                 } else {
                     auto found = current_simplex_tree_node->get_successors()->find(vertex);
 
-    //                    if (found->second->get_vertex_number() > 0)
+                    //                    if (found->second->get_vertex_number() > 0)
                     {
                         simplices[i].emplace_back(found->second);
-    //                    } else {
-    //                        ++extra_cntr;
+                        //                    } else {
+                        //                        ++extra_cntr;
                     }
 
                     delete new_simplex_node;
@@ -144,11 +145,11 @@ namespace smpl {
             insert(node, simplex.size() - 1, birth_time, simplex[simplex.size() - 1]);
         }
 
-        void insert_all_simplices(const std::vector <boost::dynamic_bitset<>> &matrix_of_adjacency,
+        void insert_all_simplices(const std::vector<boost::dynamic_bitset<>> &matrix_of_adjacency,
                                   std::unordered_map<int, int> &new_order_of_points,
                                   const std::vector<int> &subcloud_of_points,
                                   int number_of_vertices,
-                                  const std::vector <std::vector<double>> *matrix_of_distances) {
+                                  const std::vector<std::vector<double>> *matrix_of_distances) {
             if (number_of_vertices < 2 || matrix_of_adjacency.empty()) {
                 return;
             }
@@ -184,9 +185,11 @@ namespace smpl {
                                                       [std::min(temp_copy_of_subsimplex[i], subcloud_of_points[temp])]);
                         }
                         if (number_of_vertices == simplices.size()) {
-                            insert(found_node, temp_copy_of_subsimplex.size(), -max_birth_time, subcloud_of_points[temp]);
+                            insert(found_node, temp_copy_of_subsimplex.size(), -max_birth_time,
+                                   subcloud_of_points[temp]);
                         } else {
-                            insert(found_node, temp_copy_of_subsimplex.size(), max_birth_time, subcloud_of_points[temp]);
+                            insert(found_node, temp_copy_of_subsimplex.size(), max_birth_time,
+                                   subcloud_of_points[temp]);
                         }
                         temp = row.find_next(temp);
                     }

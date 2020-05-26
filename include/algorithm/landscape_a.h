@@ -28,7 +28,6 @@
 #include <random>
 
 
-
 #include <boost/bind.hpp>
 #include <boost/thread/thread.hpp>
 #include <boost/asio.hpp>
@@ -76,8 +75,8 @@ namespace smpl {
         return set_of_points;
     }
 
-    void get_persistence_pairs_sparse(Cloud* cloud, double radii, double subsample_density_coefficient,
-            tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> &v_pairs) {
+    void get_persistence_pairs_sparse(Cloud *cloud, double radii, double subsample_density_coefficient,
+                                      tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> &v_pairs) {
 
         if (DEBUG_FLAG_0) {
             mute.lock();
@@ -109,7 +108,7 @@ namespace smpl {
 
 
         if (DEBUG_FLAG_0) {
-            std::cout << number_of_dots << " started building tree \n\n\n\n" << subsample.size() <<std::endl;
+            std::cout << number_of_dots << " started building tree \n\n\n\n" << subsample.size() << std::endl;
             for (const auto &e: subsample) {
                 std::cout << e << ',';
             }
@@ -150,7 +149,7 @@ namespace smpl {
             }
             sort(Persistence_landscape_a[i].begin(), Persistence_landscape_a[i].end());
             if (DEBUG_FLAG_0) {
-                for (const auto& e: Persistence_landscape_a[i]) {
+                for (const auto &e: Persistence_landscape_a[i]) {
                     std::cout << e.first << " " << e.second << std::endl;
                 }
             }
@@ -160,23 +159,23 @@ namespace smpl {
     }
 
     void get_average_landscape_once(std::string path,
-            tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>>& diagrams,
-            Cloud* cloud,
-            int number_of_thread_workers,
-            double radii = 0.5,
-            double subsample_density_coefficient = 0.3,
-            int number_of_samples = 10,
-            bool print_pairs = false) {
+                                    tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> &diagrams,
+                                    Cloud *cloud,
+                                    int number_of_thread_workers,
+                                    double radii = 0.5,
+                                    double subsample_density_coefficient = 0.3,
+                                    int number_of_samples = 10,
+                                    bool print_pairs = false) {
 
-    //    boost::asio::thread_pool pool(number_of_thread_workers);
+        //    boost::asio::thread_pool pool(number_of_thread_workers);
         if (DEBUG_FLAG_0) {
             std::cout << "Created pool" << std::endl;
         }
-    //    for (int i = 0; i < number_of_samples; ++i) {
-    //        boost::asio::post(pool,
-    //                          bind(get_persistence_pairs_sparse, cloud, radii, subsample_density_coefficient, ref(all_persistence_diagrams)));
-    //    }
-    //    pool.join();
+        //    for (int i = 0; i < number_of_samples; ++i) {
+        //        boost::asio::post(pool,
+        //                          bind(get_persistence_pairs_sparse, cloud, radii, subsample_density_coefficient, ref(all_persistence_diagrams)));
+        //    }
+        //    pool.join();
 
 
 
@@ -188,11 +187,10 @@ namespace smpl {
         std::vector<std::future<int>> futures(number_of_samples);
 
         for (int i = 0; i < number_of_samples; ++i) {
-            std::packaged_task<int()> t([&cloud, &radii, &subsample_density_coefficient, &all_persistence_diagrams]()
-                 {
-                     get_persistence_pairs_sparse(cloud, radii, subsample_density_coefficient, all_persistence_diagrams);
-                     return 1;
-                 });
+            std::packaged_task<int()> t([&cloud, &radii, &subsample_density_coefficient, &all_persistence_diagrams]() {
+                get_persistence_pairs_sparse(cloud, radii, subsample_density_coefficient, all_persistence_diagrams);
+                return 1;
+            });
             futures[i] = t.get_future();
             pool.post(t);
         }
@@ -218,16 +216,17 @@ namespace smpl {
 //        get_average_landscape(all_persistence_diagrams, path);
     }
 
-    double main_algorithm(tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>>& diagrams,
-                            std::string from,
-                            std::string to,
-                            int max_rank,
-                            double max_edge_length,
-                            int number_of_thread_workers = 1,
-                            int number_of_samples = 1,
-                            double subsample_density_coefficient = 1.0,
-                            bool print_pairs = false,
-                            bool gudhi_format = true) {
+    double
+    main_algorithm(tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> &diagrams,
+                   std::string from,
+                   std::string to,
+                   int max_rank,
+                   double max_edge_length,
+                   int number_of_thread_workers = 1,
+                   int number_of_samples = 1,
+                   double subsample_density_coefficient = 1.0,
+                   bool print_pairs = false,
+                   bool gudhi_format = true) {
         zero_cntr = 0;
         extra_cntr = 0;
         matrix_size_cntr = 0;
@@ -255,8 +254,9 @@ namespace smpl {
         if (DEBUG_FLAG_0) {
             std::cout << "Started calculating" << std::endl;
         }
-        get_average_landscape_once(to, diagrams, matrix, number_of_thread_workers, max_edge_length, subsample_density_coefficient,
-                              number_of_samples);
+        get_average_landscape_once(to, diagrams, matrix, number_of_thread_workers, max_edge_length,
+                                   subsample_density_coefficient,
+                                   number_of_samples);
         if (DEBUG_FLAG_0) {
             std::cout << "Finished calculating" << std::endl;
         }
@@ -276,23 +276,9 @@ namespace smpl {
 
         return duration;
     }
-    double landscape_algorithm(std::string from,
-                            std::string to,
-                            int max_rank,
-                            double max_edge_length,
-                            int number_of_thread_workers,
-                            int number_of_samples,
-                            double subsample_density_coefficient,
-                            bool print_pairs = false,
-                            bool gudhi_format = true) {
-        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> tmp;
-        return main_algorithm(tmp, from, to, max_rank, max_edge_length,
-                number_of_thread_workers, number_of_samples, subsample_density_coefficient, false, true);
 
-    }
-    double landscape_algorithm_with_diagrams(std::string from,
+    double landscape_algorithm(std::string from,
                                std::string to,
-                               tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>>& all_persistence_diagrams,
                                int max_rank,
                                double max_edge_length,
                                int number_of_thread_workers,
@@ -300,6 +286,22 @@ namespace smpl {
                                double subsample_density_coefficient,
                                bool print_pairs = false,
                                bool gudhi_format = true) {
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> tmp;
+        return main_algorithm(tmp, from, to, max_rank, max_edge_length,
+                              number_of_thread_workers, number_of_samples, subsample_density_coefficient, false, true);
+
+    }
+
+    double landscape_algorithm_with_diagrams(std::string from,
+                                             std::string to,
+                                             tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> &all_persistence_diagrams,
+                                             int max_rank,
+                                             double max_edge_length,
+                                             int number_of_thread_workers,
+                                             int number_of_samples,
+                                             double subsample_density_coefficient,
+                                             bool print_pairs = false,
+                                             bool gudhi_format = true) {
         return main_algorithm(all_persistence_diagrams, from, to, max_rank, max_edge_length,
                               number_of_thread_workers, number_of_samples, subsample_density_coefficient, false, true);
     }

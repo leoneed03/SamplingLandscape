@@ -44,15 +44,15 @@ namespace smpl {
         //            columns are less
         //            bits is "should be used" are inversed (columns are from lowest to biggest number and row vice versa)!!!!!!!!!!!!!!!!!!!!!!!!
         //
-        std::vector <std::vector<int>> *new_matrix_pointer = nullptr;
+        std::vector<std::vector<int>> *new_matrix_pointer = nullptr;
 
 
-        std::vector <std::pair<int, int>> reduce_matrix(std::vector <std::vector<int>> &temp_betti_matrix,
-                                                        boost::dynamic_bitset<> &paired_bigger_simplices_should_not_be_used,
-                                                        bool is_max_simplex_rank,
-                                                        std::priority_queue<int, std::vector<int>, std::function<bool(
-                                                                const int &,
-                                                                const int &)>> &rows_with_lowest_bits) {
+        std::vector<std::pair<int, int>> reduce_matrix(std::vector<std::vector<int>> &temp_betti_matrix,
+                                                       boost::dynamic_bitset<> &paired_bigger_simplices_should_not_be_used,
+                                                       bool is_max_simplex_rank,
+                                                       std::priority_queue<int, std::vector<int>, std::function<bool(
+                                                               const int &,
+                                                               const int &)>> &rows_with_lowest_bits) {
             int xor_counter = 0;
             int max_size = 0;
             int mm_size = 0;
@@ -61,7 +61,7 @@ namespace smpl {
             }
 
 
-            std::vector <std::pair<int, int>> persistence_pairs;
+            std::vector<std::pair<int, int>> persistence_pairs;
             int max_number_of_vertices1 = INT_MIN, max_number_of_vertices2 = INT_MIN;
             persistence_pairs.reserve(std::min(less_simplices->size(), bigger_simplices->size()));
             int pos_in_paired_simplices = paired_bigger_simplices_should_not_be_used.find_first();    //this is reversed std::vector
@@ -149,21 +149,21 @@ namespace smpl {
             return persistence_pairs;
         }
 
-        std::vector <std::pair<int, int>> construct_betti_matrix(boost::dynamic_bitset<> &already_paired_simplices,
-                                                                 bool is_max_simplex_rank,
-                                                                 int current_number_of_vertices) {
+        std::vector<std::pair<int, int>> construct_betti_matrix(boost::dynamic_bitset<> &already_paired_simplices,
+                                                                bool is_max_simplex_rank,
+                                                                int current_number_of_vertices) {
             bool f = true;
             int simplex_indicator;
 
             simplex_indicator = 0;
-            std::unordered_map < Simplex_tree_node * , int > less_simplex_map;
+            std::unordered_map<Simplex_tree_node *, int> less_simplex_map;
             less_simplex_map.reserve(less_simplices->size());
             for (const auto &current_less_simplex: *less_simplices) {
                 less_simplex_map.emplace(std::make_pair(current_less_simplex, simplex_indicator));
                 ++simplex_indicator;
             }
 
-            std::vector <std::vector<int>> new_matrix(bigger_simplices->size());
+            std::vector<std::vector<int>> new_matrix(bigger_simplices->size());
 
             std::vector<int> vector_for_pq;
 

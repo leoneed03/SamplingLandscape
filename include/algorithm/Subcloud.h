@@ -8,27 +8,27 @@
 namespace smpl {
     struct SubCloud {
         std::unordered_map<int, int> new_order_of_points;
-        std::vector <boost::dynamic_bitset<>> adjacency_matrix;
+        std::vector<boost::dynamic_bitset<>> adjacency_matrix;
         std::vector<int> subcloud_of_points;
         Simplex_tree_owner *root;
-        const std::vector <std::vector<double>> *matrix_of_distances;
+        const std::vector<std::vector<double>> *matrix_of_distances;
         double max_radii = 1e6;
         int simplex_counter = 0;
-        std::vector <std::vector<int>> new_matrix;
+        std::vector<std::vector<int>> new_matrix;
         std::vector<double> from_index_to_birth;
         std::vector<int> dimensions;
         std::unordered_map<Simplex_tree_node *, int> simplex_map;
         std::unordered_map<Simplex_tree_node *, int> filtration_simplex_map;
         std::unordered_map<Simplex_tree_node *, int> less_simplex_map;
         std::unordered_map<Simplex_tree_node *, int> bigger_simplex_map;
-        std::vector <std::pair<double, int>> v_pairs;
+        std::vector<std::pair<double, int>> v_pairs;
 
         ~SubCloud() {
             delete root;
         }
 
-        phat::boundary_matrix <phat::vector_vector> get_boundary_matrix_compressed() {
-            phat::boundary_matrix <phat::vector_vector> boundary_matrix;
+        phat::boundary_matrix<phat::vector_vector> get_boundary_matrix_compressed() {
+            phat::boundary_matrix<phat::vector_vector> boundary_matrix;
             std::vector<int> number_of_simplices;
             for (int i = 0; i < root->simplices.size(); ++i) {
                 auto bigger_simplices = &root->simplices[i];
@@ -56,7 +56,7 @@ namespace smpl {
             }
 
             boundary_matrix.set_num_cols(total_size);
-            v_pairs = std::vector < std::pair < double, int >> (total_size);
+            v_pairs = std::vector<std::pair<double, int >>(total_size);
             from_index_to_birth = std::vector<double>(total_size);
             dimensions = std::vector<int>(total_size);
             int counter = 0;
@@ -79,7 +79,7 @@ namespace smpl {
             }
             for (const auto &bigger_simplex_pair: filtration_simplex_map) {
                 auto current_bigger_simplex = bigger_simplex_pair.first;
-                std::vector <phat::index> temp_col;
+                std::vector<phat::index> temp_col;
                 auto current_bigger_simplex_second = current_bigger_simplex->get_simplex_by_last_node();
                 int row_number = filtration_simplex_map[current_bigger_simplex];
 
@@ -98,7 +98,7 @@ namespace smpl {
             return boundary_matrix;
         }
 
-        tbb::concurrent_vector <std::vector<std::pair < double, double>>>
+        tbb::concurrent_vector<std::vector<std::pair<double, double>>>
 
         get_all_dimensions_landscape(bool with_cohomology = false) {
 
@@ -107,18 +107,18 @@ namespace smpl {
             if (DEBUG_FLAG_0) {
                 std::cout << "Total dim " << max_dim << std::endl;
             }
-            tbb::concurrent_vector < std::vector < std::pair < double, double >> > landscape(max_dim + 1);
+            tbb::concurrent_vector<std::vector<std::pair<double, double >>> landscape(max_dim + 1);
 
             phat::chunk_reduction chunk_reduce;
             chunk_reduce(boundary_matrix);
             std::unordered_map<int, int> zero_column_ind;
 
 
-            std::vector < std::vector < std::pair < int, int >> > p_pairs(max_dim + 1);
+            std::vector<std::vector<std::pair<int, int >>> p_pairs(max_dim + 1);
 
-            std::vector <phat::persistence_pairs> pairs(max_dim + 1);
+            std::vector<phat::persistence_pairs> pairs(max_dim + 1);
             for (int i = 0; i < boundary_matrix.get_num_cols(); ++i) {
-                std::vector <phat::index> temp_col;
+                std::vector<phat::index> temp_col;
                 boundary_matrix.get_col(i, temp_col);
                 if (temp_col.size() == 0 && boundary_matrix.get_dim(i) == max_dim + 1) {
                     ++zero_cntr;
@@ -158,8 +158,8 @@ namespace smpl {
             for (auto &e: pairs) {
                 e.sort();
             }
-            tbb::concurrent_vector < std::vector < std::pair < double, double >> >
-                                                                       persistence_pairs_all_dimensions(max_dim + 1);
+            tbb::concurrent_vector<std::vector<std::pair<double, double >>>
+                    persistence_pairs_all_dimensions(max_dim + 1);
 
             for (int ind = 0; ind < pairs.size(); ++ind) {
                 auto &pairr = pairs[ind];
@@ -217,7 +217,7 @@ namespace smpl {
 
             }
 
-            new_matrix = std::vector < std::vector < int >> (simplex_map.size());
+            new_matrix = std::vector<std::vector<int >>(simplex_map.size());
             for (const auto &bigger_simplex_pair: simplex_map) {
                 auto current_bigger_simplex = bigger_simplex_pair.first;
                 auto current_bigger_simplex_second = current_bigger_simplex->get_simplex_by_last_node();
@@ -246,11 +246,11 @@ namespace smpl {
             }
         }
 
-        std::vector <std::vector<std::pair < double, double>>>
+        std::vector<std::vector<std::pair<double, double>>>
 
         calculate_betti_matrix(int max_number_of_vertices_in_simplex) {
             bool f = true;
-            std::vector < std::vector < std::pair < double, double >> > persistence_diagram;
+            std::vector<std::vector<std::pair<double, double >>> persistence_diagram;
 
             boost::dynamic_bitset<> already_paired_bigger_simplices(
                     root->simplices[max_number_of_vertices_in_simplex].size(), 0);
@@ -270,7 +270,7 @@ namespace smpl {
 
                 auto persistence_pairs = betti_matrix.construct_betti_matrix(already_paired_bigger_simplices,
                                                                              i == max_number_of_vertices_in_simplex, i);
-                std::vector <std::pair<double, double>> persistence_intervals;
+                std::vector<std::pair<double, double>> persistence_intervals;
                 for (const auto &persistence_pair: persistence_pairs) {
 
                     double birth_time = 0;

@@ -66,7 +66,7 @@ namespace smpl {
                     std::cout << std::endl;
                 }
             }
-            distances = std::vector<std::vector<double>> (size);
+            distances = std::vector<std::vector<double>>(size);
             for (int i = 0; i < distances.size(); ++i) {
                 distances[i] = std::vector<double>(i);
                 for (int j = 0; j < i; ++j) {
@@ -93,7 +93,7 @@ namespace smpl {
         friend std::ostream &operator<<(std::ostream &os, const std::vector<std::vector<double>> &matrix);
 
     private:
-        Cloud(const Cloud& other_cloud) {
+        Cloud(const Cloud &other_cloud) {
 
         }
     };
