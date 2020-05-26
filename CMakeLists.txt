@@ -35,7 +35,7 @@ include_directories(${GTEST_INCLUDE_DIRS})
 
 add_executable(sampling_1 test/test_diagram_computation_v.cpp)
 #add_executable(sampling test/test_diagram_computation_v_1.cpp)
-target_link_libraries(sampling_1 ${GTEST_LIBRARIES} ${TBB_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(sampling_1 ${GTEST_LIBRARIES} ${TBB_LIBRARIES} ${Boost_LIBRARIES} pthread)
 #target_link_libraries(sampling_1 /usr/local/lib/libgtest.a ${TBB_LIBRARIES})
 
 enable_testing()
