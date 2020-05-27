@@ -10,37 +10,56 @@
 #include <iostream>
 
 #define PRINT_PAIR_NUMBER false
+#define GTEST_HAS_PARAM_TEST 1
 
 using namespace smpl;
 
 int num_test_diagram_1 = 10;
 
 
-/*
-    TEST(DiagramComputation, magnetometer_s2) {
+TEST(DiagramComputation, t1) {
 
-            std::string path = "../dataset/magnetometer/s2.txt";
-            double radii =  0.1;
-             
-            std::vector<double> v;
+    std::string path = "../dataset/figures/bunny500.txt";
+    double radii = 0.2;
 
-            tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_a;
-            tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_r;
+    std::vector<double> v;
 
-            for (int i = 0; i < 1; ++i) {
-                double time1 = main_ripser(diagram_r, path, "", 2, radii, 1, 1, 1, true);
-                double time2 = main_algorithm(diagram_a, path, "", 2, radii, 1, 1, 1, true);
-            }
+    tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_a;
+    tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_r;
 
-            auto p = get_M_D(v);
-            auto res = compare(diagram_a[0], diagram_r[0]);
-             
-            ASSERT_EQ(res, true);
+    for (int i = 0; i < 1; ++i) {
+        double time1 = main_ripser(diagram_r, path, "", 2, radii, 1, 1, 1, true);
+        double time2 = main_algorithm(diagram_a, path, "", 2, radii, 1, 1, 1, true);
+    }
 
-    }*/
-/*
+    auto p = get_M_D(v);
+    auto res = compare(diagram_a[0], diagram_r[0]);
+    ASSERT_EQ(res, true);
+}
 
-TEST(DiagramComputation, magnetometer_s3) {
+TEST(DiagramComputation1, magnetometer_s2) {
+
+    std::string path = "../dataset/magnetometer/s2.txt";
+    double radii = 0.1;
+
+    std::vector<double> v;
+
+    tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_a;
+    tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_r;
+
+    for (int i = 0; i < 1; ++i) {
+        double time1 = main_ripser(diagram_r, path, "", 2, radii, 1, 1, 1, true);
+        double time2 = main_algorithm(diagram_a, path, "", 2, radii, 1, 1, 1, true);
+    }
+
+    auto p = get_M_D(v);
+    auto res = compare(diagram_a[0], diagram_r[0]);
+
+    ASSERT_EQ(res, true);
+}
+
+
+TEST(DiagramComputation2, magnetometer_s3) {
 
     std::string path = "../dataset/magnetometer/s3.txt";
     double radii = 0.1;
@@ -63,7 +82,7 @@ TEST(DiagramComputation, magnetometer_s3) {
 }
 
 
-TEST(DiagramComputation, magnetometer_s0) {
+TEST(DiagramComputation3, magnetometer_s0) {
 
     std::string path = "../dataset/magnetometer/s0.txt";
     double radii = 1e11;
@@ -85,32 +104,9 @@ TEST(DiagramComputation, magnetometer_s0) {
 }
 
 
+TEST(DiagramComputation4, magnetometer_s50) {
 
-
-TEST(DiagramComputation, magnetometer_s50) {
-
-        std::string path = "../dataset/magnetometer/s50.txt";
-        double radii = 1e11;
-
-        std::vector<double> v;
-
-        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_a;
-        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_r;
-
-        for (int i = 0; i < 1; ++i) {
-            double time1 = main_ripser(diagram_r, path, "", 2, radii, 1, 1, 1, true);
-            double time2 = main_algorithm(diagram_a, path, "", 2, radii, 1, 1, 1, true);
-        }
-
-        auto p = get_M_D(v);
-        auto res = compare(diagram_a[0], diagram_r[0]);
-
-        ASSERT_EQ(res, true);
-}
-
-TEST(DiagramComputation, figures_dots50) {
-
-    std::string path = "../dataset/figures/dots50.txt";
+    std::string path = "../dataset/magnetometer/s50.txt";
     double radii = 1e11;
 
     std::vector<double> v;
@@ -119,7 +115,6 @@ TEST(DiagramComputation, figures_dots50) {
     tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_r;
 
     for (int i = 0; i < 1; ++i) {
-
         double time1 = main_ripser(diagram_r, path, "", 2, radii, 1, 1, 1, true);
         double time2 = main_algorithm(diagram_a, path, "", 2, radii, 1, 1, 1, true);
     }
@@ -129,6 +124,29 @@ TEST(DiagramComputation, figures_dots50) {
 
     ASSERT_EQ(res, true);
 }
+
+TEST(DiagramComputation5, figures_dots50) {
+    for (int j = 0; j < 10; ++j) {
+    
+        std::cout << "ATTEMPT " << j << std::endl;
+        std::string path = "../dataset/figures/dots50.txt";
+        double radii = 1e11;
+
+        std::vector<double> v;
+
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_a;
+        tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_r;
+
+        for (int i = 0; i < 1; ++i) {
+
+            double time1 = main_ripser(diagram_r, path, "", 2, radii, 1, 1, 1, true);
+            double time2 = main_algorithm(diagram_a, path, "", 2, radii, 1, 1, 1, true);
+        }
+        auto res = compare(diagram_a[0], diagram_r[0]);
+        ASSERT_EQ(res, true);
+    }
+}
+
 
 TEST(DiagramComputation, figures_dots50_without_point) {
 
@@ -152,7 +170,7 @@ TEST(DiagramComputation, figures_dots50_without_point) {
     ASSERT_EQ(res, true);
 }
 
-TEST(DiagramComputation, magnetometer_s50) {
+TEST(DiagramComputation5, magnetometer_s50_r5) {
 
     std::string path = "../dataset/magnetometer/s50.txt";
     double radii = 5;
@@ -163,10 +181,8 @@ TEST(DiagramComputation, magnetometer_s50) {
     tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_r;
 
     for (int i = 0; i < 1; ++i) {
-        double time1 = main_ripser(diagram_r, path, "",
-                2, radii, 1, 1, 1, true);
-        double time2 = main_algorithm(diagram_a, path, "",
-                2, radii, 1, 1, 1, true);
+        double time1 = main_ripser(diagram_r, path, "", 2, radii, 1, 1, 1, true);
+        double time2 = main_algorithm(diagram_a, path, "", 2, radii, 1, 1, 1, true);
     }
 
     auto p = get_M_D(v);
@@ -175,8 +191,7 @@ TEST(DiagramComputation, magnetometer_s50) {
     ASSERT_EQ(res, true);
 }
 
-TEST(DiagramComputation, figures_dots50) {
-
+TEST(DiagramComputation6, figures_dots50_r_0_5) {
     std::string path = "../dataset/figures/dots50.txt";
     double radii = 0.5;
 
@@ -195,97 +210,97 @@ TEST(DiagramComputation, figures_dots50) {
 
     ASSERT_EQ(res, true);
 }
-*/
 
 
-/*
- BOOST_AUTO_TEST_CASE(testDiagram5) {
+TEST(DiagramComputation7, magnetometer_s1000) {
 
-         std::string path = "../dataset/magnetometer/s1000.txt";
-         double radii = 5;
+    std::string path = "../dataset/magnetometer/s1000.txt";
+    double radii = 0.5;
 
-         std::vector<double> v;
+    std::vector<double> v;
 
-         tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_a;
-         tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_r;
+    tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_a;
+    tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_r;
 
-         for (int i = 0; i < 1; ++i) {
-             double time1 = main_ripser(diagram_r, path, "", 2, radii, 1, 1, 1, true);
-             double time2 = main_algorithm(diagram_a, path, "", 2, radii, 1, 1, 1, true);
-         }
+    for (int i = 0; i < 1; ++i) {
+        double time1 = main_ripser(diagram_r, path, "", 2, radii, 1, 1, 1, true);
+        double time2 = main_algorithm(diagram_a, path, "", 2, radii, 1, 1, 1, true);
+    }
 
-         auto p = get_M_D(v);
-         auto res = compare(diagram_a, diagram_r);
+    auto p = get_M_D(v);
+    auto res = compare(diagram_a[0], diagram_r[0]);
 
-         ASSERT_EQ(res, true);
- }*/
-
-/*
-TEST(DiagramComputation, figures_bunny_500) {
-
-         std::string path = "../dataset/figures/bunny500.txt";
-         double radii = 0.2;
-
-         std::vector<double> v;
-
-         tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_a;
-         tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_r;
-
-         for (int i = 0; i < 1; ++i) {
-             double time1 = main_ripser(diagram_r, path, "", 2, radii, 1, 1, 1, true);
-             double time2 = main_algorithm(diagram_a, path, "", 2, radii, 1, 1, 1, true);
-         }
-
-         auto p = get_M_D(v);
-         auto res = compare(diagram_a[0], diagram_r[0]);
-
-         ASSERT_EQ(res, true);
- }
-
-TEST(DiagramComputation, figures_sphere_500) {
-
-         std::string path = "../dataset/figures/sphere500.txt";
-         double radii = 0.2;
-
-         std::vector<double> v;
-
-         tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_a;
-         tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_r;
-
-         for (int i = 0; i < 1; ++i) {
-             double time1 = main_ripser(diagram_r, path, "", 2, radii, 1, 1, 1, true);
-             double time2 = main_algorithm(diagram_a, path, "", 2, radii, 1, 1, 1, true);
-         }
-
-         auto p = get_M_D(v);
-         auto res = compare(diagram_a[0], diagram_r[0]);
-
-         ASSERT_EQ(res, true);
- }
-*/
-TEST(DiagramComputation, figures_tore_500) {
-
-         std::string path = "../dataset/figures/tore500.txt";
-         double radii = 0.2;
-
-         std::vector<double> v;
-
-         tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_a;
-         tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_r;
-
-         for (int i = 0; i < 1; ++i) {
-             double time1 = main_ripser(diagram_r, path, "", 2, radii, 1, 1, 1, true);
-             double time2 = main_algorithm(diagram_a, path, "", 2, radii, 1, 1, 1, true);
-         }
-
-         auto p = get_M_D(v);
-         auto res = compare(diagram_a[0], diagram_r[0]);
-
-         ASSERT_EQ(res, true);
- }
+    ASSERT_EQ(res, true);
+}
 
 
-TEST(DiagramComputation, figures_human_500) {
+TEST(DiagramComputation8, figures_bunny_500_r_0_2) {
+
+    std::string path = "../dataset/figures/bunny500.txt";
+    double radii = 0.2;
+
+    std::vector<double> v;
+
+    tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_a;
+    tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_r;
+
+    for (int i = 0; i < 1; ++i) {
+        double time1 = main_ripser(diagram_r, path, "", 2, radii, 1, 1, 1, true);
+        double time2 = main_algorithm(diagram_a, path, "", 2, radii, 1, 1, 1, true);
+    }
+
+    auto p = get_M_D(v);
+    bool res = true;
+
+    res = compare(diagram_a[0], diagram_r[0]);
+
+    ASSERT_EQ(res, true);
+}
+
+TEST(DiagramComputation9, figures_sphere_500_r_0_2) {
+
+    std::string path = "../dataset/figures/sphere500.txt";
+    double radii = 0.2;
+
+    std::vector<double> v;
+
+    tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_a;
+    tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_r;
+
+    for (int i = 0; i < 1; ++i) {
+        double time1 = main_ripser(diagram_r, path, "", 2, radii, 1, 1, 1, true);
+        double time2 = main_algorithm(diagram_a, path, "", 2, radii, 1, 1, 1, true);
+    }
+
+    auto p = get_M_D(v);
+    auto res = compare(diagram_a[0], diagram_r[0]);
+
+    ASSERT_EQ(res, true);
+}
+
+TEST(DiagramComputation10, figures_tore_500_r_0_2) {
+
+    std::string path = "../dataset/figures/tore500.txt";
+    double radii = 0.2;
+
+    std::vector<double> v;
+
+    tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_a;
+    tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_r;
+
+    for (int i = 0; i < 1; ++i) {
+        double time1 = main_ripser(diagram_r, path, "", 2, radii, 1, 1, 1, true);
+        double time2 = main_algorithm(diagram_a, path, "", 2, radii, 1, 1, 1, true);
+    }
+
+    auto p = get_M_D(v);
+    auto res = compare(diagram_a[0], diagram_r[0]);
+
+    ASSERT_EQ(res, true);
+}
+
+
+TEST(DiagramComputation11, figures_human_500) {
 
     std::string path = "../dataset/figures/human500.txt";
     double radii = 0.2;
@@ -322,6 +337,7 @@ TEST(DiagramComputation, figures_human_500) {
             }
         }
     }
+
 }
 
 

@@ -44,7 +44,7 @@ namespace smpl {
             }
 
             if (DEBUG_FLAG_0) {
-                mute.lock();
+                //mute.lock();
                 std::cout << "simplices: ";
                 for (const auto &e: number_of_simplices) {
                     //                fout << e << ' ';
@@ -52,7 +52,7 @@ namespace smpl {
                 }
                 //            fout << '\n';
                 std::cout << std::endl << total_size << std::endl;
-                mute.unlock();
+                //mute.unlock();
             }
 
             boundary_matrix.set_num_cols(total_size);
@@ -121,7 +121,7 @@ namespace smpl {
                 std::vector<phat::index> temp_col;
                 boundary_matrix.get_col(i, temp_col);
                 if (temp_col.size() == 0 && boundary_matrix.get_dim(i) == max_dim + 1) {
-                    ++zero_cntr;
+//                    ++zero_cntr;
                     auto node = root->get_node_by_position(i);
                     node->set_vertex_number_deleted();
                 }

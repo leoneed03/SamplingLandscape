@@ -22,7 +22,7 @@ namespace smpl {
 //    #define space 5
     //using namespace std;
 
-    std::atomic<int> r = {0};
+//    std::atomic<int> r = {0};
 
 
     std::set<int> get_random_sample_ripser(int total_size,

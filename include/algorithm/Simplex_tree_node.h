@@ -9,10 +9,10 @@
 
 namespace smpl {
 
-    std::atomic_int zero_cntr = {0};
-    std::atomic_int matrix_size_cntr = {0};
-    std::atomic_int extra_cntr = {0};
-    std::mutex mute;
+//    std::atomic_int zero_cntr = {0};
+//    std::atomic_int matrix_size_cntr = {0};
+//    std::atomic_int extra_cntr = {0};
+//    std::mutex mute;
 
     struct Simplex_tree_node {
     protected:

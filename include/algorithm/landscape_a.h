@@ -79,10 +79,10 @@ namespace smpl {
                                       tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> &v_pairs) {
 
         if (DEBUG_FLAG_0) {
-            mute.lock();
+            //mute.lock();
             std::cout << "non flag entered pairs construction" << std::endl;
             std::cout << "entered pairs construction" << std::endl;
-            mute.unlock();
+            //mute.unlock();
         }
         int max_number_of_points_in_simplex = 4;
         int number_of_dots = cloud->size;
@@ -94,16 +94,16 @@ namespace smpl {
 
         auto subsample = get_random_sample(dots, (int) ((dots.size()) * subsample_density_coefficient));
         if (DEBUG_FLAG_0) {
-            mute.lock();
+            //mute.lock();
             std::cout << "trying construct tree" << std::endl;
-            mute.unlock();
+            //mute.unlock();
         }
         auto subcloud = new SubCloud(*cloud, subsample, radii, max_number_of_points_in_simplex);
 
         if (DEBUG_FLAG_0) {
-            mute.lock();
+            //mute.lock();
             std::cout << "constructed tree" << std::endl;
-            mute.unlock();
+            //mute.unlock();
         }
 
 
@@ -119,7 +119,7 @@ namespace smpl {
         subcloud->insert_all_simplices_including(max_number_of_points_in_simplex);
         std::vector<std::vector<std::pair<double, double>>> result;
 
-        mute.lock();
+        //mute.lock();
 
         int ss = 0;
         for (const auto &e: (subcloud->root->simplices)) {
@@ -129,8 +129,8 @@ namespace smpl {
         if (DEBUG_FLAG_0) {
             std::cout << "started calculating boundary matrix compressed " << ss << std::endl;
         }
-        matrix_size_cntr += ss;
-        mute.unlock();
+//        matrix_size_cntr += ss;
+        //mute.unlock();
         //only  1
 
 
@@ -142,7 +142,7 @@ namespace smpl {
         }
         delete subcloud;
 
-        mute.lock();
+        //mute.lock();
         for (int i = 0; i < Persistence_landscape_a.size(); ++i) {
             if (DEBUG_FLAG_0) {
                 std::cout << "DIM_" << i << std::endl;
@@ -155,7 +155,7 @@ namespace smpl {
             }
         }
         v_pairs.push_back(Persistence_landscape_a);
-        mute.unlock();
+        //mute.unlock();
     }
 
     void get_average_landscape_once(std::string path,
@@ -200,9 +200,9 @@ namespace smpl {
 
         {
             if (DEBUG_FLAG_0) {
-                mute.lock();
+                //mute.lock();
                 std::cout << "joined!" << std::endl;
-                mute.unlock();
+                //mute.unlock();
             }
         }
         int counter = 1;
@@ -227,9 +227,9 @@ namespace smpl {
                    double subsample_density_coefficient = 1.0,
                    bool print_pairs = false,
                    bool gudhi_format = true) {
-        zero_cntr = 0;
-        extra_cntr = 0;
-        matrix_size_cntr = 0;
+//        zero_cntr = 0;
+//        extra_cntr = 0;
+//        matrix_size_cntr = 0;
         int max_number_of_points_in_simplex = max_rank + 2;
 
         if (DEBUG_FLAG_0) {
@@ -270,9 +270,9 @@ namespace smpl {
         }
         delete matrix;
 
-        mute.lock();
-        std::cout << zero_cntr << " so " << extra_cntr << std::endl << "duration " << duration << std::endl;
-        mute.unlock();
+        //mute.lock();
+//        std::cout << zero_cntr << " so " << extra_cntr << std::endl << "duration " << duration << std::endl;
+        //mute.unlock();
 
         return duration;
     }
