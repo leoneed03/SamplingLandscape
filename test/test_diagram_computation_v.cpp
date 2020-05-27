@@ -297,7 +297,7 @@ TEST(DiagramComputationFigures, figures_tore_500_r_0_2) {
     auto p = get_M_D(v);
     auto res = compare(diagram_a[0], diagram_r[0]);
 
-    ASSERT_EQ(res, false);
+    ASSERT_EQ(res, true);
 }
 
 
