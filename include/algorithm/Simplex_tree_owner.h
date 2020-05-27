@@ -6,6 +6,7 @@
 #include "Simplex_tree_node_inner.h"
 
 namespace smpl {
+
     struct Simplex_tree_owner {
 
     private:

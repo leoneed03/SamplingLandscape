@@ -6,6 +6,8 @@
 #include "Betti_matrix.h"
 
 namespace smpl {
+
+    template <typename ReductionAlgorithm, typename InnerRepresentation>
     struct SubCloud {
         std::unordered_map<int, int> new_order_of_points;
         std::vector<boost::dynamic_bitset<>> adjacency_matrix;
@@ -27,8 +29,8 @@ namespace smpl {
             delete root;
         }
 
-        phat::boundary_matrix<phat::vector_vector> get_boundary_matrix_compressed() {
-            phat::boundary_matrix<phat::vector_vector> boundary_matrix;
+        phat::boundary_matrix<InnerRepresentation> get_boundary_matrix_compressed() {
+            phat::boundary_matrix<InnerRepresentation> boundary_matrix;
             std::vector<int> number_of_simplices;
             for (int i = 0; i < root->simplices.size(); ++i) {
                 auto bigger_simplices = &root->simplices[i];
@@ -99,7 +101,6 @@ namespace smpl {
         }
 
         tbb::concurrent_vector<std::vector<std::pair<double, double>>>
-
         get_all_dimensions_landscape(bool with_cohomology = false) {
 
             auto boundary_matrix = get_boundary_matrix_compressed();
@@ -109,7 +110,8 @@ namespace smpl {
             }
             tbb::concurrent_vector<std::vector<std::pair<double, double >>> landscape(max_dim + 1);
 
-            phat::chunk_reduction chunk_reduce;
+//            phat::chunk_reduction chunk_reduce;
+            ReductionAlgorithm chunk_reduce;
             chunk_reduce(boundary_matrix);
             std::unordered_map<int, int> zero_column_ind;
 

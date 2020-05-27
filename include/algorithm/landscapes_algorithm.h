@@ -1,11 +1,12 @@
 #pragma once
-#ifndef TRAVIS_OK_LANDSCAPES_ALGORITHM_H
-#define TRAVIS_OK_LANDSCAPES_ALGORITHM_H
+#ifndef LANDSCAPES_ALGORITHM_H
+#define LANDSCAPES_ALGORITHM_H
 
 #include "../mean_landscapes/mean_landscapes.h"
 #include "landscape_a.h"
 
 namespace smpl {
+    
     double landscape_with_algorithm(std::string from,
                                     std::string to,
                                     int max_rank,
@@ -24,4 +25,4 @@ namespace smpl {
         return time;
     }
 }
-#endif //TRAVIS_OK_LANDSCAPES_ALGORITHM_H
+#endif //LANDSCAPES_ALGORITHM_H

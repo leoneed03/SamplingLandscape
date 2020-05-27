@@ -1,22 +1,23 @@
 set(CMAKE_C_COMPILER gcc)
-cmake_minimum_required (VERSION 3.1)
+cmake_minimum_required(VERSION 3.1)
 
-project (sampling)
+project(sampling)
 
+include (CTest)
 set(CMAKE_CXX_STANDARD 14)
 set(GCC_COVERAGE_COMPILE_FLAGS " -Os -DNDEBUG")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}" )
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}")
 #set(CMAKE_EXE_LINKER_FLAGS "-lpthread -lboost_system ")
 
 FIND_PACKAGE(Boost COMPONENTS thread system filesystem REQUIRED)
 MESSAGE("Boost information:")
-MESSAGE("  Boost_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}")
-MESSAGE("  Boost_LIBRARIES: ${Boost_LIBRARIES}")
-MESSAGE("  Boost_LIBRARY_DIRS: ${Boost_LIBRARY_DIRS}")
+MESSAGE("   Boost_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}")
+MESSAGE("   Boost_LIBRARIES: ${Boost_LIBRARIES}")
+MESSAGE("   Boost_LIBRARY_DIRS: ${Boost_LIBRARY_DIRS}")
 
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 include_directories(/usr/local/include)
-find_package( Threads )
+find_package(Threads)
 
 LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
 
@@ -38,7 +39,7 @@ add_executable(sampling_1 test/test_diagram_computation_v.cpp)
 target_link_libraries(sampling_1 ${GTEST_LIBRARIES} ${TBB_LIBRARIES} ${Boost_LIBRARIES} pthread)
 #target_link_libraries(sampling_1 /usr/local/lib/libgtest.a ${TBB_LIBRARIES})
 
-enable_testing()
-add_test(NAME    sampling_1
+#enable_testing()
+add_test(NAME sampling_1
         COMMAND sampling_1)
 

@@ -33,25 +33,9 @@
 #include <boost/asio.hpp>
 #include <boost/dynamic_bitset.hpp>
 
-//#include "Simplex_tree_node.h"
-//#include "Simplex_tree_node_inner.h"
 #include "Subcloud.h"
-//#include "../mean_landscapes/mean_landscapes.h"
 
 namespace smpl {
-
-    std::ostream &operator<<(std::ostream &os, const SubCloud &subcloud) {
-        os << "Printing SubCloud" << std::endl;
-        for (int i = 0; i < subcloud.adjacency_matrix.size(); ++i) {
-            os << std::setw(space_alg) << subcloud.subcloud_of_points[i] << ": ";
-            for (int j = 0; j < subcloud.adjacency_matrix[i].size(); ++j) {
-                os << subcloud.adjacency_matrix[i][j];
-            }
-            os << std::endl;
-        }
-        return os;
-    }
-
 
     std::ostream &operator<<(std::ostream &os, const std::vector<std::vector<double>> &matrix) {
         for (const auto &row: matrix) {
@@ -98,7 +82,7 @@ namespace smpl {
             std::cout << "trying construct tree" << std::endl;
             //mute.unlock();
         }
-        auto subcloud = new SubCloud(*cloud, subsample, radii, max_number_of_points_in_simplex);
+        auto subcloud = new SubCloud<phat::chunk_reduction, phat::vector_vector>(*cloud, subsample, radii, max_number_of_points_in_simplex);
 
         if (DEBUG_FLAG_0) {
             //mute.lock();
