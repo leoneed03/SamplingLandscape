@@ -1,4 +1,4 @@
-int num_ = 2;
+int num_ = 3;
 
 //#include <boost/test/included/unit_test.hpp>
 #include <gtest/gtest.h>
@@ -57,6 +57,7 @@ TEST(LandscapeComputationAlgorithm, magnetometer_500) {
     std::cout << "\n E = " << p.first << " D = " << p.second << '\n';
 }
 
+/*
 TEST(LandscapeComputationAlgorithm, human_500) {
     std::cout << "\n\nTest sampled diagram with r =  diam" << std::endl;
     std::vector<double> v;
@@ -65,41 +66,12 @@ TEST(LandscapeComputationAlgorithm, human_500) {
         double time = landscape_algorithm("../dataset/figures/human500.txt", "results", 2, 0.5, 4, 10, 0.4);
         v.push_back(time);
     }
-
-//    std::cout << "S_amples " << apd.size() << std::endl;
-//    for (const auto& e: apd) {
-//        std::cout << "            dims " << e.size() << std::endl;
-//        for (const auto& a: e) {
-//            std::cout << "                         intervals " << a.size() << std::endl;
-//        }
-//    }
     auto p = get_M_D(v);
     std::cout << "\n E = " << p.first << " D = " << p.second << '\n';
 }
-
+*/
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
-
-/*
-    BOOST_AUTO_TEST_CASE(testCalculator4) {
-        std::ofstream out;
-        out.open("loggudhi.txt", std::ios::app);
-        out << "\n\n\nnew loggudhi.n r=diam full ";
-        std::cout << "\n\nTest full diagram with r = 0.5" << std::endl;
-        std::vector<double> v;
-        for (int i = 0; i < num_; ++i) {
-            double time = landscape_gudhi("../dataset/figures/human500.txt", "results",
-                        2, 1e11, 1, 1, 1);
-            v.push_back(time);
-            out << time << ' ';
-        }
-        auto p = get_M_D(v);
-        out << "\n E = " << p.first << " D = " << p.second << '\n';
-        std::cout << "\n E = " << p.first << " D = " << p.second << '\n';
-        out.close();
-//        BOOST_CHECK_EQUAL(s(6,6), 12);
-    }
- */

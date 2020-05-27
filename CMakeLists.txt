@@ -34,6 +34,11 @@ LINK_DIRECTORIES(${tbb_LIBRARY_DIRS})
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS})
 
+add_executable(sampling_algorithm_v test/test_algorithm_v.cpp)
+target_link_libraries(sampling_algorithm_v ${GTEST_LIBRARIES} ${TBB_LIBRARIES} ${Boost_LIBRARIES} pthread)
+add_test(NAME sampling_algorithm_v
+        COMMAND sampling_algorithm_v)
+
 add_executable(sampling_algorithm time_test/test_algorithm.cpp)
 target_link_libraries(sampling_algorithm ${GTEST_LIBRARIES} ${TBB_LIBRARIES} ${Boost_LIBRARIES} pthread)
 add_test(NAME sampling_algorithm

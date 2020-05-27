@@ -52,6 +52,7 @@ script:
 #- cd time_test
 - cmake ../
 - make
+- valgrind --leak-check=full ./sampling_algorithm_v
 - make test
 - valgrind --leak-check=full ./sampling_1
 #- make
