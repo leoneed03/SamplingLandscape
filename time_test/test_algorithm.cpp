@@ -1,6 +1,4 @@
-#define BOOST_TEST_MODULE testSuiteCalculator
-
-int num_ = 1;
+int num_ = 2;
 
 //#include <boost/test/included/unit_test.hpp>
 #include <gtest/gtest.h>
@@ -35,7 +33,7 @@ using namespace smpl;
 //    auto res = compare(diagram_a[0], diagram_r[0]);
 //    ASSERT_EQ(res, true);
 //}
-
+/*
 TEST(LandscapeComputationAlgorithm, random_500) {
     std::cout << "\n\nTest sampled diagram with r =  diam" << std::endl;
     std::vector<double> v;
@@ -78,7 +76,7 @@ TEST(LandscapeComputationAlgorithm, human_500) {
     auto p = get_M_D(v);
     std::cout << "\n E = " << p.first << " D = " << p.second << '\n';
 }
-
+*/
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
