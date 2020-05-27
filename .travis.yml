@@ -53,6 +53,7 @@ script:
 - cmake ../
 - make
 - make test
+- valgrind --leak-check=full ./sampling_1
 #- make
 #- valgrind --leak-check=full ./algo_a_v
 #- ./algo_r_m
