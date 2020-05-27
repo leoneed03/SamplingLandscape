@@ -283,6 +283,7 @@ TEST(DiagramComputationFigures, figures_tore_500_r_0_2) {
     std::string path = "../dataset/figures/tore500.txt";
     double radii = 0.2;
 
+
     std::vector<double> v;
 
     tbb::concurrent_vector<tbb::concurrent_vector<std::vector<std::pair<double, double>>>> diagram_a;
