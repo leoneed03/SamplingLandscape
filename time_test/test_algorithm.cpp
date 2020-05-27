@@ -1,6 +1,6 @@
 #define BOOST_TEST_MODULE testSuiteCalculator
 
-int num_ = 3;
+int num_ = 1;
 
 //#include <boost/test/included/unit_test.hpp>
 #include <gtest/gtest.h>
