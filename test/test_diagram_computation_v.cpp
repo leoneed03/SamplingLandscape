@@ -10,7 +10,6 @@
 #include <iostream>
 
 #define PRINT_PAIR_NUMBER false
-#define GTEST_HAS_PARAM_TEST 1
 
 using namespace smpl;
 

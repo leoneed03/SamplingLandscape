@@ -106,7 +106,7 @@ namespace smpl {
         //mute.lock();
 
         int ss = 0;
-        for (const auto &e: (subcloud->get_root()->get_simplices())) {
+        for (const auto &e: (subcloud->get_root()->get_simplices()  )) {
             ss += e.size();
         }
 
