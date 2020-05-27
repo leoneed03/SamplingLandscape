@@ -6,11 +6,22 @@
 
 namespace smpl {
     struct Cloud {
+    private:
         int dimension, size;
         std::vector<std::vector<double>> points;
         std::vector<std::vector<double>> distances;
         Simplex_tree_owner *simplex_tree;
 
+    public:
+        int get_size() {
+            return size;
+        }
+        const std::vector<std::vector<double>>& get_distances() const {
+            return distances;
+        }
+        Simplex_tree_owner * get_simplex_tree_owner() const {
+            return simplex_tree;
+        }
         Cloud(const std::string &path, int n) {
             std::ifstream input_stream(path);
             std::cout << path << std::endl;

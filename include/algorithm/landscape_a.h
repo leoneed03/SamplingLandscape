@@ -69,7 +69,7 @@ namespace smpl {
             //mute.unlock();
         }
         int max_number_of_points_in_simplex = 4;
-        int number_of_dots = cloud->size;
+        int number_of_dots = cloud->get_size();
         std::vector<int> dots(number_of_dots);
 
         for (int i = 0; i < number_of_dots; ++i) {
@@ -106,7 +106,7 @@ namespace smpl {
         //mute.lock();
 
         int ss = 0;
-        for (const auto &e: (subcloud->root->simplices)) {
+        for (const auto &e: (subcloud->get_root()->get_simplices())) {
             ss += e.size();
         }
 
@@ -226,7 +226,7 @@ namespace smpl {
         }
         std::vector<int> dots;
 
-        int number_of_dots = matrix->size;
+        int number_of_dots = matrix->get_size();
         std::set<int> not_include = {0, 2, 6, 8, 23, 25};
         for (int i = 0; i < number_of_dots; ++i) {
             if (not_include.find(i) == not_include.end()) {

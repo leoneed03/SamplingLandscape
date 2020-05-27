@@ -18,13 +18,14 @@ namespace smpl {
     }
 
     struct Betti_matrix {
+    private:
         int number_of_points_in_the_less_simplex;
         Simplex_tree_owner *simplex_tree;
         std::vector<Simplex_tree_node *> *less_simplices;
         std::vector<Simplex_tree_node *> *bigger_simplices;
         std::vector<int> *original_numbers_of_points;
         std::unordered_map<Simplex_tree_node *, int> &less_simplex_map_;
-
+    public:
         Betti_matrix(int new_number_of_points_in_the_less_simplex,
                      std::vector<Simplex_tree_node *> *new_less_simplices,
                      std::vector<Simplex_tree_node *> *new_bigger_simplices,

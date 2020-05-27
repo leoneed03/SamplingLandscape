@@ -7,8 +7,9 @@
 
 namespace smpl {
 
-    template <typename ReductionAlgorithm, typename InnerRepresentation>
+    template<typename ReductionAlgorithm, typename InnerRepresentation>
     struct SubCloud {
+    private:
         std::unordered_map<int, int> new_order_of_points;
         std::vector<boost::dynamic_bitset<>> adjacency_matrix;
         std::vector<int> subcloud_of_points;
@@ -24,7 +25,10 @@ namespace smpl {
         std::unordered_map<Simplex_tree_node *, int> less_simplex_map;
         std::unordered_map<Simplex_tree_node *, int> bigger_simplex_map;
         std::vector<std::pair<double, int>> v_pairs;
-
+    public:
+        Simplex_tree_owner * get_root() {
+            return root;
+        }
         ~SubCloud() {
             delete root;
         }
@@ -32,17 +36,17 @@ namespace smpl {
         phat::boundary_matrix<InnerRepresentation> get_boundary_matrix_compressed() {
             phat::boundary_matrix<InnerRepresentation> boundary_matrix;
             std::vector<int> number_of_simplices;
-            for (int i = 0; i < root->simplices.size(); ++i) {
-                auto bigger_simplices = &root->simplices[i];
+            for (int i = 0; i < root->get_simplices().size(); ++i) {
+                auto bigger_simplices = &root->get_simplices()[i];
                 stable_sort(bigger_simplices->begin(), bigger_simplices->end(), [](const auto &lhs, const auto &rhs) {
                     return lhs->get_birth_time() < rhs->get_birth_time();
                 });
             }
             int total_size = 0;
-            for (int i = 0; i < root->simplices.size(); ++i) {
-                total_size += root->simplices[i].size();
+            for (int i = 0; i < root->get_simplices().size(); ++i) {
+                total_size += root->get_simplices()[i].size();
 
-                number_of_simplices.push_back(root->simplices[i].size());
+                number_of_simplices.push_back(root->get_simplices()[i].size());
             }
 
             if (DEBUG_FLAG_0) {
@@ -63,9 +67,9 @@ namespace smpl {
             dimensions = std::vector<int>(total_size);
             int counter = 0;
 
-            for (int i = 0; i < root->simplices.size(); ++i) {
+            for (int i = 0; i < root->get_simplices().size(); ++i) {
 
-                auto bigger_simplices = root->simplices[i];
+                auto bigger_simplices = root->get_simplices()[i];
                 for (const auto &e: bigger_simplices) {
 
                     filtration_simplex_map[e] = counter;
@@ -104,7 +108,7 @@ namespace smpl {
         get_all_dimensions_landscape(bool with_cohomology = false) {
 
             auto boundary_matrix = get_boundary_matrix_compressed();
-            int max_dim = root->simplices.size() - 2;
+            int max_dim = root->get_simplices().size() - 2;
             if (DEBUG_FLAG_0) {
                 std::cout << "Total dim " << max_dim << std::endl;
             }
@@ -194,23 +198,23 @@ namespace smpl {
         }
 
         void get_boundary_matrix_in_column_form() {
-            for (int i = 0; i < root->simplices.size(); ++i) {
-                auto bigger_simplices = &root->simplices[i];
+            for (int i = 0; i < root->get_simplices().size(); ++i) {
+                auto bigger_simplices = &root->get_simplices()[i];
                 stable_sort(bigger_simplices->begin(), bigger_simplices->end(), [](const auto &lhs, const auto &rhs) {
                     return lhs->get_birth_time() < rhs->get_birth_time();
                 });
             }
             int total_size = 0;
-            for (int i = 0; i < root->simplices.size(); ++i) {
-                total_size += root->simplices[i].size();
+            for (int i = 0; i < root->get_simplices().size(); ++i) {
+                total_size += root->get_simplices()[i].size();
             }
             from_index_to_birth = std::vector<double>(total_size);
             dimensions = std::vector<int>(total_size);
 
 
-            for (int i = 0; i < root->simplices.size(); ++i) {
+            for (int i = 0; i < root->get_simplices().size(); ++i) {
 
-                auto bigger_simplices = root->simplices[i];
+                auto bigger_simplices = root->get_simplices()[i];
                 for (const auto &e: bigger_simplices) {
                     simplex_map[e] = simplex_map.size();
                     from_index_to_birth[simplex_map[e]] = e->get_birth_time();
@@ -255,9 +259,9 @@ namespace smpl {
             std::vector<std::vector<std::pair<double, double >>> persistence_diagram;
 
             boost::dynamic_bitset<> already_paired_bigger_simplices(
-                    root->simplices[max_number_of_vertices_in_simplex].size(), 0);
-            for (int i = 0; i < root->simplices.size(); ++i) {
-                auto bigger_simplices = &root->simplices[i];
+                    root->get_simplices()[max_number_of_vertices_in_simplex].size(), 0);
+            for (int i = 0; i < root->get_simplices().size(); ++i) {
+                auto bigger_simplices = &root->get_simplices()[i];
                 stable_sort(bigger_simplices->begin(), bigger_simplices->end(), [](const auto &lhs, const auto &rhs) {
                     return lhs->get_birth_time() < rhs->get_birth_time();
                 });
@@ -266,7 +270,7 @@ namespace smpl {
             for (int i = max_number_of_vertices_in_simplex; i >= 1; --i) {
 
 
-                auto betti_matrix = Betti_matrix(i, &root->simplices[i - 1], &root->simplices[i], root,
+                auto betti_matrix = Betti_matrix(i, &root->get_simplices()[i - 1], &root->get_simplices()[i], root,
                                                  &subcloud_of_points, less_simplex_map, bigger_simplex_map);
 
 
@@ -278,27 +282,27 @@ namespace smpl {
                     double birth_time = 0;
                     double death_time;
                     if (persistence_pair.first == INT_MAX) {
-                        Simplex_tree_node *stn = ((root->simplices[i])[persistence_pair.second]);
+                        Simplex_tree_node *stn = ((root->get_simplices()[i])[persistence_pair.second]);
                         birth_time = stn->get_birth_time_protected();
                         persistence_diagram[persistence_diagram.size() - 1].emplace_back(
                                 std::make_pair(birth_time, max_radii));
                         death_time = birth_time;
                     } else {
-                        if (persistence_pair.second > root->simplices[i - 1].size() - 1) {
+                        if (persistence_pair.second > root->get_simplices()[i - 1].size() - 1) {
                             continue;
                         }
-                        auto found_simplex = (root->simplices[i - 1])[root->simplices[i - 1].size() - 1 -
+                        auto found_simplex = (root->get_simplices()[i - 1])[root->get_simplices()[i - 1].size() - 1 -
                                                                       persistence_pair.second];
-                        auto node_with_this_simplex = (((root->simplices[i - 1])[root->simplices[i - 1].size() - 1 -
+                        auto node_with_this_simplex = (((root->get_simplices()[i - 1])[root->get_simplices()[i - 1].size() - 1 -
                                                                                  persistence_pair.second]));
                         birth_time = node_with_this_simplex->get_birth_time_protected();
                     }
                     if (persistence_pair.first == INT_MAX) {}
                     else {
-                        if (persistence_pair.first < 0 || persistence_pair.first >= (root->simplices[i]).size()) {
+                        if (persistence_pair.first < 0 || persistence_pair.first >= (root->get_simplices()[i]).size()) {
 
                         } else {
-                            death_time = (((root->simplices[i])[persistence_pair.first]))->get_birth_time_protected();
+                            death_time = (((root->get_simplices()[i])[persistence_pair.first]))->get_birth_time_protected();
                         }
                     }
                     if (abs(death_time - birth_time) > epsilon_a) {
@@ -312,7 +316,7 @@ namespace smpl {
                     for (int ip = 0; ip < already_paired_bigger_simplices.size(); ++ip) {
                         if (!already_paired_bigger_simplices[ip]) {
                             persistence_intervals.emplace_back(std::make_pair(
-                                    ((root->simplices[i - 1])[root->simplices[i - 1].size() - 1 -
+                                    ((root->get_simplices()[i - 1])[root->get_simplices()[i - 1].size() - 1 -
                                                               ip])->get_birth_time_protected(), max_radii));
                         }
                     }
@@ -324,16 +328,17 @@ namespace smpl {
             return persistence_diagram;
         }
 
-        SubCloud(const Cloud &cloud, const std::vector<int> &points, double max_radius,
+        SubCloud(Cloud &cloud, const std::vector<int> &points, double max_radius,
                  int max_number_of_points_in_simplex) {
             max_radii = max_radius;
-            matrix_of_distances = &cloud.distances;
+            matrix_of_distances = &cloud.get_distances();
             subcloud_of_points = points;
-            root = new Simplex_tree_owner(cloud.simplex_tree, cloud.simplex_tree->simplices.size());
+            root = new Simplex_tree_owner(cloud.get_simplex_tree_owner(),
+                                          cloud.get_simplex_tree_owner()->get_simplices().size());
 
             for (const auto &point: points) {
                 auto found = root->find(std::vector<int>({point}), -1);
-                root->simplices[0].emplace_back(found);
+                root->get_simplices()[0].emplace_back(found);
             }
 
 
@@ -350,12 +355,13 @@ namespace smpl {
                         adjacency_matrix[i][j] = false;
                         continue;
                     }
-                    if (cloud.distances[std::max(points[i], points[j])][std::min(points[i], points[j])] < max_radius) {
+                    if (cloud.get_distances()[std::max(points[i], points[j])][std::min(points[i], points[j])] <
+                        max_radius) {
                         adjacency_matrix[i][j] = true;
                         if (points[i] < points[j]) {
                             root->insert(std::vector<int>({points[i], points[j]}),
-                                         cloud.distances[std::max(points[i], points[j])][std::min(points[i],
-                                                                                                  points[j])]);
+                                         cloud.get_distances()[std::max(points[i], points[j])][std::min(points[i],
+                                                                                                        points[j])]);
                         }
                     }
                 }

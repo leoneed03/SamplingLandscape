@@ -11,11 +11,16 @@ namespace smpl {
 
     private:
         Simplex_tree_node_inner *all_first_vertices;
-    public:
+    private:
         bool to_delete = true;
         std::vector<std::vector<Simplex_tree_node *>> simplices;
     public:
-
+        std::vector<std::vector<Simplex_tree_node *>>& get_simplices() {
+            return simplices;
+        }
+        bool get_to_delete() {
+            return to_delete;
+        }
         void free_tree() {
             delete all_first_vertices;
         }
