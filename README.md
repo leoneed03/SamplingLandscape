@@ -31,7 +31,7 @@ Function arguments should be:
 
 for each launch of landscape_{method} you will get set of files with landscapes which can be easily represented:
 
-![Image of Yaktocat](https://drive.google.com/file/d/1EIh2edGS-uiTFr45ZFREAlvYyg1lUex_/view?usp=sharing)
+![Image of Yaktocat](https://drive.google.com/uc?export=view&id=1EIh2edGS-uiTFr45ZFREAlvYyg1lUex_)
 
 left -- exact landscape, right -- approximated one with subsample_density_coefficient = 0.4 and number_of_samples = 10
 ## Dependencies
