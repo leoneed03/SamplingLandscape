@@ -16,16 +16,17 @@ Thread pool can be installed from https://github.com/inkooboo/thread-pool-cpp
 ## Usage
 
 every implemented landscape-building algorithm has same interface
+
 let's use landscape_ripser from ripser/landscape_r.h:
 
 Function arguments should be:
-  std::string from -- path to file point cloud descriptor where each line represents vector of coordinates for one point (see dataset folder for examples)
-  std::string to -- path to file where to store resulting landscape
-  int max_rank -- max rank of homology computated
-  double max_edge_length -- threshold for edge in connectivity graph 
-  int number_of_thread_workers = 1 -- thread pool size
-  int number_of_samples = 1 -- number of samples (more for more accuracy)
-  double subsample_density_coefficient = 1.0 -- fraction of sample size and cloud size (less for less computation time)
+  - std::string from -- path to file point cloud descriptor where each line represents vector of coordinates for one point (see dataset folder for examples)
+  - std::string to -- path to file where to store resulting landscape
+  - int max_rank -- max rank of homology computated
+  - double max_edge_length -- threshold for edge in connectivity graph 
+  - int number_of_thread_workers = 1 -- thread pool size
+  - int number_of_samples = 1 -- number of samples (more for more accuracy)
+  - double subsample_density_coefficient = 1.0 -- fraction of sample size and cloud size (less for less computation time)
 
 ## Example
 
