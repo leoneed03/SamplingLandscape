@@ -1,8 +1,10 @@
-language: generic
+language: generic # Works better in most cases
 
 matrix:
   include:
   - env: CXX=g++ CC=gcc
+    # additional apt settings if needed
+#  - env: CXX=clang++ CC=clang
 dist: bionic
 
 sources:
@@ -32,6 +34,7 @@ before_install:
 - sudo cmake CMakeLists.txt
 - sudo make
 - ls
+#- cd lib
 - sudo cp *.a /usr/lib
 - sudo apt-get -y install libstdc++6
 - sudo apt-get install g++
@@ -46,8 +49,15 @@ script:
 - ls
 - mkdir sampling_build
 - cd sampling_build
+#- cd time_test
 - cmake ../
 - make
 - valgrind --leak-check=full ./sampling_algorithm_v
 - make test
 - valgrind --leak-check=full ./sampling_1
+#- make
+#- valgrind --leak-check=full ./algo_a_v
+#- ./algo_r_m
+#- ./algo_g_m
+#- valgrind --leak-check=full ./algo_dc_v
+#- ./algo_dc_m
