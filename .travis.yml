@@ -1,0 +1,63 @@
+language: generic # Works better in most cases
+
+matrix:
+  include:
+  - env: CXX=g++ CC=gcc
+    # additional apt settings if needed
+#  - env: CXX=clang++ CC=clang
+dist: bionic
+
+sources:
+- ubuntu-toolchain-r-test
+packages:
+- gcc-6
+- g++-6
+- cmake
+
+before_install:
+- sudo apt-get -y install libboost-dev
+- sudo apt-get -y install libboost-test-dev
+- sudo apt-get -y install libboost-system-dev
+- sudo apt-get -y install libboost-filesystem-dev
+- sudo apt-get -y install libboost-thread-dev
+- sudo apt-get -y install libboost-program-options-dev
+- sudo apt-get -y install valgrind
+- sudo cp -r dep/thread_pool/thread_pool /usr/local/include/
+- sudo cp -r dep/thread_pool/thread_pool.hpp /usr/local/include/
+- sudo cp -r dep/phat /usr/local/include/
+- sudo cp -r dep/gudhi /usr/local/include/
+- sudo apt-get -y install libtbb-dev
+
+- sudo apt-get -y install libgtest-dev
+- sudo apt-get -y install cmake
+- cd /usr/src/gtest
+- sudo cmake CMakeLists.txt
+- sudo make
+- ls
+#- cd lib
+- sudo cp *.a /usr/lib
+- sudo apt-get -y install libstdc++6
+- sudo apt-get install g++
+
+script:
+- cd
+- cd build
+- ls
+- cd leoneed03
+- ls
+- cd SamplingLandscape
+- ls
+- mkdir sampling_build
+- cd sampling_build
+#- cd time_test
+- cmake ../
+- make
+- valgrind --leak-check=full ./sampling_algorithm_v
+- make test
+- valgrind --leak-check=full ./sampling_1
+#- make
+#- valgrind --leak-check=full ./algo_a_v
+#- ./algo_r_m
+#- ./algo_g_m
+#- valgrind --leak-check=full ./algo_dc_v
+#- ./algo_dc_m
